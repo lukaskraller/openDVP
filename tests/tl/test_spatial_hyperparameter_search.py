@@ -1,8 +1,10 @@
+import anndata as ad
 import numpy as np
 import pandas as pd
-import anndata as ad
 import pytest
+
 from opendvp.tl.spatial_hyperparameter_search import spatial_hyperparameter_search
+
 
 @pytest.fixture
 def simple_adata():

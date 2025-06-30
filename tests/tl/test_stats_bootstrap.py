@@ -34,6 +34,12 @@ def test_return_types_and_shapes(sample_df: pd.DataFrame) -> None:
     assert list(summary_df.columns) == ["subset_size", "feature", "cv_summary"]
 
 
+def test_return_summary_only(sample_df: pd.DataFrame) -> None:
+    """Test returning only the raw results."""
+    summary_df = stats_bootstrap(sample_df, return_raw=False, return_summary=True, plot=False)
+    assert isinstance(summary_df, pd.DataFrame)
+    assert "cv_summary" in summary_df.columns
+
 def test_return_both_dataframes(sample_df: pd.DataFrame) -> None:
     """Test returning both raw and summary dataframes."""
     n_bootstrap = 10
