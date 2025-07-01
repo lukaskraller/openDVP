@@ -71,6 +71,3 @@ def import_thresholds(
         return gates_for_scimap
     else:
         return gates
-    
-
-    #TODO update tests

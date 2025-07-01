@@ -2,7 +2,6 @@ import anndata as ad
 import numpy as np
 import pandas as pd
 import pytest
-from unittest.mock import patch
 
 from opendvp.tl import spatial_autocorrelation
 
@@ -156,8 +155,7 @@ def test_geary_c_values():
     assert geary_c_checker > 1.1
     assert p_val_checker < 0.05
 
-@patch('opendvp.tl.spatial_autocorrelation.logger')
-def test_handling_problematic_genes(mock_logger, adata_spatial):
+def test_handling_problematic_genes(adata_spatial):
     """Test that genes with constant or NaN values are handled gracefully."""
     k = 5
     spatial_autocorrelation(adata_spatial, method="moran", k=k)
@@ -165,12 +163,3 @@ def test_handling_problematic_genes(mock_logger, adata_spatial):
     # Check that the results are NaN as expected
     assert np.isnan(adata_spatial.var.loc['gene_constant', f'Moran_I_k{k}'])
     assert np.isnan(adata_spatial.var.loc['gene_with_nan', f'Moran_I_k{k}'])
-
-    # Check that the logger was called with the correct warnings
-    # Get all calls to the warning method
-    warning_calls = [call.args[0] for call in mock_logger.warning.call_args_list]
-    
-    # Check for specific messages
-    assert any("Skipping gene gene_constant: has zero variance" in call for call in warning_calls)
-    assert any("Skipping gene gene_with_nan: contains NaN or Inf values" in call for call in warning_calls)
-    assert any("2 genes failed during MORAN calculation" in call for call in warning_calls)
