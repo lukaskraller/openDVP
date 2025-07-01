@@ -36,15 +36,20 @@ def test_missing_sample_id_column(tmp_path):
         import_thresholds(str(file_path), sample_id='sample1')
 
 def test_filter_zero_gates(gates_csv):
-    df = import_thresholds(gates_csv, log1p=False)
-    assert (df['gate_value'] == 0.0).sum() == 0
-    assert 'marker_id' in df.columns
+    with pytest.raises(ValueError, match="You must specify a sample, when you have gated more than one sample"):
+        df = import_thresholds(gates_csv, scimap=False)
 
 def test_log1p_transformation(gates_csv):
-    df = import_thresholds(gates_csv)
+    df = import_thresholds(gates_csv, sample_id='sample1', scimap=True)
     assert 'markers' in df.columns
-    assert df.shape[0] == 3  # Only 3 rows with gate_value != 0.0
+    assert df.shape[0] == 2 #two valid gates for sample1
     assert df.iloc[0, 1] == pytest.approx(np.log1p(1.0), rel=1e-3)
+
+    df = import_thresholds(gates_csv, sample_id='sample2', scimap=True)
+    assert 'markers' in df.columns
+    assert df.shape[0] == 1 #one valid gate for sample2
+    assert df.iloc[0, 1] == pytest.approx(np.log1p(2.5), rel=1e-3)
+
 
 def test_filter_by_sample(gates_csv):
     df = import_thresholds(gates_csv, sample_id='sample1')

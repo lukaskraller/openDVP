@@ -1,0 +1,6 @@
+,marker_id,gate_value,sample_id
+0,CD3,1.0,sample1
+1,CD4,0.0,sample1
+2,CD8,2.5,sample2
+3,CD3,3.0,sample1
+4,CD4,0.0,sample2
