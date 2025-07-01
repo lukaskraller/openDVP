@@ -7,7 +7,7 @@ from opendvp.utils import logger
 def import_thresholds(
     gates_csv_path :str, 
     sample_id : str | int | None = None, 
-    log1p: bool = True
+    scimap: bool = True
 ) -> pd.DataFrame:
     """Read gate thresholds from a CSV file, filter, and optionally log1p-transform for scimap compatibility.
 
@@ -20,8 +20,8 @@ def import_thresholds(
             Path to the CSV file containing gate thresholds. Must end with '.csv'.
         sample_id (str or int, optional):
             If provided, only gates for this sample will be returned and the output column will be named accordingly.
-        log1p (bool, default True):
-            If True, applies log1p transformation to gate values and formats output for scimap.
+        scimap (bool, default True):
+            If True, applies log1p transformation and column rename, returning formats output for scimap.
 
     Returns:
         pd.DataFrame: Filtered DataFrame containing valid gates, with columns including 'markers' and the sample_id
@@ -42,24 +42,31 @@ def import_thresholds(
     if "sample_id" not in gates.columns:
          raise ValueError("sample_id is not present")
 
-    logger.info("   Filtering out all rows with value 0.0 (assuming not gated)")
+    logger.info("Filtering out all rows with value 0.0 (assuming not gated)")
     gates = gates[gates.gate_value != 0.0]
-    logger.info(f"  Found {gates.shape[0]} valid gates")
-    logger.info(f"  Markers found: {gates.marker_id.unique()}")
-    logger.info(f"  Samples found: {gates.sample_id.unique()}")
+    logger.info(f"Found {gates.shape[0]} valid gates")
+    logger.info(f"Markers found: {gates.marker_id.unique()}")
+    logger.info(f"Samples found: {gates.sample_id.unique()}")
 
     if sample_id is not None:
         if "sample_id" not in gates.columns:
             raise ValueError("The column sample_id is not present in the csv file")
         gates = gates[gates['sample_id'] == sample_id]
         logger.info(f"  Found {gates.shape[0]} valid gates for sample {sample_id}")
+    if sample_id is None:
+        if len(gates['sample_id'].unique())>1:
+            raise ValueError("You must specify a sample, when you have gated more than one sample")
+        sample_id = gates['sample_id'].unique()[0]
 
-    if log1p:
-        logger.info("   Applying log1p transformation to gate values and formatting for scimap.")
+    if scimap:
+        logger.info("Applying log1p transformation to gate values and formatting for scimap.")
         gates_copy = gates.copy()
         gates_copy['log1p_gate_value'] = np.log1p(gates.gate_value)
         gates_for_scimap = gates_copy[['marker_id', 'log1p_gate_value']]
-        gates_for_scimap = gates_for_scimap.rename(columns={'marker_id': 'markers', 'log1p_gate_value': sample_id if sample_id is not None else 'log1p_gate_value'})
+        gates_for_scimap = gates_for_scimap.rename(
+            columns={
+                'marker_id': 'markers', 
+                'log1p_gate_value': sample_id if sample_id is not None else 'log1p_gate_value'})
         logger.info(f"   Output DataFrame columns: {gates_for_scimap.columns.tolist()}")
         return gates_for_scimap
     else:
