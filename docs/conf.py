@@ -25,6 +25,8 @@ templates_path = ["_templates"]
 nitpicky = True
 needs_sphinx = "4.0"
 
+add_module_names = False
+
 html_context = {
     "display_github": True,
     "github_user": "CosciaLab",
