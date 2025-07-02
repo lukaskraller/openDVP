@@ -8096,8 +8096,8 @@ packages:
   requires_python: '>3.10'
 - pypi: ./
   name: opendvp
-  version: 0.5.2
-  sha256: 1e113dbed0bdbad25e6d0684faaa2818de9ab4ac84eb58dff1415b11a3807ef0
+  version: 0.5.3
+  sha256: 2ecc9eb8b3a7aac48f9f7b6f7408354b19f5f2b77314d5854267d33b33abeccc
   requires_dist:
   - anndata>=0.9.1,<0.11
   - geopandas>=0.14
