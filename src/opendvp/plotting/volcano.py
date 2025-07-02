@@ -11,8 +11,9 @@ def volcano(
     adata: AnnData,
     x: str = "log2_FC",
     y: str = "-log10(p_val_corr)_BH",
-    significant: bool = True,
+    significant: bool = False,
     FDR: float | None = None,
+    significant_metric : str = "p_corr",
     tag_top: int | None = None,
     group1: str | None = None,
     group2: str | None = None,
@@ -73,7 +74,7 @@ def volcano(
     if significant:
         if FDR is None:
             raise ValueError("FDR must be specified if significant=True.")
-        sig_df = df[df["p_val_corr_BH"] < FDR]
+        sig_df = df[df[significant_metric] < FDR]
         ax.scatter(sig_df[x], sig_df[y], color="red", s=20)
     if tag_top:
         tag_df = df.sort_values(by=y, ascending=False).head(tag_top)

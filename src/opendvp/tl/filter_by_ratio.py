@@ -94,5 +94,6 @@ def filter_by_ratio(
     logger.info(f"Cells with {label} ratio between {min_ratio} and {max_ratio}: {num_passed}")
     logger.info(f"Cells filtered: {round(100 - (num_passed / total_cells) * 100, 2)}%")
     logger.success("filter_by_ratio complete.")
+    logger.info(f"New boolean column '{label}_ratio_pass' added to adata.obs.")
 
     return adata_copy
