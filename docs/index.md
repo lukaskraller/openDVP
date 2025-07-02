@@ -60,7 +60,7 @@ pip install git+https://github.com/CosciaLab/openDVP.git@main
 
 ### Tutorial 2: Integration of imaging with proteomics
 
-### Turotial 3: Downstream proteomics analysis
+### Tutorial 3: Downstream proteomics analysis
 
 
 ## Contact
