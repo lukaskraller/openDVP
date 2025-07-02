@@ -13,7 +13,25 @@ Please check our [API documentation](api/index.md) for detailed functionalities.
 
 You need at least Python 3.10 installed. If you do not have Python installed, we suggest installing via [uv](https://github.com/astral-sh/uv).  
 
-There are three alternatives to install openDVP:  
+<details>
+<summary> First time trying python? Click here for extra instructions</summary>
+
+1. IF you need software to run jupyter notebooks, I suggest you install [Visual Studio Code](https://code.visualstudio.com/download).
+2. Install `uv`, a python environment manager, following instructions at [installing uv](https://docs.astral.sh/uv/getting-started/installation/). 
+3. Create a local folder you would like to use for your project, and open that folder it in `VSCode`
+4. Open the terminal and run 
+
+```bash
+uv init
+```
+
+Now you
+
+</details>
+
+
+### There are three alternatives to install openDVP:
+
 1. Install the latest stable release from [PyPI](https://pypi.org/project/openDVP/) with minimal dependencies:
 ```bash
 pip install openDVP
