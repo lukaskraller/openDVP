@@ -37,7 +37,7 @@ pip install 'opendvp[spatialdata]'
 
 ## Motivation
 
-Deep Visual Profiling (DVP) combines high-dimensional imaging, spatial analysis, and machine learning to extract complex biological insights from tissue samples. However, many current DVP tools are locked into proprietary formats, restricted software ecosystems, or closed-source pipelines that limit reproducibility, accessibility, and community collaboration.
+Deep Visual Proteomics (DVP) combines high-dimensional imaging, spatial analysis, and machine learning to extract complex biological insights from tissue samples. However, many current DVP tools are locked into proprietary formats, restricted software ecosystems, or closed-source pipelines that limit reproducibility, accessibility, and community collaboration.
 
 - Work transparently across modalities and analysis environments
 - Contribute improvements back to a growing ecosystem
