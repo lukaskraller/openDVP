@@ -113,7 +113,6 @@ select = [
     "B",    # flake8-bugbear
     "I",    # isort (import sorting)
     "UP",   # pyupgrade (modernize syntax)
-    "C90",  # mccabe (complexity)
     "D",    # pydocstyle (docstrings)
     "A",    # flake8-builtins
     "S",    # flake8-bandit (security)

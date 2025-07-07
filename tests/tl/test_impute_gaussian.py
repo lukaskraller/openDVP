@@ -166,3 +166,22 @@ def test_ddof_calculation_is_correct():
     stored_std = qc_df.loc['0', 'imputation_stddev']  # var name is '0' by default
 
     assert np.isclose(manual_std, stored_std)
+
+
+def test_imputed_adata_is_writable(tmp_path):
+    """Test that the imputed AnnData object can be written to an h5ad file."""
+    adata = create_test_adata(n_obs=10, n_vars=5, nan_pattern='structured')
+    imputed_adata = impute_gaussian(adata)
+
+    file_path = tmp_path / "imputed_data.h5ad"
+
+    # The main test is whether this write operation succeeds without errors.
+    try:
+        imputed_adata.write_h5ad(file_path)
+    except Exception as e:
+        pytest.fail(f"Writing imputed AnnData to h5ad failed with an exception: {e}")
+
+    assert file_path.exists()
+    read_adata = ad.read_h5ad(file_path)
+    assert read_adata.shape == imputed_adata.shape
+    assert 'impute_gaussian_qc_metrics' in read_adata.uns

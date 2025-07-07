@@ -5,7 +5,6 @@ from .density import density
 from .dual_axis_boxplots import dual_axis_boxplots
 from .dynamic_histogram import dynamic_histogram
 from .histogram_w_imputation import histogram_w_imputation
-from .pca import pca
 from .pca_loadings import pca_loadings
 from .plot_graph_network import plot_graph_network
 from .rankplot import rankplot
@@ -26,6 +25,5 @@ __all__ = [
     "dual_axis_boxplots",
     "histogram_w_imputation",
     "pca_loadings",
-    "pca",
     "upset"
 ]
