@@ -9,7 +9,7 @@
 
 ![Screenshot 2025-06-17 at 11 43 44](https://github.com/user-attachments/assets/c8ac779d-a7bb-401a-b12d-93599f75528a)
 
-**OpenDVP** is an open-source framework designed to support Deep Visual Profiling (DVP) across multiple modalities using community-supported tools.
+**OpenDVP** is an open-source framework designed to support Deep Visual Proteomics (DVP) across multiple modalities using community-supported tools.
 
 ---
 
@@ -37,7 +37,7 @@ pip install 'opendvp[spatialdata]'
 
 ## Motivation
 
-Deep Visual Profiling (DVP) combines high-dimensional imaging, spatial analysis, and machine learning to extract complex biological insights from tissue samples. However, many current DVP tools are locked into proprietary formats, restricted software ecosystems, or closed-source pipelines that limit reproducibility, accessibility, and community collaboration.
+Deep Visual Proteomics (DVP) combines high-dimensional imaging, spatial analysis, and machine learning to extract complex biological insights from tissue samples. However, many current DVP tools are locked into proprietary formats, restricted software ecosystems, or closed-source pipelines that limit reproducibility, accessibility, and community collaboration.
 
 - Work transparently across modalities and analysis environments
 - Contribute improvements back to a growing ecosystem
