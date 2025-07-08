@@ -10,7 +10,6 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - `pixi install` was failing because of `pyproj` from PyPi was failing
 
-
 ---
 
 ## [0.2.0] - 2025-06-14
