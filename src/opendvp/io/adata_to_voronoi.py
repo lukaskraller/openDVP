@@ -106,6 +106,8 @@ def adata_to_voronoi(
     boundary_box = shapely.box(x_min, y_min, x_max, y_max)
     gdf = gdf[gdf.geometry.within(boundary_box)]
     logger.info(f"Retaining {len(gdf)} valid polygons after filtering infinite ones.")
+    if gdf.shape[0] < 1:
+        raise ValueError("No valid polygons remain")
 
     # Area filter
     if voronoi_area_quantile:
@@ -122,12 +124,14 @@ def adata_to_voronoi(
             gdf[classify_by] = gdf.index
             gdf = gdf.explode(index_parts=True)
             gdf = gdf.reset_index(drop=True)
+        
         gdf['class'] = gdf[classify_by].astype(str)
-        if color_dict:
-            color_dict = parse_color_for_qupath(color_dict, adata=adata, adata_obs_key=classify_by)
-            if 'filtered_out' not in color_dict:
-                color_dict['filtered_out'] = [0, 0, 0]
-            gdf['classification'] = gdf.apply(
-                lambda row: {'name': row['class'], 'color': color_dict[row['class']]}, axis=1)
+        color_dict = parse_color_for_qupath(color_dict, adata=adata, adata_obs_key=classify_by)
+        gdf['classification'] = gdf.apply(
+            lambda row: {'name': row['class'], 'color': color_dict[row['class']]}, axis=1)
+        gdf = gdf.drop(columns='class')
 
+    cols_to_keep = ["objectType", "geometry", "classification"]
+    existing_cols_to_keep = [col for col in cols_to_keep if col in gdf.columns]
+    gdf = gdf[existing_cols_to_keep]
     return gdf

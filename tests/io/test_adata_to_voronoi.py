@@ -8,10 +8,12 @@ from opendvp.io import adata_to_voronoi
 
 @pytest.fixture
 def basic_adata():
+    n_cells = 100
+    np.random.seed(42)
     obs = pd.DataFrame({
-        "X_centroid": [1.0, 2.0, 3.0, 2.5, 1.5],
-        "Y_centroid": [1.0, 1.0, 1.0, 2.0, 2.0],
-        "celltype": pd.Series(["A", "B", "A", "B", "A"], dtype="category")
+        "X_centroid": np.random.uniform(low=1, high=100, size=n_cells),
+        "Y_centroid": np.random.uniform(low=1, high=100, size=n_cells),
+        "celltype": pd.Series(np.random.choice(["A", "B", "C"], n_cells), dtype="category")
     })
     return ad.AnnData(obs=obs)
 
@@ -61,5 +63,5 @@ def test_color_dict_validation(basic_adata):
 
 def test_merge_adjacent_shapes(basic_adata):
     gdf = adata_to_voronoi(basic_adata, classify_by="celltype", merge_adjacent_shapes=True)
-    assert "class" in gdf.columns
+    assert "classification" in gdf.columns
     assert gdf.geometry.is_valid.all()
