@@ -14,17 +14,21 @@ from .stats_average_samples import stats_average_samples
 from .stats_bootstrap import stats_bootstrap
 from .stats_ttest import stats_ttest
 
-from .phenotype_cells import phenotype_cells
+from .scimap_phenotype import scimap_phenotype
+from .scimap_spatial_lda import scimap_spatial_lda
+from .scimap_spatial_cluster import scimap_spatial_cluster
 
 __all__ = [
     "filter_adata_by_gates",
     "filter_by_ratio",
     "filter_by_abs_value",
     "filter_by_annotation",
-    "spatial_autocorrelation",
-    "phenotype_cells",
     "filter_features_byNaNs",
+    "scimap_phenotype",
+    "scimap_spatial_lda",
+    "scimap_spatial_cluster",
     "impute_gaussian",
+    "spatial_autocorrelation",
     "spatial_hyperparameter_search",
     "stats_average_samples",
     "stats_anova",

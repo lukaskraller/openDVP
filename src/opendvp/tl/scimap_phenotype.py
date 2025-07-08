@@ -30,7 +30,7 @@ import argparse
 
 
 
-def phenotype_cells (adata, 
+def scimap_phenotype (adata, 
                      phenotype, 
                      gate = 0.5, 
                      label="phenotype", 

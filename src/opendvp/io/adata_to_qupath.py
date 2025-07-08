@@ -119,7 +119,8 @@ def adata_to_qupath(  # noqa: C901
             gdf['class'] = gdf.index.map(index_class).astype(str).fillna('filtered_out')
         logger.info(f"Classes now in shapes: {gdf['class'].unique()}")
         color_dict = parse_color_for_qupath(color_dict, adata=adata, adata_obs_key=classify_by)
-        gdf['classification'] = gdf.apply(lambda row: {'name': row['class'], 'color': color_dict[row['class']]}, axis=1)
+        gdf['classification'] = gdf.apply(
+            lambda row: {'name': row['class'], 'color': color_dict[row['class']]}, axis=1)
         gdf = gdf.drop(columns='class')
 
     # Simplify geometry
