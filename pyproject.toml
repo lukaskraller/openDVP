@@ -39,6 +39,7 @@ spatialdata = [
     "spatialdata==0.4.0",
     "napari-spatialdata",
     "pyqt5",
+    "spatialdata-plot",
 ]
 dev = [
     "ruff",

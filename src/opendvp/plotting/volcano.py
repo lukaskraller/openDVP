@@ -67,7 +67,6 @@ def volcano(
         fig, ax = plt.subplots()
     else:
         fig = ax.figure
-    # plotting logic
 
     #objects
     adata_copy = adata.copy()
