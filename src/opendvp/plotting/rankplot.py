@@ -65,8 +65,8 @@ def rankplot(
         missing = [g for g in groups if g not in unique_groups]
         if missing:
             raise ValueError(f"Groups not present in adata.obs['{adata_obs_key}']: {missing}")
-    if min_presence_fraction < 0.01:
-        raise ValueError(f"min_presence_fraction should be above 0.01, can't plot fully NaNs in rankplot")
+    if min_presence_fraction < 0.01 or min_presence_fraction > 1.0:
+        raise ValueError(f"min_presence_fraction should be between 0.01 and 1.0 (inclusive).")
     if group_colors is None:
         tab10 = matplotlib.cm.get_cmap('tab10')
         group_colors = {g: matplotlib.colors.to_hex(tab10(i % 10)) for i, g in enumerate(groups)}
