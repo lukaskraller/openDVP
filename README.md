@@ -6,6 +6,7 @@
 [![Platforms](https://img.shields.io/badge/platform-linux%20%7C%20windows%20%7C%20macos-lightgrey.svg)](https://github.com/CosciaLab/openDVP/actions/workflows/testing.yml)
 [![PyPI version](https://img.shields.io/pypi/v/openDVP.svg)](https://pypi.org/project/openDVP/)
 [![License](https://img.shields.io/github/license/CosciaLab/openDVP.svg)](https://github.com/CosciaLab/opendvp/blob/main/LICENSE)
+[![codecov](https://codecov.io/gh/CosciaLab/openDVP/graph/badge.svg?token=IWGKMCHAA1)](https://codecov.io/gh/CosciaLab/openDVP)
 
 ![Screenshot 2025-06-17 at 11 43 44](https://github.com/user-attachments/assets/c8ac779d-a7bb-401a-b12d-93599f75528a)
 
