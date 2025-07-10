@@ -21,7 +21,7 @@ def export_figure(
     that text remains editable in vector graphics editors like Adobe Illustrator.
 
     Parameters:
-    ----------
+    ------------
     fig : matplotlib.figure.Figure
         The matplotlib figure object to be saved.
     path_to_dir : str
@@ -32,11 +32,11 @@ def export_figure(
         Resolution in dots per inch for the saved figure. Default is 300.
 
     Returns:
-    -------
+    ---------
     None
 
     Prints:
-    ------
+    --------
     str
         Confirmation message with the full paths to the saved PDF and SVG files.
 
@@ -47,7 +47,7 @@ def export_figure(
     >>> ax.plot([0, 1], [0, 1])
     >>> export_figure(fig, path="figures/", suffix="line_plot")
 
-    Figures saved as: 
+    Figures saved as:
     figures/20250519_1245_line_plot.pdf
     figures/20250519_1245_line_plot.svg
     """

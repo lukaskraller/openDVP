@@ -12,10 +12,12 @@ def quant_to_adata(
         ) -> ad.AnnData:
     """Convert cell quantification CSV data to an AnnData object for downstream analysis.
 
-    This module provides a function to read a CSV file containing single-cell quantification data, extract metadata and marker intensities, and return an AnnData object suitable for spatial omics workflows. The function expects specific metadata columns and parses marker columns by splitting their names into mathematical operation and marker name.
+    This module provides a function to read a CSV file containing single-cell quantification data.
+    Extract metadata and marker intensities, and return an AnnData object suitable for spatial omics workflows.
+    The function expects specific metadata columns and parses marker columns by splitting their names into mathematical operation and marker name.
 
-    Parameters
-    ----------
+    Parameters:
+    ------------
     path : str
         Path to the CSV file containing cell quantification data.
     index_into_1_based : str | None
@@ -24,12 +26,12 @@ def quant_to_adata(
         If None, no modifications will be performed
 
     Returns:
-    -------
+    ---------
     ad.AnnData
         AnnData object with cell metadata in `.obs` and marker intensities in `.X` and `.var`.
 
     Examples:
-    --------
+    ----------
     >>> from opendvp.io import quant_to_adata
     >>> adata = quant_to_adata('my_quantification.csv')
     >>> print(adata)
@@ -52,7 +54,7 @@ def quant_to_adata(
     if not meta_columns:
         meta_columns = ['CellID', 'Y_centroid', 'X_centroid', 'Area', 'MajorAxisLength',
                         'MinorAxisLength', 'Eccentricity', 'Orientation', 'Extent', 'Solidity']
-    if not all([column in quant_data.columns for column in meta_columns]):
+    if not all(column in quant_data.columns for column in meta_columns):
         raise ValueError("Not all metadata columns are present in the csv file")
 
     if index_into_1_based:

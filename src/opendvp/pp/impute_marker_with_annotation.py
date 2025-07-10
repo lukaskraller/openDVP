@@ -11,7 +11,7 @@ def impute_marker_with_annotation(
     quantile_for_imputation : float = 0.05
 ) -> ad.AnnData:
     """Change value of a feature in an AnnData object for rows matching a specific annotation.
-    
+
     Using a specified quantile value from the variable's distribution.
 
     Parameters:

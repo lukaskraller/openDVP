@@ -29,7 +29,7 @@ def import_perseus(
     obs_headers = list(perseus_df.columns.names)
     logger.debug(f"Observation headers: {obs_headers}")
     # get obs contents
-    obs = [col for col in perseus_df.columns.values] #tuples
+    obs = list(perseus_df.columns.values) #tuples
     obs = pd.DataFrame(obs)
     logger.debug(f"Observation DataFrame shape before cleaning: {obs.shape}")
     # var headers configurable

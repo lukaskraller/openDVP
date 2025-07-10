@@ -60,7 +60,7 @@ def stats_anova(
             result = pg.anova(data=df_feature, dv="value", between="group", detailed=False)
             F_vals.append(result['F'].to_numpy()[0])
             p_vals.append(result['p-unc'].to_numpy()[0])
-        except Exception:
+        except (ValueError, KeyError):
             F_vals.append(np.nan)
             p_vals.append(np.nan)
 

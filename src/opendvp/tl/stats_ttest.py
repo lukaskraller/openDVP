@@ -18,8 +18,8 @@ def stats_ttest(
 ) -> ad.AnnData:
     """Perform a t-test for all columns of an AnnData object between two groups.
 
-    Parameters
-    ----------
+    Parameters:
+    -------------
     adata : AnnData
         AnnData object.
     grouping : str
@@ -32,7 +32,7 @@ def stats_ttest(
         The threshold for the FDR correction.
 
     Returns:
-    ------- 
+    ----------
     None
         Results are saved to adata.var in-place.
     """

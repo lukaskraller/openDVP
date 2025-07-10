@@ -36,7 +36,7 @@ def rankplot(
     proteins_to_label : list of str, optional
         List of feature names (in adata.var_names) to label on the plot.
     group_colors : dict, optional
-        Dictionary mapping group names to colors. Both keys and values should be strings. 
+        Dictionary mapping group names to colors. Both keys and values should be strings.
     return_fig : bool, optional
         If True, returns the matplotlib figure object for further customization.
     ax : matplotlib.axes.Axes, optional
@@ -123,7 +123,7 @@ def rankplot(
     # adjust_text(texts, arrowprops=dict(arrowstyle='->', color='black'))
     adjust_text(
         texts,
-        arrowprops=dict(arrowstyle='->', color='black'),
+        arrowprops={"arrowstyle": '->', "color": 'black'},
         expand_points=(2, 2),
         expand_text=(1.5, 1.5),
         force_text=0.5,

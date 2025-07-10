@@ -7,6 +7,8 @@ import pytest
 import tifffile
 from shapely.geometry import MultiPolygon, Polygon
 
+from opendvp.imaging.mask_to_polygons import mask_to_polygons
+
 
 # Helper function for counting coordinates in geometries
 def _count_coords(geometry):
@@ -19,9 +21,6 @@ def _count_coords(geometry):
             total_coords += len(poly.exterior.coords) + sum(len(interior.coords) for interior in poly.interiors)
         return total_coords
     return 0
-
-from opendvp.imaging.mask_to_polygons import mask_to_polygons
-
 
 @pytest.fixture
 def create_temp_mask_tif():

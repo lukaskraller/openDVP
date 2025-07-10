@@ -60,8 +60,8 @@ def dynamic_histogram(
     # Add initial annotations for counts
     fig.update_layout(
         annotations=[
-            dict(x=0.02, y=1.1, xref="paper", yref="paper", text=f"Left Count: {left_count}", showarrow=False),
-            dict(x=0.98, y=1.1, xref="paper", yref="paper", text=f"Right Count: {right_count}", showarrow=False),
+            {"x": 0.02, "y": 1.1, "xref": "paper", "yref": "paper", "text": f"Left Count: {left_count}", "showarrow": False},
+            {"x": 0.98, "y": 1.1, "xref": "paper", "yref": "paper", "text": f"Right Count: {right_count}", "showarrow": False},
         ]
     )
 
@@ -70,7 +70,7 @@ def dynamic_histogram(
         type="line",
         x0=initial_threshold, y0=0, x1=initial_threshold, y1=1,
         xref="x", yref="paper",
-        line=dict(color="red", width=2, dash="dash")
+        line={"color": "red", "width": 2, "dash": "dash"}
     )
 
     # Function to update both the annotations and line
@@ -79,14 +79,14 @@ def dynamic_histogram(
         left_count, right_count = calculate_counts(data, threshold)
         # Update annotations
         annotations = [
-            dict(x=0.02, y=1.1, xref="paper", yref="paper", text=f"Left Count: {left_count}", showarrow=False),
-            dict(x=0.98, y=1.1, xref="paper", yref="paper", text=f"Right Count: {right_count}", showarrow=False)]
+            {"x": 0.02, "y": 1.1, "xref": "paper", "yref": "paper", "text": f"Left Count: {left_count}", "showarrow": False},
+            {"x": 0.98, "y": 1.1, "xref": "paper", "yref": "paper", "text": f"Right Count: {right_count}", "showarrow": False}]
         # Update line position
-        shapes = [dict(
-            type="line",
-            x0=threshold, y0=0, x1=threshold, y1=1,
-            xref="x", yref="paper",
-            line=dict(color="red", width=2, dash="dash"))]
+        shapes = [{
+            "type": "line",
+            "x0": threshold, "y0": 0, "x1": threshold, "y1": 1,
+            "xref": "x", "yref": "paper",
+            "line": {"color": "red", "width": 2, "dash": "dash"}}]
         return {"annotations": annotations, "shapes": shapes}
 
     # Add slider with threshold steps

@@ -23,7 +23,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 # Function
-def rescale(
+def scimap_rescale(
     adata,
     gate=None,
     log=True,

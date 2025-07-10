@@ -59,7 +59,7 @@ def export_adata(
     try:
         os.makedirs(path_to_dir, exist_ok=True)
         os.makedirs(os.path.join(path_to_dir,checkpoint_name), exist_ok=True)
-    except Exception as e:
+    except (KeyError,ValueError) as e:
         logger.error(f"Could not create folder, permission problem likely: {e}")
         return
 

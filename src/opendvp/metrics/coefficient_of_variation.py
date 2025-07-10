@@ -9,7 +9,7 @@ def coefficient_of_variation(
     ddof: int = 1
 ) -> pd.Series:
     """Calculate the coefficient of variation.
-     
+
     (CV = std / mean) along a specified axis of a DataFrame.
 
     Parameters:
@@ -23,10 +23,10 @@ def coefficient_of_variation(
         - 'raise': raises ValueError if NaN is present
         - 'omit': ignores NaNs in the calculation
     ddof : int, default 1
-        Delta Degrees of Freedom used in the std calculation. 
+        Delta Degrees of Freedom used in the std calculation.
         The divisor used in calculations is N - ddof,
         default is 1
-        
+
 
     Returns:
     -------

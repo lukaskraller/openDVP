@@ -110,8 +110,8 @@ def dual_axis_boxplots(
                 positions=[x1_box],
                 widths=width,
                 patch_artist=True,
-                boxprops=dict(facecolor=box1_color, alpha=0.6),
-                medianprops=dict(color=median_color),
+                boxprops={"facecolor": box1_color, "alpha": 0.6},
+                medianprops={"color": median_color},
                 showfliers=False,
                 **kwargs,
             )
@@ -130,8 +130,8 @@ def dual_axis_boxplots(
                 positions=[x2_box],
                 widths=width,
                 patch_artist=True,
-                boxprops=dict(facecolor=box2_color, alpha=0.6),
-                medianprops=dict(color=median_color),
+                boxprops={"facecolor": box2_color, "alpha": 0.6},
+                medianprops={"color": median_color},
                 showfliers=False,
                 **kwargs,
             )

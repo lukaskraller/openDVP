@@ -16,7 +16,7 @@ def adata_to_voronoi(
     save_as_detection: bool = True,
 ) -> gpd.GeoDataFrame | None:
     """Generate a GeoDataFrame of Voronoi polygons from AnnData centroids.
-    
+
     This function computes Voronoi polygons from centroid coordinates in AnnData.obs
     Optionally annotates them with class labels and colors for QuPath, and returns a GeoDataFrame.
 

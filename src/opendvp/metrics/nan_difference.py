@@ -6,7 +6,7 @@ def nan_difference(
     array2: np.ndarray
 ) -> tuple[int, int]:
     """Calculate how many NaNs do not match between two arrays.
-    
+
     Good quality control, since this can happen.
 
     Parameters:

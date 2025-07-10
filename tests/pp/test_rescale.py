@@ -9,7 +9,7 @@ from opendvp.pp import rescale
 @pytest.fixture
 def rescale_adata() -> ad.AnnData:
     """Creates a sample AnnData object for rescale tests.
-    
+
     - 100 cells, 50 from 'image1' and 50 from 'image2'.
     - 'marker_A': Bimodal distribution, clearly separable.
     - 'marker_B': Unimodal distribution.

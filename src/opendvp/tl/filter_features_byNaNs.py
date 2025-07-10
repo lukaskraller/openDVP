@@ -22,7 +22,7 @@ def filter_features_byNaNs(
     threshold : float, default 0.7
         Proportion of valid values above which a protein is considered valid (between 0 and 1).
     grouping : Optional[str], default None
-        Name of the column in adata.obs to discriminate the groups by. 
+        Name of the column in adata.obs to discriminate the groups by.
         If provided, counting of NaNs and validity is done per group.
     valid_in_ANY_or_ALL_groups : {'ANY', 'ALL'}, default 'ANY'
         'ANY' means that if a protein passes the threshold in any group it will be kept.

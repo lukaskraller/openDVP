@@ -111,6 +111,9 @@ exclude = [
     "docs",
     "notebooks",
     "tests/data",
+    "src/opendvp/tl/scimap_*.py",
+    "src/opendvp/pp/scimap_*.py",
+    "src/opendvp/experimental/*",
 ]
 
 select = [

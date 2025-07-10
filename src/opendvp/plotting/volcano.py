@@ -97,7 +97,7 @@ def volcano(
             texts_left + texts_right,
             ax=ax,
             expand_points=(1.2, 1.2),
-            arrowprops=dict(arrowstyle="-", color='black', lw=0.5, alpha=0.5)
+            arrowprops={"arrowstyle": "-", "color": 'black', "lw": 0.5, "alpha": 0.5}
         )
 
     if highlight_genes is not None:
@@ -116,7 +116,7 @@ def volcano(
                     texts_highlight,
                     ax=ax,
                     expand_points=(1.2, 1.2),
-                    arrowprops=dict(arrowstyle="-", color='blue', lw=0.5, alpha=0.5)
+                    arrowprops={"arrowstyle": "-", "color": 'blue', "lw": 0.5, "alpha": 0.5}
                 )
 
     if group1 is not None and group2 is not None:

@@ -68,7 +68,7 @@ def test_invalid_extension():
 def test_custom_meta_columns(sample_csv):
     # Use a reduced set of metadata columns
     adata = quant_to_adata(sample_csv, meta_columns=['CellID', 'Y_centroid', 'X_centroid'])
-    assert set(['CellID', 'Y_centroid', 'X_centroid']).issubset(adata.obs.columns)
+    assert {'CellID', 'Y_centroid', 'X_centroid'}.issubset(adata.obs.columns)
     assert 'mean_CD3' in adata.var.index
 
 

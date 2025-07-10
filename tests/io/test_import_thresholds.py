@@ -37,7 +37,7 @@ def test_missing_sample_id_column(tmp_path):
 
 def test_filter_zero_gates(gates_csv):
     with pytest.raises(ValueError, match="You must specify a sample, when you have gated more than one sample"):
-        df = import_thresholds(gates_csv, scimap=False)
+        import_thresholds(gates_csv, scimap=False)
 
 def test_log1p_transformation(gates_csv):
     df = import_thresholds(gates_csv, sample_id='sample1', scimap=True)

@@ -105,7 +105,7 @@ def spatial_autocorrelation(
             else:
                 raise ValueError("Method must be 'moran' or 'geary'.")
             results.append(result)
-        except Exception as e:
+        except (ValueError, KeyError) as e:
             results.append(np.nan)
             failed_genes.append(gene)
             logger.warning(f"Failed processing gene {gene}: {e}")

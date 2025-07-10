@@ -62,7 +62,7 @@ def pca_loadings(
     for i, label in enumerate(genenames):
         text = ax.text(x[i], y[i], label, fontsize=8)
         texts.append(text)
-    adjust_text(texts, arrowprops=dict(arrowstyle="-", color='black'))
+    adjust_text(texts, arrowprops={'arrowstyle': "-", 'color': 'black'})
     ax.set(xticklabels=[], yticklabels=[])
     ax.grid(False)
     if return_fig:

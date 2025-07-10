@@ -24,7 +24,7 @@ def upset(
     Variables that are completely NaN across all samples are excluded.
     Variables that do not pass min_presence_fraction of the selected group are removed.
     e.g if 0.5, if only 40% of samples have a valid value that variable is not counted for that group.
-    The final UpSet plot shows presence/absence of variables across the specified groups.  
+    The final UpSet plot shows presence/absence of variables across the specified groups.
 
     Parameters:
     -----------

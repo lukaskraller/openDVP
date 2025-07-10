@@ -111,6 +111,7 @@ def impute_gaussian(
     return adata_copy
 
 def floats_to_str(val):
+    """Ensure floats become strings, for adata.write_h5ad compatibility."""
     if isinstance(val, np.ndarray):
         return "[" + ", ".join(f"{x:.6g}" for x in val) + "]"
     if isinstance(val, float):
