@@ -96,6 +96,7 @@ pyproj = "3.7.1.*"
 line-length = 120
 target-version = "py311"
 
+
 [tool.ruff.lint]
 per-file-ignores."*/__init__.py" = [ "F401" ]
 per-file-ignores."docs/*" = [ "I" ]
@@ -154,3 +155,4 @@ quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
+docstring-code-format = true
