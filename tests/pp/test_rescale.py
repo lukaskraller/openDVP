@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from opendvp.pp import rescale
+from opendvp.pp import scimap_rescale
 
 
 @pytest.fixture
@@ -46,7 +46,7 @@ def test_rescale_with_gmm(rescale_adata: ad.AnnData):
     adata = rescale_adata.copy()
     adata_original_X = adata.X.copy()
 
-    adata_rescaled = rescale(adata, gate=None, log=False, verbose=False)
+    adata_rescaled = scimap_rescale(adata, gate=None, log=False, verbose=False)
 
     # 1. Check if adata is modified in place and raw is created
     assert adata_rescaled is adata
@@ -74,7 +74,7 @@ def test_rescale_with_manual_gates(rescale_adata: ad.AnnData):
     adata = rescale_adata.copy()
     manual_gates = pd.DataFrame({"markers": ["marker_A", "marker_B"], "gates": [5.0, 9.0]})
 
-    adata_rescaled = rescale(adata, gate=manual_gates, log=False, verbose=False)
+    adata_rescaled = scimap_rescale(adata, gate=manual_gates, log=False, verbose=False)
 
     gates_df = adata_rescaled.uns["gates"]
     assert gates_df.loc["marker_A", "image1"] == 5.0
@@ -92,7 +92,7 @@ def test_rescale_with_failed_markers(rescale_adata: ad.AnnData):
     """Test handling of failed markers."""
     adata = rescale_adata.copy()
     failed_markers = {"image1": ["marker_C"]}
-    adata_rescaled = rescale(adata, failed_markers=failed_markers, log=True, verbose=False)
+    adata_rescaled = scimap_rescale(adata, failed_markers=failed_markers, log=True, verbose=False)
 
     gates_df = adata_rescaled.uns["gates"]
 
@@ -114,7 +114,7 @@ def test_rescale_log_transformation(rescale_adata: ad.AnnData):
     original_X = adata.X.copy()
 
     # Run rescale with log=True
-    adata_rescaled = rescale(adata, log=True, verbose=False)
+    adata_rescaled = scimap_rescale(adata, log=True, verbose=False)
 
     # Check that adata.raw.X is the original data
     np.testing.assert_array_equal(adata_rescaled.raw.X, original_X)
@@ -128,11 +128,11 @@ def test_rescale_no_raw_data_initially(rescale_adata: ad.AnnData):
     """Test that adata.raw is created if it's initially None."""
     adata = ad.AnnData(rescale_adata.X.copy(), obs=rescale_adata.obs.copy(), var=rescale_adata.var.copy())
     assert adata.raw is None # Ensure it starts as None
-    rescale(adata, log=False, verbose=False)
+    scimap_rescale(adata, log=False, verbose=False)
     assert adata.raw is not None
     np.testing.assert_array_equal(adata.raw.X, rescale_adata.X)
 
 def test_rescale_invalid_failed_markers_input(rescale_adata: ad.AnnData):
     """Test that non-dict input for failed_markers raises ValueError."""
     with pytest.raises(ValueError, match="`failed_markers` should be a python dictionary"):
-        rescale(rescale_adata, failed_markers=["marker_C"])
+        scimap_rescale(rescale_adata, failed_markers=["marker_C"])

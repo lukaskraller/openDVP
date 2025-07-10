@@ -78,7 +78,7 @@ def test_filter_with_default_params(sample_adata, temp_geojson_file):
     assert obs_df.loc["unannotated", "annotation"] == "Unannotated"
 
     # Check that ClassD column exists and is all False
-    assert (not adata_annotated.obs["ClassD"]).all()
+    assert (~adata_annotated.obs["ClassD"]).all()
 
     # Check boolean columns for the MIXED cell
     assert obs_df.loc["in_A_and_B_overlap", "ClassA"]
@@ -143,9 +143,9 @@ def test_all_cells_unannotated(sample_adata, tmp_path):
 
     adata_annotated = filter_by_annotation(sample_adata, str(filepath))
 
-    assert (not adata_annotated.obs["FarAwayClass"]).all()
+    assert (~adata_annotated.obs["FarAwayClass"]).all()
     assert (adata_annotated.obs["annotation"] == "Unannotated").all()  # All "Unannotated"
-    assert (not adata_annotated.obs["ANY"]).all()
+    assert (~adata_annotated.obs["ANY"]).all()
 
 
 def test_some_cells_annotated(sample_adata, temp_geojson_file):
