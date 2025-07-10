@@ -67,7 +67,7 @@ def test_filter_division_by_zero(sample_adata):
     assert np.isnan(adata_filtered.obs["DAPI_ratio"][zero_indices]).all()
 
     # Where ratio is nan, pass should be False
-    assert (adata_filtered.obs["DAPI_ratio_pass"][zero_indices] == False).all()
+    assert (not adata_filtered.obs["DAPI_ratio_pass"][zero_indices]).all()
 
 
 def test_error_invalid_end_cycle(sample_adata):
@@ -101,10 +101,10 @@ def test_returns_copy_not_view(sample_adata):
 def test_no_cells_pass_filter(sample_adata):
     """Test scenario where no cells pass the filter (very strict range)."""
     adata_filtered = filter_by_ratio(sample_adata, "marker_A", "marker_B", min_ratio=1000, max_ratio=2000)
-    assert (adata_filtered.obs["DAPI_ratio_pass"] == False).all()
+    assert (not adata_filtered.obs["DAPI_ratio_pass"]).all()
 
 
 def test_all_cells_pass_filter(sample_adata):
     """Test scenario where all cells pass the filter (very permissive range)."""
     adata_filtered = filter_by_ratio(sample_adata, "marker_A", "marker_B", min_ratio=-1000, max_ratio=1000)
-    assert (adata_filtered.obs["DAPI_ratio_pass"] == True).all()
+    assert (adata_filtered.obs["DAPI_ratio_pass"]).all()

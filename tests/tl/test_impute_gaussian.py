@@ -178,7 +178,7 @@ def test_imputed_adata_is_writable(tmp_path):
     # The main test is whether this write operation succeeds without errors.
     try:
         imputed_adata.write_h5ad(file_path)
-    except Exception as e:
+    except OSError as e:
         pytest.fail(f"Writing imputed AnnData to h5ad failed with an exception: {e}")
 
     assert file_path.exists()

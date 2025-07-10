@@ -7879,7 +7879,7 @@ packages:
 - pypi: ./
   name: opendvp
   version: 0.5.6
-  sha256: 0cf6bc8ff2e475bb1e466089208e05f119e9d4dae9fda4dc26f438ee7390cbee
+  sha256: 5d342e3ec6c3fa1148fb58fa62f85c3f77bd7d17539f79202799c12c96cb2c14
   requires_dist:
   - anndata>=0.9.1,<0.11
   - geopandas>=0.14

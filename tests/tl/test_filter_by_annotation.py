@@ -78,7 +78,7 @@ def test_filter_with_default_params(sample_adata, temp_geojson_file):
     assert obs_df.loc["unannotated", "annotation"] == "Unannotated"
 
     # Check that ClassD column exists and is all False
-    assert (adata_annotated.obs["ClassD"] == False).all()
+    assert (not adata_annotated.obs["ClassD"]).all()
 
     # Check boolean columns for the MIXED cell
     assert obs_df.loc["in_A_and_B_overlap", "ClassA"]
@@ -143,9 +143,9 @@ def test_all_cells_unannotated(sample_adata, tmp_path):
 
     adata_annotated = filter_by_annotation(sample_adata, str(filepath))
 
-    assert (adata_annotated.obs["FarAwayClass"] == False).all()  # All False for the annotation class
+    assert (not adata_annotated.obs["FarAwayClass"]).all()
     assert (adata_annotated.obs["annotation"] == "Unannotated").all()  # All "Unannotated"
-    assert (adata_annotated.obs["ANY"] == False).all()
+    assert (not adata_annotated.obs["ANY"]).all()
 
 
 def test_some_cells_annotated(sample_adata, temp_geojson_file):
@@ -174,9 +174,7 @@ def test_new_obs_columns_present(sample_adata, temp_geojson_file):
 
     # Get expected columns from the GeoJSON (annotation classes) and the function's defaults
     gdf = gpd.read_file(temp_geojson_file)
-    expected_annotation_cols = [
-        name for name in gdf['classification'].apply(lambda x: ast.literal_eval(x).get('name')).unique()
-    ]
+    expected_annotation_cols = list(gdf['classification'].apply(lambda x: ast.literal_eval(x).get('name')).unique())
     expected_cols = expected_annotation_cols + ["ANY", "annotation"]
 
     # Check if all expected columns are present in adata.obs
