@@ -1,10 +1,11 @@
-import pytest
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import pytest
 from anndata import AnnData
 
 from opendvp.plotting.upset import upset
+
 
 @pytest.fixture
 def adata_simple():

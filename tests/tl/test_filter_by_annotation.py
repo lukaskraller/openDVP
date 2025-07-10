@@ -2,7 +2,6 @@ import ast
 
 import anndata as ad
 import geopandas as gpd
-import numpy as np
 import pandas as pd
 import pytest
 from shapely.geometry import Polygon
@@ -21,7 +20,7 @@ def sample_adata() -> ad.AnnData:
         "in_A_and_B_overlap": (60, 60), # In the overlap of A and B
         "unannotated": (150, 150)
     }
-    
+
     obs_data = pd.DataFrame({
         "CellID": list(coords.keys()),
         "X_centroid": [c[0] for c in coords.values()],
@@ -58,7 +57,7 @@ def temp_geojson_file(tmp_path, sample_geojson) -> str:
 def test_filter_with_default_params(sample_adata, temp_geojson_file):
     """Test filtering with deterministic data and overlapping polygons."""
     adata_annotated = filter_by_annotation(sample_adata, temp_geojson_file)
-    
+
     assert "ClassA" in adata_annotated.obs.columns
     assert "ClassB" in adata_annotated.obs.columns
     assert "ClassD" in adata_annotated.obs.columns # New assertion for ClassD
@@ -172,14 +171,14 @@ def test_some_cells_annotated(sample_adata, temp_geojson_file):
 def test_new_obs_columns_present(sample_adata, temp_geojson_file):
     """Test that the expected new columns are added to adata.obs."""
     adata_filtered = filter_by_annotation(sample_adata, temp_geojson_file)
-    
+
     # Get expected columns from the GeoJSON (annotation classes) and the function's defaults
     gdf = gpd.read_file(temp_geojson_file)
     expected_annotation_cols = [
         name for name in gdf['classification'].apply(lambda x: ast.literal_eval(x).get('name')).unique()
     ]
     expected_cols = expected_annotation_cols + ["ANY", "annotation"]
-    
+
     # Check if all expected columns are present in adata.obs
     for col in expected_cols:
         assert col in adata_filtered.obs.columns, f"Expected column '{col}' not found in adata.obs"

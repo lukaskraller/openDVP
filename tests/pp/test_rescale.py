@@ -47,7 +47,7 @@ def test_rescale_with_gmm(rescale_adata: ad.AnnData):
     adata_original_X = adata.X.copy()
 
     adata_rescaled = rescale(adata, gate=None, log=False, verbose=False)
-    
+
     # 1. Check if adata is modified in place and raw is created
     assert adata_rescaled is adata
     assert adata.raw is not None
@@ -61,7 +61,7 @@ def test_rescale_with_gmm(rescale_adata: ad.AnnData):
     assert "gates" in adata.uns
     gates_df = adata.uns["gates"]
     assert isinstance(gates_df, pd.DataFrame)
-    
+
     # Check that gates were determined for marker_A and marker_B (not NaN)
     # marker_C might be all zeros, leading to a max gate of 0, which is fine.
     assert not pd.isna(gates_df.loc["marker_A", "image1"])
@@ -79,14 +79,14 @@ def test_rescale_with_manual_gates(rescale_adata: ad.AnnData):
     gates_df = adata_rescaled.uns["gates"]
     assert gates_df.loc["marker_A", "image1"] == 5.0
     assert gates_df.loc["marker_B", "image1"] == 9.0
-    
+
     # Check that X is modified and values are within [0, 1]
     assert not np.array_equal(adata.X, adata_rescaled.raw.X)
     assert np.all(adata.X >= 0) and np.all(adata.X <= 1)
 
     # Check that other markers (like C) also have gates (potentially GMM-derived)
     assert not pd.isna(gates_df.loc["marker_C", "image1"])
-    
+
 
 def test_rescale_with_failed_markers(rescale_adata: ad.AnnData):
     """Test handling of failed markers."""
@@ -95,14 +95,14 @@ def test_rescale_with_failed_markers(rescale_adata: ad.AnnData):
     adata_rescaled = rescale(adata, failed_markers=failed_markers, log=True, verbose=False)
 
     gates_df = adata_rescaled.uns["gates"]
-    
+
     # Check that X is modified and values are within [0, 1]
     assert not np.array_equal(adata.X, adata_rescaled.raw.X)
     assert np.all(adata.X >= 0) and np.all(adata.X <= 1)
 
     # Check that marker_C for image1 has a gate (it should be the max value due to 'failed')
     assert not pd.isna(gates_df.loc["marker_C", "image1"])
-    
+
     # Check that other markers (like A and B) also have gates (potentially GMM-derived)
     assert not pd.isna(gates_df.loc["marker_A", "image1"])
     assert not pd.isna(gates_df.loc["marker_B", "image1"])
@@ -118,7 +118,7 @@ def test_rescale_log_transformation(rescale_adata: ad.AnnData):
 
     # Check that adata.raw.X is the original data
     np.testing.assert_array_equal(adata_rescaled.raw.X, original_X)
-    
+
     # Check that adata.X is transformed and scaled to [0, 1]
     assert not np.array_equal(adata_rescaled.X, original_X) # Should be different due to log and scaling
     assert np.all(adata_rescaled.X >= 0) and np.all(adata_rescaled.X <= 1)

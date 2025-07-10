@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import pytest
-
 from opendvp.io import DIANN_to_adata
 
 TEST_DATA_DIR = Path(__file__).parent.parent / "test_data" / "io"
@@ -19,7 +17,7 @@ def test_DIANN_to_adata_181():
     )
     assert adata.shape == (18,5159)
     assert list(adata.var.columns) == [
-        'Protein.Group', 'Protein.Ids', 
+        'Protein.Group', 'Protein.Ids',
         'Protein.Names', 'Genes',
         'First.Protein.Description']
 
@@ -31,7 +29,7 @@ def test_DIANN_to_adata_19():
     )
     assert adata.shape == (18,5233)
     assert list(adata.var.columns) == [
-        'Protein.Group', 'Protein.Names', 
+        'Protein.Group', 'Protein.Names',
         'Genes', 'First.Protein.Description']
 
 
@@ -43,5 +41,5 @@ def test_DIANN_to_adata_2():
     )
     assert adata.shape == (15,7815)
     assert list(adata.var.columns) == [
-        'Protein.Group', 'Protein.Names', 
+        'Protein.Group', 'Protein.Names',
         'Genes', 'First.Protein.Description']

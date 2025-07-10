@@ -13,7 +13,7 @@ from opendvp.tl.impute_gaussian import impute_gaussian
 def create_test_adata(
     n_obs=10,
     n_vars=5,
-    nan_pattern : Literal['random', 'structured', 'all_valid', 'all_nan'] | None = None,  
+    nan_pattern : Literal['random', 'structured', 'all_valid', 'all_nan'] | None = None,
     grouping_col=None,
     var_cols=None
 ):
@@ -38,7 +38,7 @@ def create_test_adata(
     obs = pd.DataFrame(index=[f'cell_{i}' for i in range(n_obs)])
     if grouping_col:
         obs[grouping_col] = ['groupA'] * (n_obs // 2) + ['groupB'] * (n_obs - n_obs // 2)
-    
+
     var_data = {'original_col_1': [f'gene_{i}' for i in range(n_vars)],
                 'original_col_2': np.arange(n_vars)}
     if var_cols:

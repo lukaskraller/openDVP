@@ -107,7 +107,7 @@ def stats_bootstrap(
             # Use a new random state for each sample to ensure independence
             subset = dataframe.sample(n=size, replace=replace, random_state=rng.integers(0, int(1e9)))
             cv = coefficient_of_variation(subset, axis=0, nan_policy=nan_policy)  # Series
-            
+
             # Create a small long-format df for this iteration
             iter_df = cv.reset_index()
             iter_df.columns = ['feature', 'cv']

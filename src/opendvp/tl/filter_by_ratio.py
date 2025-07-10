@@ -88,7 +88,7 @@ def filter_by_ratio(
     num_too_high = np.sum(ratio > max_ratio)
     num_passed = np.sum(pass_final)
     total_cells = adata_copy.n_obs
-    
+
     logger.info(f"Number of cells with {label} ratio < {min_ratio}: {num_too_low}")
     logger.info(f"Number of cells with {label} ratio > {max_ratio}: {num_too_high}")
     logger.info(f"Cells with {label} ratio between {min_ratio} and {max_ratio}: {num_passed}")

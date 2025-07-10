@@ -45,8 +45,8 @@ def test_return_both_dataframes(sample_df: pd.DataFrame) -> None:
     n_bootstrap = 10
     subset_sizes = [10, 20]
     raw_df, summary_df = stats_bootstrap(
-        sample_df, n_bootstrap=n_bootstrap, 
-        subset_sizes=subset_sizes, return_raw=True, 
+        sample_df, n_bootstrap=n_bootstrap,
+        subset_sizes=subset_sizes, return_raw=True,
         return_summary=True, plot=False
     ) # type: ignore
 

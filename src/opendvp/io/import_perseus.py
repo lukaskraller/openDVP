@@ -41,7 +41,7 @@ def import_perseus(
     logger.debug(f"Observation DataFrame shape after cleaning: {obs.shape}")
     #rename headers
     obs.columns = obs_headers
-    #var 
+    #var
     var = perseus_df[var_headers]
     var.columns = var_headers
     logger.debug(f"Variable DataFrame shape: {var.shape}")

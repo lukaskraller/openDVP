@@ -124,7 +124,7 @@ def adata_to_voronoi(
             gdf[classify_by] = gdf.index
             gdf = gdf.explode(index_parts=True)
             gdf = gdf.reset_index(drop=True)
-        
+
         gdf['class'] = gdf[classify_by].astype(str)
         color_dict = parse_color_for_qupath(color_dict, adata=adata, adata_obs_key=classify_by)
         gdf['classification'] = gdf.apply(

@@ -51,7 +51,7 @@ def histogram_w_imputation(
     fig, axes = plt.subplots(nrows=n_rows, ncols=n_cols, figsize=(fig_width, fig_height), sharex=True, sharey=True)
     axes = axes.flatten()
     bins = np.arange(5, 25.5, 0.5)
-    
+
     for i in range(n_samples):
         row_raw = raw_data[i, :]
         row_imputed = imputed_data[i, :]
@@ -69,7 +69,7 @@ def histogram_w_imputation(
         ax.legend()
     fig.tight_layout()
     fig.suptitle("Gaussian Imputation (per protein) for each sample", fontsize=30, y=1.015)
-    
+
     if save and save_name is not None:
         fig.savefig(save_name, bbox_inches='tight')
     if return_fig:

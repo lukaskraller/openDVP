@@ -35,7 +35,7 @@ def gates_df() -> pd.DataFrame:
 def test_filter_without_sample_id(sample_adata, gates_df):
     """Test filtering without specifying a sample_id."""
     adata_filtered = filter_adata_by_gates(sample_adata, gates_df)
-    
+
     assert adata_filtered.n_vars == 8
     assert adata_filtered.shape == (sample_adata.n_obs, 8)
     expected_markers = sorted(gates_df['marker_id'].unique())
@@ -83,7 +83,7 @@ def test_error_on_markers_not_in_adata(sample_adata, gates_df):
     """Test ValueError if gates contain markers not present in the AnnData object."""
     extra_marker_gate = pd.DataFrame([{'marker_id': 'non_existent_marker', 'sample_id': 991}])
     invalid_gates = pd.concat([gates_df, extra_marker_gate], ignore_index=True)
-    
+
     with pytest.raises(ValueError, match="Markers not found in adata.var_names:.*'non_existent_marker'"):
         filter_adata_by_gates(sample_adata, invalid_gates, sample_id=991)
 
@@ -106,7 +106,7 @@ def test_returns_copy(sample_adata, gates_df):
     """Test that the function returns a copy, not a view, of the AnnData object."""
     adata_filtered = filter_adata_by_gates(sample_adata, gates_df)
     assert adata_filtered is not sample_adata
-    
+
     # Modify the copy and check if the original is unchanged
     adata_filtered.X[0, 0] = -999
     assert sample_adata.X[0, 0] != -999

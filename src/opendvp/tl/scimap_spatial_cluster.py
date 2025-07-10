@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Created on Mon Oct 12 17:03:56 2020
 # @author: Ajit Johnson Nirmal
-"""
-!!! abstract "Short Description"
+"""!!! abstract "Short Description"
     `sm.tl.cluster`: This function is designed for clustering cells within the dataset, facilitating the identification of distinct cell populations based on their expression profiles or other relevant features. It supports three popular clustering algorithms:
     
     - **kmeans**: A partitioning method that divides the dataset into `k` clusters, each represented by the centroid of the data points in the cluster. It is suitable for identifying spherical clusters in the feature space.
@@ -16,15 +14,14 @@
 """
 
 # Import library
+import pathlib
+import sys
+
+import anndata
 import numpy as np
 import pandas as pd
 import scanpy as sc
-import scanpy.external as sce
 from sklearn.cluster import KMeans
-import argparse
-import sys
-import anndata
-import pathlib
 
 
 def scimap_spatial_cluster(

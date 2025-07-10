@@ -2,15 +2,15 @@ from typing import Any
 
 import matplotlib
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from adjustText import adjust_text
 from anndata import AnnData
 from matplotlib.figure import Figure
 
-
 from opendvp.utils import logger
+
 
 def rankplot(
     adata: AnnData,
@@ -55,7 +55,7 @@ def rankplot(
         fig, ax = plt.subplots(figsize=(5, 5))
     else:
         fig = ax.figure
-    
+
     adata_copy = adata.copy()
     unique_groups = adata_copy.obs[adata_obs_key].unique().tolist()
     if groups is None:
@@ -66,7 +66,7 @@ def rankplot(
         if missing:
             raise ValueError(f"Groups not present in adata.obs['{adata_obs_key}']: {missing}")
     if min_presence_fraction < 0.01 or min_presence_fraction > 1.0:
-        raise ValueError(f"min_presence_fraction should be between 0.01 and 1.0 (inclusive).")
+        raise ValueError("min_presence_fraction should be between 0.01 and 1.0 (inclusive).")
     if group_colors is None:
         tab10 = matplotlib.cm.get_cmap('tab10')
         group_colors = {g: matplotlib.colors.to_hex(tab10(i % 10)) for i, g in enumerate(groups)}
@@ -107,7 +107,7 @@ def rankplot(
 
     sns.scatterplot(data=df_sns, x="rank", y="mean", hue="group", palette=group_colors, ax=ax, s=40, linewidth=0, **kwargs)
 
-    
+
     texts = []
     if proteins_to_label:
         labeled_df = df_sns[df_sns['protein'].isin(proteins_to_label)]

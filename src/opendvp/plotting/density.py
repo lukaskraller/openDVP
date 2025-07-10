@@ -45,7 +45,7 @@ def density(
         fig, ax = plt.subplots()
     else:
         fig = ax.figure
-    
+
     adata_copy = adata.copy()
 
     if color_by not in adata_copy.obs.columns:

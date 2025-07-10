@@ -5,9 +5,9 @@ from opendvp.utils import logger
 
 
 def impute_marker_with_annotation(
-    adata : ad.AnnData, 
+    adata : ad.AnnData,
     target_variable : str,
-    target_annotation_column : str, 
+    target_annotation_column : str,
     quantile_for_imputation : float = 0.05
 ) -> ad.AnnData:
     """Change value of a feature in an AnnData object for rows matching a specific annotation.

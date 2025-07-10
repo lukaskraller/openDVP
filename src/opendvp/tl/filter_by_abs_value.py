@@ -99,9 +99,9 @@ def filter_by_abs_value(
         if (upper_bound is not None and not (0 <= upper_bound <= 1)):
             raise ValueError("For 'quantile' mode, 'upper_bound' must be between 0 and 1 (inclusive).")
         # Convert to float if provided as int (e.g., 0 or 1) to ensure consistent quantile behavior
-        if lower_bound is not None: 
+        if lower_bound is not None:
             lower_bound = float(lower_bound)
-        if upper_bound is not None: 
+        if upper_bound is not None:
             upper_bound = float(upper_bound)
 
 

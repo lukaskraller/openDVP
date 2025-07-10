@@ -14,7 +14,7 @@ def export_adata(
     checkpoint_name: str,
     export_as_cvs : bool = False,
     metadata_cols : list | None = None,
-    metadata_index : str | None = None, 
+    metadata_index : str | None = None,
     parquet : bool = False,
     perseus : bool = False,
 ) -> None:
@@ -56,13 +56,13 @@ def export_adata(
     >>> adata = ad.AnnData(X=X, obs=obs, var=var)
     >>> export_adata(adata, path_to_dir='checkpoints', checkpoint_name='test', export_as_cvs=True, perseus=True)
     """
-    try:    
+    try:
         os.makedirs(path_to_dir, exist_ok=True)
         os.makedirs(os.path.join(path_to_dir,checkpoint_name), exist_ok=True)
     except Exception as e:
         logger.error(f"Could not create folder, permission problem likely: {e}")
         return
-    
+
     basename = f"{os.path.join(path_to_dir,checkpoint_name)}/{get_datetime()}_{checkpoint_name}_adata"
 
     # Save h5ad file

@@ -8,9 +8,9 @@ from opendvp.utils import logger
 
 
 def export_figure(
-    fig : matplotlib.figure.Figure, 
+    fig : matplotlib.figure.Figure,
     path_to_dir : str,
-    suffix : str, 
+    suffix : str,
     dpi :int = 300
 ) -> None:
     """Save a matplotlib figure as both PDF and SVG files with a timestamped filename.

@@ -3,7 +3,6 @@ from typing import Literal
 
 import anndata as ad
 import numpy as np
-import pandas as pd
 
 from opendvp.utils import logger
 
@@ -47,10 +46,10 @@ def filter_features_byNaNs(
 
     adata_copy = adata.copy()
     initial_protein_count = adata_copy.shape[1]
-    
+
     # Store original var columns before adding any QC metrics
     original_var_columns = adata_copy.var.columns.tolist()
-    
+
     # --- Step 1: Calculate overall QC metrics for all features ---
     logger.info("Calculating overall QC metrics for all features.")
     X_all = np.asarray(adata_copy.X).astype('float64')
@@ -61,7 +60,7 @@ def filter_features_byNaNs(
     adata_copy.var['overall_valid'] = adata_copy.var['overall_nan_proportions'] < (1.0 - threshold)
 
     # Default mask if no grouping
-    proteins_to_keep_mask = adata_copy.var.overall_valid.to_numpy().astype(bool) 
+    proteins_to_keep_mask = adata_copy.var.overall_valid.to_numpy().astype(bool)
 
     # --- Step 2: Calculate group-specific QC metrics if grouping is provided ---
     if grouping:
@@ -71,20 +70,20 @@ def filter_features_byNaNs(
         group_valid_cols = []
         for group in unique_groups:
             adata_group = adata[adata.obs[grouping] == group]
-            logger.info(f" {group} has {adata_group.shape[0]} samples") 
+            logger.info(f" {group} has {adata_group.shape[0]} samples")
             X_group = np.asarray(adata_group.X).astype('float64')
-            
+
             # Calculate metrics for the current group and add directly to adata_copy.var
-            adata_copy.var[f"{group}_mean"] = np.nanmean(X_group, axis=0).round(3)    
+            adata_copy.var[f"{group}_mean"] = np.nanmean(X_group, axis=0).round(3)
             adata_copy.var[f'{group}_nan_count'] = np.isnan(X_group).sum(axis=0)
             adata_copy.var[f'{group}_valid_count'] = (~np.isnan(X_group)).sum(axis=0)
             adata_copy.var[f'{group}_nan_proportions'] = np.isnan(X_group).mean(axis=0).round(3)
-            
+
             # Determine validity for the current group
             current_group_valid_col = f'{group}_valid'
             adata_copy.var[current_group_valid_col] = adata_copy.var[f'{group}_nan_proportions'] < (1.0 - threshold)
             group_valid_cols.append(current_group_valid_col)
-    
+
         # Calculate overall validity columns based on groups
         adata_copy.var['valid_in_all_groups'] = adata_copy.var[group_valid_cols].all(axis=1)
         adata_copy.var['valid_in_any_group'] = adata_copy.var[group_valid_cols].any(axis=1)
@@ -104,7 +103,7 @@ def filter_features_byNaNs(
         # These are kept for consistency with previous versions that didn't have 'overall_' prefix
         adata_copy.var['valid'] = adata_copy.var['overall_valid']
         adata_copy.var['not_valid'] = ~adata_copy.var['overall_valid']
-    
+
     # --- Step 3: Store full QC matrix and perform filtering ---
     # Store the complete adata_copy.var (with all calculated metrics) into adata.uns
     adata_copy.uns['filter_features_byNaNs_qc_metrics'] = adata_copy.var.copy()
@@ -122,7 +121,7 @@ def filter_features_byNaNs(
         final_var_df['mean'] = adata_copy.var['overall_mean']
     if 'overall_nan_proportions' in adata_copy.var.columns:
         final_var_df['nan_proportions'] = adata_copy.var['overall_nan_proportions']
-    
+
     # Assign the new var DataFrame back to adata_copy
     adata_copy.var = final_var_df
 

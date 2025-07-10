@@ -1,9 +1,8 @@
 import ast
-from typing import Sequence
+from collections.abc import Sequence
 
 import anndata as ad
 import geopandas as gpd
-import numpy as np
 import pandas as pd
 
 from opendvp.utils import logger
@@ -70,16 +69,16 @@ def filter_by_annotation(
     missing_cols = [col for col in required_cols if col not in adata.obs.columns]
     if missing_cols:
         raise ValueError(f"Required column(s) missing from adata.obs: {', '.join(missing_cols)}")
-    
+
     # Convert AnnData cell centroids to a GeoDataFrame
     points_gdf = gpd.GeoDataFrame(
         adata_copy.obs, geometry=gpd.points_from_xy(adata_copy.obs[x_y[0]], adata_copy.obs[x_y[1]]), crs=gdf.crs
-    )    
+    )
     # Perform spatial join: find which points fall within which polygons
     joined = gpd.sjoin(points_gdf, gdf[['geometry', 'class_name']], how='left', predicate='within')
 
     # --- Process spatial join results to create annotation columns ---
-    
+
     # 1. Create boolean columns for each unique annotation class
     annotated_cells = joined.dropna(subset=['class_name'])
 
@@ -109,7 +108,7 @@ def filter_by_annotation(
     num_annotations = annotation_presence[actual_annotation_cols].sum(axis=1)
     annotation_presence['annotation'] = 'Unannotated'
     annotation_presence.loc[num_annotations > 1, 'annotation'] = 'MIXED'
-    
+
     # Set single class name for cells in exactly one annotation
     single_mask = num_annotations == 1
     if single_mask.any():

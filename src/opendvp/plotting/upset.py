@@ -69,7 +69,7 @@ def upset(
         .agg(lambda x: x.sum() / len(x) >= min_presence_fraction)
         .T  # transpose to have variables as rows, groups as columns
     )
-    
+
     if grouped_presence.shape[1] == 0:
         raise ValueError("No variables passed the presence filter for any group.")
 

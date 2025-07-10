@@ -8,8 +8,8 @@ from opendvp.utils import logger
 
 
 def parse_color_for_qupath(
-    color_dict : dict | None, 
-    adata : ad.AnnData, 
+    color_dict : dict | None,
+    adata : ad.AnnData,
     adata_obs_key : str
 ) -> dict:
     """Parse and convert color definitions to a format compatible with QuPath.
@@ -29,8 +29,8 @@ def parse_color_for_qupath(
         Dictionary mapping category names to [R, G, B] lists with values in the range 0-255.
     """
     logger.info("Parsing colors compatible with QuPath")
-    
-    if color_dict is None: 
+
+    if color_dict is None:
         logger.info("No color_dict found, using defaults")
         default_colors = [[31, 119, 180], [255, 127, 14], [44, 160, 44], [214, 39, 40], [148, 103, 189]]
         color_cycle = cycle(default_colors)
@@ -43,7 +43,7 @@ def parse_color_for_qupath(
         )
         logger.info(f"color_dict created: {parsed_colors}")
     else:
-        logger.info("Custom color dictionary passed, adapting to QuPath color format")  
+        logger.info("Custom color dictionary passed, adapting to QuPath color format")
         parsed_colors = {}
         for name, color in color_dict.items():
             if isinstance(color, tuple) and len(color) == 3:
@@ -58,5 +58,5 @@ def parse_color_for_qupath(
                 parsed_colors[name] = list(int(c * 255) for c in parsed_colors[name])
             else:
                 raise ValueError(f"Invalid color format for '{name}': {color}")
-            
+
     return parsed_colors

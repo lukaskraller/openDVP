@@ -25,10 +25,10 @@ def sample_adata() -> ad.AnnData:
     adata.obs["cell_size"] = rng.normal(loc=50, scale=10, size=n_obs)
     adata.obs["cell_density"] = rng.uniform(0.1, 1.0, size=n_obs)
     adata.obs["patient_id"] = [f"P{i // 50}" for i in range(n_obs)]  # Non-numeric for type check
-    
+
     # Deliberate duplicate name to test ambiguity error
     # This 'marker_0' in obs will conflict with 'marker_0' in var_names
-    adata.obs["marker_0"] = rng.normal(loc=10, scale=2, size=n_obs) 
+    adata.obs["marker_0"] = rng.normal(loc=10, scale=2, size=n_obs)
 
     return adata
 
@@ -40,13 +40,13 @@ def test_filter_x_absolute_lower_bound(sample_adata):
     feature_name = "marker_1"
     lower_bound = 10.0
     adata_filtered = filter_by_abs_value(sample_adata, feature_name, lower_bound=lower_bound, mode='absolute')
-    
+
     filter_col = f"{feature_name}_filter"
     assert filter_col in adata_filtered.obs.columns
     mask = adata_filtered.obs[filter_col]
-    
+
     original_data = pd.Series(sample_adata[:, feature_name].X.flatten(), index=sample_adata.obs_names)
-    
+
     # All cells marked True must meet the condition
     assert (original_data[mask] >= lower_bound).all()
     # No cells marked False should meet the condition
@@ -59,12 +59,12 @@ def test_filter_x_absolute_upper_bound(sample_adata):
     feature_name = "marker_2"
     upper_bound = 9.0
     adata_filtered = filter_by_abs_value(sample_adata, feature_name, upper_bound=upper_bound, mode='absolute')
-    
+
     filter_col = f"{feature_name}_filter"
     assert filter_col in adata_filtered.obs.columns
     mask = adata_filtered.obs[filter_col] # type: ignore
     original_data = pd.Series(sample_adata[:, feature_name].X.flatten(), index=sample_adata.obs_names)
-    
+
     assert (original_data[mask] <= upper_bound).all()
     assert not (original_data[~mask] <= upper_bound).any()
     assert mask.sum() > 0 and mask.sum() < sample_adata.n_obs
@@ -75,12 +75,12 @@ def test_filter_x_absolute_range(sample_adata):
     lower_bound = 9.0
     upper_bound = 11.0
     adata_filtered = filter_by_abs_value(sample_adata, feature_name, lower_bound=lower_bound, upper_bound=upper_bound, mode='absolute')
-    
+
     filter_col = f"{feature_name}_filter"
     assert filter_col in adata_filtered.obs.columns
     mask = adata_filtered.obs[filter_col] # type: ignore
     original_data = pd.Series(sample_adata[:, feature_name].X.flatten(), index=sample_adata.obs_names)
-    
+
     assert ((original_data[mask] >= lower_bound) & (original_data[mask] <= upper_bound)).all()
     assert not ((original_data[~mask] >= lower_bound) & (original_data[~mask] <= upper_bound)).any()
     assert mask.sum() > 0 and mask.sum() < sample_adata.n_obs
@@ -90,12 +90,12 @@ def test_filter_x_quantile_lower_bound(sample_adata):
     feature_name = "marker_4"
     lower_bound = 0.25
     adata_filtered = filter_by_abs_value(sample_adata, feature_name, lower_bound=lower_bound, mode='quantile')
-    
+
     filter_col = f"{feature_name}_filter"
     assert filter_col in adata_filtered.obs.columns
     mask = adata_filtered.obs[filter_col] # type: ignore
     original_data = pd.Series(sample_adata[:, feature_name].X.flatten(), index=sample_adata.obs_names)
-    
+
     actual_lower_threshold = original_data.quantile(lower_bound)
     assert (original_data[mask] >= actual_lower_threshold).all()
     assert not (original_data[~mask] >= actual_lower_threshold).any()
@@ -106,12 +106,12 @@ def test_filter_x_quantile_upper_bound(sample_adata):
     feature_name = "marker_1" # Re-use marker_1
     upper_bound = 0.75
     adata_filtered = filter_by_abs_value(sample_adata, feature_name, upper_bound=upper_bound, mode='quantile')
-    
+
     filter_col = f"{feature_name}_filter"
     assert filter_col in adata_filtered.obs.columns
     mask = adata_filtered.obs[filter_col] # type: ignore
     original_data = pd.Series(sample_adata[:, feature_name].X.flatten(), index=sample_adata.obs_names)
-    
+
     actual_upper_threshold = original_data.quantile(upper_bound)
     assert (original_data[mask] <= actual_upper_threshold).all()
     assert not (original_data[~mask] <= actual_upper_threshold).any()
@@ -123,15 +123,15 @@ def test_filter_x_quantile_range(sample_adata):
     lower_bound = 0.1
     upper_bound = 0.9
     adata_filtered = filter_by_abs_value(sample_adata, feature_name, lower_bound=lower_bound, upper_bound=upper_bound, mode='quantile')
-    
+
     filter_col = f"{feature_name}_filter"
     assert filter_col in adata_filtered.obs.columns
     mask = adata_filtered.obs[filter_col] # type: ignore
     original_data = pd.Series(sample_adata[:, feature_name].X.flatten(), index=sample_adata.obs_names)
-    
+
     actual_lower_threshold = original_data.quantile(lower_bound)
     actual_upper_threshold = original_data.quantile(upper_bound)
-    
+
     assert ((original_data[mask] >= actual_lower_threshold) & (original_data[mask] <= actual_upper_threshold)).all()
     assert not ((original_data[~mask] >= actual_lower_threshold) & (original_data[~mask] <= actual_upper_threshold)).any()
     assert mask.sum() > 0 and mask.sum() < sample_adata.n_obs
@@ -144,12 +144,12 @@ def test_filter_obs_absolute_lower_bound(sample_adata):
     feature_name = "cell_size"
     lower_bound = 55.0
     adata_filtered = filter_by_abs_value(sample_adata, feature_name, lower_bound=lower_bound, mode='absolute')
-    
+
     filter_col = f"{feature_name}_filter"
     assert filter_col in adata_filtered.obs.columns
     mask = adata_filtered.obs[filter_col]
     original_data = sample_adata.obs[feature_name]
-    
+
     assert (original_data[mask] >= lower_bound).all()
     assert not (original_data[~mask] >= lower_bound).any()
     assert mask.sum() > 0 and mask.sum() < sample_adata.n_obs
@@ -160,15 +160,15 @@ def test_filter_obs_quantile_range(sample_adata):
     lower_bound = 0.2
     upper_bound = 0.8
     adata_filtered = filter_by_abs_value(sample_adata, feature_name, lower_bound=lower_bound, upper_bound=upper_bound, mode='quantile')
-    
+
     filter_col = f"{feature_name}_filter"
     assert filter_col in adata_filtered.obs.columns
     mask = adata_filtered.obs[filter_col]
     original_data = sample_adata.obs[feature_name]
-    
+
     actual_lower_threshold = original_data.quantile(lower_bound)
     actual_upper_threshold = original_data.quantile(upper_bound)
-    
+
     assert ((original_data[mask] >= actual_lower_threshold) & (original_data[mask] <= actual_upper_threshold)).all()
     assert not ((original_data[~mask] >= actual_lower_threshold) & (original_data[~mask] <= actual_upper_threshold)).any()
     assert mask.sum() > 0 and mask.sum() < sample_adata.n_obs
@@ -223,9 +223,9 @@ def test_returns_copy_not_view(sample_adata):
     feature_name = "marker_1"
     lower_bound = 10.0
     adata_filtered = filter_by_abs_value(sample_adata, feature_name, lower_bound=lower_bound, mode='absolute')
-    
+
     assert adata_filtered is not sample_adata # Ensure it's a distinct object
-    
+
     # Modify the copy and ensure original is unchanged
     filter_col = f"{feature_name}_filter"
     adata_filtered.obs[filter_col].iloc[0] = False

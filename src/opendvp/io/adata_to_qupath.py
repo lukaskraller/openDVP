@@ -4,7 +4,7 @@ import geopandas
 from opendvp.utils import logger, parse_color_for_qupath
 
 
-def adata_to_qupath(  # noqa: C901
+def adata_to_qupath(
     adata: ad.AnnData,
     geodataframe: geopandas.GeoDataFrame,
     adataobs_on: str = "CellID",
@@ -92,10 +92,10 @@ def adata_to_qupath(  # noqa: C901
             raise ValueError(f"The {classify_by} contains NaN values")
         if adata.obs[classify_by].dtype.name != 'category':
             logger.warning(f"{classify_by} is not a categorical, converting to categorical")
-            adata.obs[classify_by] = adata.obs[classify_by].astype('category')        
+            adata.obs[classify_by] = adata.obs[classify_by].astype('category')
     if color_dict and not isinstance(color_dict,dict):
         raise ValueError("provided color_dict is not a dict")
-    
+
     # Check matches between adata and geodataframe
     adata_index_values = set(adata.obs[adataobs_on])
     gdf_index_values = set(geodataframe[gdf_on]) if gdf_on else set(geodataframe.index)

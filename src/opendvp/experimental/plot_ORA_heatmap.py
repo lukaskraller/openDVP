@@ -10,15 +10,15 @@ def get_datetime():
     return time.strftime("%Y%m%d_%H%M%S")
 
 def plot_ORA_heatmap(
-        adata, 
-        msigdb, 
-        collection, 
-        groupby_analysis, 
-        groupby_plot, 
-        n_pathways, 
+        adata,
+        msigdb,
+        collection,
+        groupby_analysis,
+        groupby_plot,
+        n_pathways,
         return_adata=False,
         return_acts=False,
-        **kwargs): 
+        **kwargs):
     """Description:
         Perform an Over-Representation Analysis (ORA) using the Decoupler package and plot the results as a heatmap.
     Parameters:
@@ -65,8 +65,8 @@ def plot_ORA_heatmap(
 
     print("Plotting heatmap using scanpy")
     sc.pl.matrixplot(adata=acts,
-                var_names=source_markers, 
-                groupby=groupby_plot, 
+                var_names=source_markers,
+                groupby=groupby_plot,
                 dendrogram=True,
                 cmap='coolwarm',
                 **kwargs

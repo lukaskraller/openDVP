@@ -74,7 +74,7 @@ def volcano(
 
     sns.scatterplot(x=df[x], y=df[y], ax=ax, color='gray', s=20, edgecolor=None, **kwargs)
 
-    
+
     if significant:
         if FDR is None:
             raise ValueError("FDR must be specified if significant=True.")
@@ -99,14 +99,14 @@ def volcano(
             expand_points=(1.2, 1.2),
             arrowprops=dict(arrowstyle="-", color='black', lw=0.5, alpha=0.5)
         )
-    
+
     if highlight_genes is not None:
         highlight_genes_found = [g for g in highlight_genes if g in df.index]
 
         if len(highlight_genes_found) > 0:
             highlight_df = df.loc[highlight_genes_found]
             ax.scatter(highlight_df[x], highlight_df[y], color="blue", s=20, edgecolor='black', zorder=5, alpha=0.7)
-            
+
             if show_highlighted_genes_names:
                 texts_highlight = [
                     ax.text(row[x], row[y], idx, ha='center', va='bottom', fontsize=9, fontweight='bold', color='blue')
@@ -118,13 +118,13 @@ def volcano(
                     expand_points=(1.2, 1.2),
                     arrowprops=dict(arrowstyle="-", color='blue', lw=0.5, alpha=0.5)
                 )
-    
+
     if group1 is not None and group2 is not None:
         ax.set_xlabel(f"Difference in mean protein expression (log2)\n{group1} (right) vs {group2} (left)")
     else:
         ax.set_xlabel(x)
     ax.set_ylabel(y)
-    
+
     ax.grid(False)
 
     # plotting logic

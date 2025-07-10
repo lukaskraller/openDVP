@@ -19,13 +19,13 @@ def get_datetime():
 
 
 def plot_MLM_heatmap(
-        adata, 
-        groupby_analysis, 
-        groupby_plot, 
-        n_pathways, 
+        adata,
+        groupby_analysis,
+        groupby_plot,
+        n_pathways,
         return_adata=False,
         return_acts=False,
-        **kwargs): 
+        **kwargs):
     """Description:
         Perform an Over-Representation Analysis (ORA) using the Decoupler package and plot the results as a heatmap.
     Parameters:
@@ -67,8 +67,8 @@ def plot_MLM_heatmap(
 
     print("Plotting heatmap using scanpy")
     sc.pl.matrixplot(adata=acts,
-                var_names=source_markers, 
-                groupby=groupby_plot, 
+                var_names=source_markers,
+                groupby=groupby_plot,
                 dendrogram=True,
                 cmap='coolwarm',
                 **kwargs
@@ -85,7 +85,7 @@ def plot_MLM_heatmap(
     else:
         print("Done")
         return None
-    
+
 
 def plot_MLM_source_variables(
     adata: ad.AnnData,
@@ -115,7 +115,7 @@ def plot_MLM_source_variables(
     # msigdb = msigdb[~msigdb.duplicated(['geneset', 'genesymbol'], keep='first')]
 
     progeny = dc.get_progeny(organism='human', top=500)
-    
+
     pathway_genes = progeny[progeny['source'] == geneset]['target'].tolist()
 
     # Check how many genes from geneset are present in adata.var.index

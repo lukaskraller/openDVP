@@ -39,14 +39,14 @@ def ensure_one_based_index(adata, cellid_col="CellID"):
     # Check if the column exists
     if cellid_col not in adata.obs.columns:
         raise ValueError(f"Column '{cellid_col}' not found in adata.obs.")
-    
+
     # Ensure the CellID column and index are integers
     if not np.issubdtype(adata.obs[cellid_col].dtype, np.integer):
         adata.obs[cellid_col] = adata.obs[cellid_col].astype(int)
 
     if not np.issubdtype(adata.obs.index.dtype, np.integer):
         adata.obs.index = adata.obs.index.astype(int)
-    
+
     # Check if both are 0-based and increment if needed
     if (adata.obs[cellid_col].min() == 0) and (adata.obs.index.min() == 0):
         adata.obs[cellid_col] += 1
@@ -54,7 +54,7 @@ def ensure_one_based_index(adata, cellid_col="CellID"):
         print(f"✅ Incremented '{cellid_col}' and index to 1-based numbering.")
     else:
         print("⏭️ Skipping increment: CellID or index is not 0-based.")
-    
+
     return adata
 
 
@@ -65,10 +65,10 @@ def create_vertical_legend(color_dict, title="Legend"):
     ax.set_axis_off()
 
     patches = [
-        plt.Line2D([0], [0], marker='o', color=color, markersize=10, label=label, linestyle='None') 
+        plt.Line2D([0], [0], marker='o', color=color, markersize=10, label=label, linestyle='None')
         for label, color in color_dict.items()
     ]
-    
+
     # Draw legend as a vertical list
     legend = ax.legend(
         handles=patches,
@@ -78,7 +78,7 @@ def create_vertical_legend(color_dict, title="Legend"):
         bbox_to_anchor=(0, 0.5),
         alignment="left"
     )
-    
+
     return fig
 
 

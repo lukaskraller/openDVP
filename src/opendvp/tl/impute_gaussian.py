@@ -85,7 +85,7 @@ def impute_gaussian(
             shifted_random_values = np.random.normal(
                 loc=(col_mean + (mean_shift * col_stddev)),
                 scale=(col_stddev * std_dev_shift),size=num_nans)
-            
+
             #store in qc_metrics as a string (h5ad doesnt write lists or arrays)
             qc_metrics.loc[col, 'imputed_values'] = floats_to_str(shifted_random_values)
             impute_df.loc[nan_mask, col] = shifted_random_values
@@ -100,12 +100,12 @@ def impute_gaussian(
         logger.warning("Negative values found after imputation. Impute log-transformed data instead.")
 
     adata_copy.X = impute_df.to_numpy()
-    
+
     qc_metrics['n_imputed'] = qc_metrics['n_imputed'].astype(int)
     qc_metrics['imputation_mean'] = qc_metrics['imputation_mean'].astype(float)
     qc_metrics['imputation_stddev'] = qc_metrics['imputation_stddev'].astype(float)
     adata_copy.uns[uns_key] = qc_metrics
-    
+
     logger.info(f"Imputation complete. QC metrics stored in `adata.uns['{uns_key}']`.")
 
     return adata_copy

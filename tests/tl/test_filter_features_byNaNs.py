@@ -12,7 +12,7 @@ from opendvp.tl.filter_features_byNaNs import filter_features_byNaNs
 def create_test_adata(
     n_obs=10,
     n_vars=5,
-    nan_pattern : Literal['random', 'structured', 'all_valid', 'all_nan'] | None = None,  
+    nan_pattern : Literal['random', 'structured', 'all_valid', 'all_nan'] | None = None,
     grouping_col=None,
     var_cols=None
 ):
@@ -37,7 +37,7 @@ def create_test_adata(
     obs = pd.DataFrame(index=[f'cell_{i}' for i in range(n_obs)])
     if grouping_col:
         obs[grouping_col] = ['groupA'] * (n_obs // 2) + ['groupB'] * (n_obs - n_obs // 2)
-    
+
     var_data = {'original_col_1': [f'gene_{i}' for i in range(n_vars)],
                 'original_col_2': np.arange(n_vars)}
     if var_cols:
@@ -204,7 +204,7 @@ def test_grouping_column_not_found_raises_key_error():
     adata = create_test_adata(grouping_col=None) # No grouping column
     with pytest.raises(KeyError): # pandas will raise KeyError if column not found
         filter_features_byNaNs(adata, grouping='non_existent_group')
-        
+
 
 def test_no_nans_in_data_all_kept():
     adata = create_test_adata(n_obs=10, n_vars=5, nan_pattern='all_valid')
@@ -240,7 +240,7 @@ def test_qc_metrics_in_uns_completeness_with_grouping():
     qc_df = filtered_adata.uns['filter_features_byNaNs_qc_metrics']
     assert isinstance(qc_df, pd.DataFrame)
     assert qc_df.shape[0] == adata.shape[1] # All original proteins
-    
+
     # Check for overall metrics
     assert 'overall_mean' in qc_df.columns
     assert 'overall_nan_count' in qc_df.columns

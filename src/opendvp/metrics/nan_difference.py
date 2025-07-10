@@ -25,7 +25,7 @@ def nan_difference(
     """
     if array1.shape != array2.shape:
         raise ValueError(f"Shape mismatch: array1.shape={array1.shape}, array2.shape={array2.shape}")
-    
+
     total_elements = array1.size
     nan_mask1 = np.isnan(array1)
     nan_mask2 = np.isnan(array2)
@@ -33,5 +33,5 @@ def nan_difference(
     # XOR is True only if inputs are different (one True, one False)
     mismatch_mask = np.logical_xor(nan_mask1, nan_mask2)
     mismatch_count = int(np.sum(mismatch_mask))
-    
+
     return mismatch_count, total_elements

@@ -38,7 +38,7 @@ def stats_ttest(
     """
     if group1 not in adata.obs[grouping].unique() or group2 not in adata.obs[grouping].unique():
         raise ValueError(f"Given groups not found in {grouping}")
-    
+
     adata_copy = adata.copy()
     t_values = []
     p_values = []

@@ -5,8 +5,8 @@ from opendvp.utils import logger
 
 
 def import_thresholds(
-    gates_csv_path :str, 
-    sample_id : str | int | None = None, 
+    gates_csv_path :str,
+    sample_id : str | int | None = None,
     scimap: bool = True
 ) -> pd.DataFrame:
     """Read gate thresholds from a CSV file, filter, and optionally log1p-transform for scimap compatibility.
@@ -65,7 +65,7 @@ def import_thresholds(
         gates_for_scimap = gates_copy[['marker_id', 'log1p_gate_value']]
         gates_for_scimap = gates_for_scimap.rename(
             columns={
-                'marker_id': 'markers', 
+                'marker_id': 'markers',
                 'log1p_gate_value': sample_id if sample_id is not None else 'log1p_gate_value'})
         logger.info(f"   Output DataFrame columns: {gates_for_scimap.columns.tolist()}")
         return gates_for_scimap

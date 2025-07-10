@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Created on Fri Feb 26 19:47:10 2021
 # @author: Ajit Johnson Nirmal
 
-"""
-!!! abstract "Short Description"
+"""!!! abstract "Short Description"
     `sm.tl.spatial_lda`: This function constructs a neighborhood matrix based on 
     user-specified categorical variables, such as cell types, 
     and applies Latent Dirichlet Allocation (LDA) to model the latent space of 
@@ -19,33 +17,33 @@
 """
 
 #Import
-from sklearn.neighbors import BallTree
-import numpy as np
-import pandas as pd
 import re
 
 # Gensim
 import gensim
 import gensim.corpora as corpora
+import numpy as np
+import pandas as pd
 from gensim.models import CoherenceModel
+from sklearn.neighbors import BallTree
+
 
 # Function
-def scimap_spatial_lda(adata, 
+def scimap_spatial_lda(adata,
                  x_coordinate='X_centroid',
                  y_coordinate='Y_centroid',
                  z_coordinate= None,
-                 phenotype='phenotype', 
-                 method='radius', 
-                 radius=30, 
+                 phenotype='phenotype',
+                 method='radius',
+                 radius=30,
                  knn=10,
                  imageid='imageid',
-                 num_motifs=10, 
-                 random_state=0, 
+                 num_motifs=10,
+                 random_state=0,
                  subset=None,
                  verbose=True,
                  label='spatial_lda',**kwargs):
-    """
-Parameters:
+    """Parameters:
         adata (anndata.AnnData):  
             AnnData object, containing spatial gene expression data.
 
@@ -88,11 +86,11 @@ Parameters:
         label (str, optional):  
             Custom label for storing results in `adata.uns`.
 
-Returns:
+    Returns:
         adata (anndata.AnnData):  
             The input `adata` object, updated with spatial LDA results in `adata.uns[label]`.
 
-Example:
+    Example:
         ```python
         
         # Analyze spatial motifs using the radius method 
@@ -111,17 +109,15 @@ Example:
         ```
     
     """
-    
-
     # Function
-    def spatial_lda_internal (adata_subset, x_coordinate,y_coordinate,z_coordinate,phenotype, 
+    def spatial_lda_internal (adata_subset, x_coordinate,y_coordinate,z_coordinate,phenotype,
                               method, radius, knn, imageid):
-        
+
         # Print which image is being processed
         if verbose:
             print('Processing: ' + str(np.unique(adata_subset.obs[imageid])))
-        
-        
+
+
         # Create a dataFrame with the necessary inforamtion
         if z_coordinate is not None:
             if verbose:
@@ -130,13 +126,13 @@ Example:
         else:
             data = pd.DataFrame({'x': adata_subset.obs[x_coordinate], 'y': adata_subset.obs[y_coordinate], 'phenotype': adata_subset.obs[phenotype]})
 
-        
+
         # Create a DataFrame with the necessary inforamtion
         #data = pd.DataFrame({'x': adata_subset.obs[x_coordinate], 'y': adata_subset.obs[y_coordinate], 'phenotype': adata_subset.obs[phenotype]})
-        
+
         # Identify neighbourhoods based on the method used
         # a) KNN method
-        
+
         if method == 'knn':
             if verbose:
                 print("Identifying the " + str(knn) + " nearest neighbours for every cell")
@@ -147,17 +143,17 @@ Example:
                 tree = BallTree(data[['x','y']], leaf_size= 2)
                 ind = tree.query(data[['x','y']], k=knn, return_distance= False)
             ind = list(np.array(item) for item in ind)
-                
+
 
         # b) Local radius method
         if method == 'radius':
             if verbose:
                 print("Identifying neighbours within " + str(radius) + " pixels of every cell")
             if z_coordinate is not None:
-                kdt = BallTree(data[['x','y','z']], metric='euclidean') 
+                kdt = BallTree(data[['x','y','z']], metric='euclidean')
                 ind = kdt.query_radius(data[['x','y','z']], r=radius, return_distance=False)
             else:
-                kdt = BallTree(data[['x','y']], metric='euclidean') 
+                kdt = BallTree(data[['x','y']], metric='euclidean')
                 ind = kdt.query_radius(data[['x','y']], r=radius, return_distance=False)
 
 
@@ -169,46 +165,46 @@ Example:
 #             ind = tree.query(data[['x','y']], k=knn, return_distance= False)
 #             #ind = [np.array(x) for x in ind]
 #             ind = list(np.array(item) for item in ind)
-#             
+#
 #         # b) Local radius method
 #         if method == 'radius':
 #             if verbose:
 #                 print("Identifying neighbours within " + str(radius) + " pixels of every cell")
-#             kdt = BallTree(data[['x','y']], leaf_size= 2) 
+#             kdt = BallTree(data[['x','y']], leaf_size= 2)
 #             ind = kdt.query_radius(data[['x','y']], r=radius, return_distance=False)
-#             
+#
 # =============================================================================
 
         # Map phenotype
-        phenomap = dict(zip(list(range(len(ind))), data['phenotype'])) # Used for mapping
+        phenomap = dict(zip(list(range(len(ind))), data['phenotype'], strict=False)) # Used for mapping
         for i in range(len(ind)):
             ind[i] = [phenomap[letter] for letter in ind[i]]
-            
+
         # return
         return ind
-    
+
     # Subset a particular image if needed
     if subset is not None:
         adata_list = [adata[adata.obs[imageid] == subset]]
     else:
         adata_list = [adata[adata.obs[imageid] == i] for i in adata.obs[imageid].unique()]
-        
+
     # Apply function to all images
-    # Create lamda function 
+    # Create lamda function
     r_spatial_lda_internal = lambda x: spatial_lda_internal(adata_subset=x,
                                                             x_coordinate=x_coordinate,
                                                             y_coordinate=y_coordinate,
                                                             z_coordinate=z_coordinate,
-                                                            phenotype=phenotype, 
-                                                            method=method, 
-                                                            radius=radius, 
-                                                            knn=knn, 
-                                                            imageid=imageid) 
-    all_data = list(map(r_spatial_lda_internal, adata_list)) # Apply function 
-    
+                                                            phenotype=phenotype,
+                                                            method=method,
+                                                            radius=radius,
+                                                            knn=knn,
+                                                            imageid=imageid)
+    all_data = list(map(r_spatial_lda_internal, adata_list)) # Apply function
+
     # combine all the data into one
     texts = np.concatenate( all_data, axis=0 ).tolist()
-    
+
     # LDA pre-processing
     if verbose:
         print ('Pre-Processing Spatial LDA')
@@ -217,21 +213,21 @@ Example:
 
     # Term Document Frequency
     corpus = [id2word.doc2bow(text) for text in texts]
-    
+
     # Build LDA model
     if verbose:
         print ('Training Spatial LDA')
     try:
         lda_model = gensim.models.ldamulticore.LdaMulticore(corpus=corpus,
                                                    id2word=id2word,
-                                                   num_topics=num_motifs, 
+                                                   num_topics=num_motifs,
                                                    random_state=random_state,**kwargs)
     except:
         lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
                                                    id2word=id2word,
-                                                   num_topics=num_motifs, 
+                                                   num_topics=num_motifs,
                                                    random_state=random_state,**kwargs)
-    
+
     # Compute Coherence Score
     if verbose:
         print ('Calculating the Coherence Score')
@@ -252,9 +248,9 @@ Example:
     # conver to dataframe
     arr = pd.DataFrame(topic_weights, index=adata.obs.index).fillna(0)
     arr = arr.add_prefix('Motif_')
-    
+
     # isolate the weights of phenotypes
-    pattern = "(\d\.\d+).\"(.*?)\""
+    pattern = "(\\d\\.\\d+).\"(.*?)\""
     cell_weight = pd.DataFrame(index=np.unique(adata.obs[phenotype]))
     for i in range(0, len(lda_model.print_topics())):
         level1 = lda_model.print_topics()[i][1]
@@ -265,11 +261,11 @@ Example:
         cell_weight = cell_weight.merge(tmp, how='outer', left_index=True, right_index=True)
     # fill zeros
     cell_weight = cell_weight.fillna(0).astype(float)
-    
+
     # save the results in anndata object
     adata.uns[label] = arr # save the weight for each cell
     adata.uns[str(label)+'_probability'] = cell_weight # weights of each cell type
     #adata.uns[str(label)+'_model'] = lda_model
-    
+
     # return
     return adata

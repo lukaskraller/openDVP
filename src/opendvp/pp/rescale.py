@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Created on Fri Mar  6 12:13:22 2020
 # @author: Ajit Johnson Nirmal
 
-"""
-!!! abstract "Short Description"
+"""!!! abstract "Short Description"
     `sm.pp.rescale`: The function allows users to rescale the data. This step is often performed to standardize the 
     the expression of all markers to a common scale. The rescaling can be either performed automatically or manually. 
     User defined gates can be passed to rescale the data manually, else the algorithm fits a GMM (gaussian mixed model) to 
@@ -14,13 +12,14 @@
 """
 
 # Import library
-import pandas as pd
-import numpy as np
 import argparse
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.mixture import GaussianMixture
-import anndata as ad
 import json
+
+import anndata as ad
+import numpy as np
+import pandas as pd
+from sklearn.mixture import GaussianMixture
+from sklearn.preprocessing import MinMaxScaler
 
 
 # Function
@@ -35,8 +34,7 @@ def rescale(
     random_state=0,
     gmm_components=3,
 ):
-    """
-    Parameters:
+    """Parameters:
         adata (AnnData Object, required):
             An annotated data object that contains single-cell expression data.
 
@@ -94,7 +92,6 @@ def rescale(
         ```
 
     """
-
     # log=True; imageid='imageid'; failed_markers=None; method='all'; random_state=0
 
     # make a copy to raw data if raw is none
@@ -126,7 +123,7 @@ def rescale(
             gate_mapping.gate = gate_mapping.gate.fillna(
                 gate_mapping.markers.map(
                     dict(
-                        zip(gate['markers'], gate['gates'])
+                        zip(gate['markers'], gate['gates'], strict=False)
                     )  # these columns are hardcoded in CSV
                 )
             )
@@ -310,7 +307,7 @@ def rescale(
         gates = list(map(r_gmm_gating, marker_to_gate))
         # create a df with results
         result = image_specific[image_specific.gate.isnull()]
-        mapping = dict(zip(marker_to_gate, gates))
+        mapping = dict(zip(marker_to_gate, gates, strict=False))
         for i in result.index:
             result.loc[i, 'gate'] = mapping[result.loc[i, 'markers']]
         # result['gate'] = result['gate'].fillna(result['markers'].map(dict(zip(marker_to_gate, gates))))
@@ -340,7 +337,7 @@ def rescale(
         result = pd.concat(result, join='outer')
         # use this to merge with gate_mapping
         gate_mapping.gate = gate_mapping.gate.fillna(
-            gate_mapping.markers.map(dict(zip(result.markers, result.gate)))
+            gate_mapping.markers.map(dict(zip(result.markers, result.gate, strict=False)))
         )
 
     # Rescaling function
@@ -530,7 +527,7 @@ if __name__ == '__main__':
     # Load failed markers if provided
     failed_markers = None
     if args.failed_markers:
-        with open(args.failed_markers, 'r') as f:
+        with open(args.failed_markers) as f:
             failed_markers = json.load(f)
 
     # Call the function

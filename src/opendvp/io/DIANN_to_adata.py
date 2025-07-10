@@ -79,11 +79,11 @@ def DIANN_to_adata(
         sample_metadata = pd.DataFrame(index=rawdata.index)
 
     # check sample_metadata filename_paths are unique, and matches df
-    if set(sample_metadata.index) != set(rawdata.index): 
+    if set(sample_metadata.index) != set(rawdata.index):
         logger.warning("uniques from sample metadata and DIANN table do not match")
         logger.warning("check n_of_protein_metadata_cols, it varies per DIANN version")
         raise ValueError("uniques don't match")
-    
+
     if rawdata.shape[0] != sample_metadata.shape[0]:
         logger.error("Number of samples in DIANN output and metadata do not match")
 
@@ -92,10 +92,10 @@ def DIANN_to_adata(
 
     # create adata object
     adata = ad.AnnData(
-        X=rawdata.to_numpy().astype(np.float64), 
-        obs=sample_metadata_aligned, 
+        X=rawdata.to_numpy().astype(np.float64),
+        obs=sample_metadata_aligned,
         var=protein_metadata)
-    
+
     if adata.var.index.has_duplicates:
         logger.info("Duplicate genes found from different protein groups")
         logger.info(f"{adata.var.index[adata.var.index.duplicated()].unique().tolist()}")

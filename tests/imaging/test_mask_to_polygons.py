@@ -7,6 +7,7 @@ import pytest
 import tifffile
 from shapely.geometry import MultiPolygon, Polygon
 
+
 # Helper function for counting coordinates in geometries
 def _count_coords(geometry):
     """Counts total coordinates in a Polygon or MultiPolygon."""
@@ -145,7 +146,7 @@ def test_simplify_geometry(create_temp_mask_tif):
     assert _count_coords(gdf_simplified.iloc[0]['geometry']) <= _count_coords(gdf_original.iloc[0]['geometry'])
     # Area should be approximately the same
     assert gdf_simplified.iloc[0]['geometry'].area == pytest.approx(gdf_original.iloc[0]['geometry'].area, rel=0.1)
-    
+
 
 def test_max_memory_mb_raises_error(create_temp_mask_tif):
     """Test that ValueError is raised for exceeding max_memory_mb."""

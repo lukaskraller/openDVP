@@ -8,13 +8,13 @@ from opendvp.tl import spatial_autocorrelation
 # --- Fixtures ---
 
 def create_adata_spatial(
-        grid_size: int = 20, 
-        spacing: int = 1, 
-        checker_block_size: int = 1, 
+        grid_size: int = 20,
+        spacing: int = 1,
+        checker_block_size: int = 1,
         seed: int = 42) -> ad.AnnData:
 
     rng = np.random.default_rng(seed)
-    
+
     # Generate grid coordinates
     x_indices, y_indices = np.meshgrid(
         np.arange(grid_size),
@@ -114,7 +114,7 @@ def test_moran_i_values(adata_spatial):
     """Test the logical correctness of Moran's I values for patterned data."""
     k = 6
     spatial_autocorrelation(adata_spatial, method="moran", k=k)
-    
+
     # Gene with positive spatial gradient should have high positive Moran's I
     moran_i_gradient = adata_spatial.var.loc['gene_gradient_x', f'Moran_I_k{k}']
     p_val_gradient = adata_spatial.var.loc['gene_gradient_x', f'Moran_p_sim_k{k}']
@@ -159,7 +159,7 @@ def test_handling_problematic_genes(adata_spatial):
     """Test that genes with constant or NaN values are handled gracefully."""
     k = 5
     spatial_autocorrelation(adata_spatial, method="moran", k=k)
- 
+
     # Check that the results are NaN as expected
     assert np.isnan(adata_spatial.var.loc['gene_constant', f'Moran_I_k{k}'])
     assert np.isnan(adata_spatial.var.loc['gene_with_nan', f'Moran_I_k{k}'])
