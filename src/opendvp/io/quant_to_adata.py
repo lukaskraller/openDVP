@@ -3,13 +3,14 @@ import pandas as pd
 
 from opendvp.utils import logger
 
-#TODO not general enough, exemplar001 fails
+# TODO not general enough, exemplar001 fails
+
 
 def quant_to_adata(
-        path: str,
-        index_into_1_based : str | None = "CellID",
-        meta_columns : list | None = None,
-        ) -> ad.AnnData:
+    path: str,
+    index_into_1_based: str | None = "CellID",
+    meta_columns: list | None = None,
+) -> ad.AnnData:
     """Convert cell quantification CSV data to an AnnData object for downstream analysis.
 
     This module provides a function to read a CSV file containing single-cell quantification data.
@@ -33,7 +34,7 @@ def quant_to_adata(
     Examples:
     ----------
     >>> from opendvp.io import quant_to_adata
-    >>> adata = quant_to_adata('my_quantification.csv')
+    >>> adata = quant_to_adata("my_quantification.csv")
     >>> print(adata)
     AnnData object with n_obs * n_vars = ...
     >>> adata.obs.head()
@@ -46,14 +47,24 @@ def quant_to_adata(
     - Raises ValueError if required metadata columns are missing or if the file is not a CSV.
     - The function logs the number of cells and variables loaded, and the time taken for the operation.
     """
-    if not path.endswith('.csv'):
+    if not path.endswith(".csv"):
         raise ValueError("The file should be a csv file")
     quant_data = pd.read_csv(path)
     quant_data.index = quant_data.index.astype(str)
 
     if not meta_columns:
-        meta_columns = ['CellID', 'Y_centroid', 'X_centroid', 'Area', 'MajorAxisLength',
-                        'MinorAxisLength', 'Eccentricity', 'Orientation', 'Extent', 'Solidity']
+        meta_columns = [
+            "CellID",
+            "Y_centroid",
+            "X_centroid",
+            "Area",
+            "MajorAxisLength",
+            "MinorAxisLength",
+            "Eccentricity",
+            "Orientation",
+            "Extent",
+            "Solidity",
+        ]
     if not all(column in quant_data.columns for column in meta_columns):
         raise ValueError("Not all metadata columns are present in the csv file")
 

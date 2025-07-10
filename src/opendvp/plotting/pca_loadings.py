@@ -8,12 +8,7 @@ from matplotlib.figure import Figure
 
 
 def pca_loadings(
-    adata: AnnData,
-    top: int = 30,
-    n_pcs: int = 2,
-    return_fig: bool = False,
-    ax: Any | None = None,
-    **kwargs
+    adata: AnnData, top: int = 30, n_pcs: int = 2, return_fig: bool = False, ax: Any | None = None, **kwargs
 ) -> Figure | None:
     """Plot PCA protein loadings for the top features in the first two principal components.
 
@@ -37,7 +32,7 @@ def pca_loadings(
     fig : matplotlib.figure.Figure or None
         The figure object if return_fig is True, otherwise None.
     """
-    PCs = np.asarray(adata.varm['PCs'])
+    PCs = np.asarray(adata.varm["PCs"])
     if ax is None:
         fig, ax = plt.subplots(figsize=(10, 10))
     else:
@@ -50,19 +45,19 @@ def pca_loadings(
         all_top_indices.append(top_indices.tolist())
     flattened_list = np.concatenate(all_top_indices).tolist()
     ax.scatter(PCs[:, 0], PCs[:, 1], c="b", s=7, **kwargs)
-    ax.axhline(0, color='black', linewidth=0.4, linestyle='--')
-    ax.axvline(0, color='black', linewidth=0.4, linestyle='--')
+    ax.axhline(0, color="black", linewidth=0.4, linestyle="--")
+    ax.axvline(0, color="black", linewidth=0.4, linestyle="--")
     x = PCs[flattened_list, 0]
     y = PCs[flattened_list, 1]
-    ax.set_xlabel(f"PC1 {np.round(adata.uns['pca']['variance_ratio'][0]*100, 2)} %")
-    ax.set_ylabel(f"PC2 {np.round(adata.uns['pca']['variance_ratio'][1]*100, 2)} %")
-    genenames = adata.var.iloc[flattened_list]['Genes'].values
+    ax.set_xlabel(f"PC1 {np.round(adata.uns['pca']['variance_ratio'][0] * 100, 2)} %")
+    ax.set_ylabel(f"PC2 {np.round(adata.uns['pca']['variance_ratio'][1] * 100, 2)} %")
+    genenames = adata.var.iloc[flattened_list]["Genes"].values
     ax.scatter(x, y, s=12, c="r", **kwargs)
     texts = []
     for i, label in enumerate(genenames):
         text = ax.text(x[i], y[i], label, fontsize=8)
         texts.append(text)
-    adjust_text(texts, arrowprops={'arrowstyle': "-", 'color': 'black'})
+    adjust_text(texts, arrowprops={"arrowstyle": "-", "color": "black"})
     ax.set(xticklabels=[], yticklabels=[])
     ax.grid(False)
     if return_fig:

@@ -6,12 +6,7 @@ from matplotlib.figure import Figure
 
 
 def plot_graph_network(
-    w: Any,
-    coords: Any,
-    threshold: float,
-    return_fig: bool = False,
-    ax: Any | None = None,
-    **kwargs
+    w: Any, coords: Any, threshold: float, return_fig: bool = False, ax: Any | None = None, **kwargs
 ) -> Figure | None:
     """Plot the graph of connected nodes for a given threshold.
 
@@ -57,9 +52,9 @@ def plot_graph_network(
         pos,
         with_labels=False,
         node_size=30,
-        node_color='blue',
+        node_color="blue",
         alpha=0.5,
-        edge_color='gray',
+        edge_color="gray",
         width=0.5,
         ax=ax,
         **kwargs,

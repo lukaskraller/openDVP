@@ -10,8 +10,8 @@ def impute_gaussian(
     mean_shift: float = -1.8,
     std_dev_shift: float = 0.3,
     perSample: bool = False,
-    layer_key: str = 'unimputed',
-    uns_key: str = 'impute_gaussian_qc_metrics'
+    layer_key: str = "unimputed",
+    uns_key: str = "impute_gaussian_qc_metrics",
 ) -> ad.AnnData:
     """Impute missing values in an AnnData object using a Gaussian distribution.
 
@@ -61,14 +61,17 @@ def impute_gaussian(
         logger.info("Imputation with Gaussian distribution PER PROTEIN")
 
     # Initialize QC metrics DataFrame
-    qc_metrics = pd.DataFrame(
-        index=impute_df.columns, columns=['n_imputed', 'imputation_mean', 'imputation_stddev'])
-    qc_metrics['imputed_values'] = pd.Series(index=qc_metrics.index, dtype='object')
+    qc_metrics = pd.DataFrame(index=impute_df.columns, columns=["n_imputed", "imputation_mean", "imputation_stddev"])
+    qc_metrics["imputed_values"] = pd.Series(index=qc_metrics.index, dtype="object")
 
-    logger.info(f'Mean number of missing values per sample: '
-                f'{round(impute_df.isna().sum(axis=1).mean(),2)} out of {impute_df.shape[1]} proteins')
-    logger.info(f'Mean number of missing values per protein: '
-                f'{round(impute_df.isna().sum(axis=0).mean(),2)} out of {impute_df.shape[0]} samples')
+    logger.info(
+        f"Mean number of missing values per sample: "
+        f"{round(impute_df.isna().sum(axis=1).mean(), 2)} out of {impute_df.shape[1]} proteins"
+    )
+    logger.info(
+        f"Mean number of missing values per protein: "
+        f"{round(impute_df.isna().sum(axis=0).mean(), 2)} out of {impute_df.shape[0]} samples"
+    )
 
     for col in impute_df.columns:
         col_mean = np.nanmean(impute_df[col])
@@ -77,21 +80,21 @@ def impute_gaussian(
         num_nans = nan_mask.sum()
 
         # Store QC metrics
-        qc_metrics.loc[col, 'n_imputed'] = num_nans
-        qc_metrics.loc[col, 'imputation_mean'] = col_mean
-        qc_metrics.loc[col, 'imputation_stddev'] = col_stddev
+        qc_metrics.loc[col, "n_imputed"] = num_nans
+        qc_metrics.loc[col, "imputation_mean"] = col_mean
+        qc_metrics.loc[col, "imputation_stddev"] = col_stddev
 
         if num_nans > 0:
             shifted_random_values = np.random.normal(
-                loc=(col_mean + (mean_shift * col_stddev)),
-                scale=(col_stddev * std_dev_shift),size=num_nans)
+                loc=(col_mean + (mean_shift * col_stddev)), scale=(col_stddev * std_dev_shift), size=num_nans
+            )
 
-            #store in qc_metrics as a string (h5ad doesnt write lists or arrays)
-            qc_metrics.loc[col, 'imputed_values'] = floats_to_str(shifted_random_values)
+            # store in qc_metrics as a string (h5ad doesnt write lists or arrays)
+            qc_metrics.loc[col, "imputed_values"] = floats_to_str(shifted_random_values)
             impute_df.loc[nan_mask, col] = shifted_random_values
             logger.debug(f"Imputed {num_nans} NaNs in column '{col}' with mean={col_mean:.2f}, std={col_stddev:.2f}")
         else:
-            qc_metrics.loc[col, 'imputed_values'] = "NAN"
+            qc_metrics.loc[col, "imputed_values"] = "NAN"
 
     if perSample:
         impute_df = impute_df.T
@@ -101,14 +104,15 @@ def impute_gaussian(
 
     adata_copy.X = impute_df.to_numpy()
 
-    qc_metrics['n_imputed'] = qc_metrics['n_imputed'].astype(int)
-    qc_metrics['imputation_mean'] = qc_metrics['imputation_mean'].astype(float)
-    qc_metrics['imputation_stddev'] = qc_metrics['imputation_stddev'].astype(float)
+    qc_metrics["n_imputed"] = qc_metrics["n_imputed"].astype(int)
+    qc_metrics["imputation_mean"] = qc_metrics["imputation_mean"].astype(float)
+    qc_metrics["imputation_stddev"] = qc_metrics["imputation_stddev"].astype(float)
     adata_copy.uns[uns_key] = qc_metrics
 
     logger.info(f"Imputation complete. QC metrics stored in `adata.uns['{uns_key}']`.")
 
     return adata_copy
+
 
 def floats_to_str(val):
     """Ensure floats become strings, for adata.write_h5ad compatibility."""

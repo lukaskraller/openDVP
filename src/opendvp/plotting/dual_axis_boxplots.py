@@ -16,18 +16,18 @@ def dual_axis_boxplots(
     offset: float = 0.1,
     width: float = 0.2,
     point_alpha: float = 0.2,
-    box1_color: str = 'skyblue',
-    box2_color: str = 'lightcoral',
-    median_color: str = 'black',
-    scatter_color: str = 'black',
-    tick1_color: str = 'blue',
-    tick2_color: str = 'red',
+    box1_color: str = "skyblue",
+    box2_color: str = "lightcoral",
+    median_color: str = "black",
+    scatter_color: str = "black",
+    tick1_color: str = "blue",
+    tick2_color: str = "red",
     figsize: tuple[int, int] = (6, 6),
     return_fig: bool = False,
     show_plot: bool = True,
     ax1: Any | None = None,
     ax2: Any | None = None,
-    **kwargs
+    **kwargs,
 ) -> Figure | None:
     """Generates a dual-axis plot with boxplots and stripplots for two features grouped by a specified feature key.
 
@@ -148,8 +148,8 @@ def dual_axis_boxplots(
     ax1.set_xticklabels(groups)
     ax1.set_ylabel(ylabel1, color=tick1_color)
     ax2.set_ylabel(ylabel2, color=tick2_color)
-    ax1.tick_params(axis='y', labelcolor=tick1_color)
-    ax2.tick_params(axis='y', labelcolor=tick2_color)
+    ax1.tick_params(axis="y", labelcolor=tick1_color)
+    ax2.tick_params(axis="y", labelcolor=tick2_color)
     ax1.set_xlabel(feature_key)
     ax1.grid(False)
     ax2.grid(False)

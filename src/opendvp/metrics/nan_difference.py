@@ -1,10 +1,7 @@
 import numpy as np
 
 
-def nan_difference(
-    array1: np.ndarray,
-    array2: np.ndarray
-) -> tuple[int, int]:
+def nan_difference(array1: np.ndarray, array2: np.ndarray) -> tuple[int, int]:
     """Calculate how many NaNs do not match between two arrays.
 
     Good quality control, since this can happen.

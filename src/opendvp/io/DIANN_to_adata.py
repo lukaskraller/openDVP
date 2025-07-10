@@ -13,7 +13,7 @@ def DIANN_to_adata(
     metadata_filepath_header: str = "File.Name",
     filter_contamination: bool = True,
     filter_nan_genes: bool = True,
-    n_of_protein_metadata_cols: int = 4
+    n_of_protein_metadata_cols: int = 4,
 ) -> ad.AnnData:
     r"""Converts DIANN output file and metadata file into an AnnData object.
 
@@ -44,34 +44,31 @@ def DIANN_to_adata(
     diann_df = pd.read_csv(DIANN_path, sep=DIANN_sep)
     logger.info(f"Starting DIANN matrix shape {diann_df.shape}")
     if filter_contamination:
-        condition_cont = diann_df['Protein.Group'].str.contains("Cont_")
+        condition_cont = diann_df["Protein.Group"].str.contains("Cont_")
         logger.info(f"Removing {diann_df[condition_cont].shape[0]} contaminants")
         diann_df = diann_df[~condition_cont]
     if filter_nan_genes:
-        condition_na = diann_df['Genes'].isna()
+        condition_na = diann_df["Genes"].isna()
         logger.info(f"Filtering {diann_df[condition_na].shape[0]} genes that are NaN")
         logger.info(f"{diann_df[condition_na]['Protein.Names'].tolist()}")
         diann_df = diann_df[~condition_na]
 
     ### numerical data ###
-    diann_dft= diann_df.T.copy()
+    diann_dft = diann_df.T.copy()
     diann_dft.columns = diann_dft.loc["Protein.Group", :].to_numpy()
     diann_dft.index.name = "Sample_filepath"
-    rawdata = diann_dft.iloc[n_of_protein_metadata_cols:,:]
+    rawdata = diann_dft.iloc[n_of_protein_metadata_cols:, :]
     logger.info(f"{rawdata.shape[0]} samples, and {rawdata.shape[1]} proteins")
 
     ### protein metadata ###
-    protein_metadata = diann_df.iloc[:,:n_of_protein_metadata_cols]
-    protein_metadata['Genes_simplified'] = [
-        gene.split(";")[0]
-        for gene in protein_metadata['Genes'].tolist()
-    ]
-    protein_metadata = protein_metadata.set_index('Genes_simplified')
-    n_simple = protein_metadata[protein_metadata['Genes'].str.contains(';')].shape[0]
+    protein_metadata = diann_df.iloc[:, :n_of_protein_metadata_cols]
+    protein_metadata["Genes_simplified"] = [gene.split(";")[0] for gene in protein_metadata["Genes"].tolist()]
+    protein_metadata = protein_metadata.set_index("Genes_simplified")
+    n_simple = protein_metadata[protein_metadata["Genes"].str.contains(";")].shape[0]
     logger.info(f"{n_simple} gene lists (eg 'TMA7;TMA7B') were simplified to ('TMA7').")
     protein_metadata.index.name = "Gene"
 
-    #load sample metadata
+    # load sample metadata
     if metadata_path is not None:
         sample_metadata = pd.read_csv(metadata_path, sep=metadata_sep)
         sample_metadata = sample_metadata.set_index(metadata_filepath_header)
@@ -91,10 +88,7 @@ def DIANN_to_adata(
     sample_metadata_aligned = sample_metadata.reindex(rawdata.index)
 
     # create adata object
-    adata = ad.AnnData(
-        X=rawdata.to_numpy().astype(np.float64),
-        obs=sample_metadata_aligned,
-        var=protein_metadata)
+    adata = ad.AnnData(X=rawdata.to_numpy().astype(np.float64), obs=sample_metadata_aligned, var=protein_metadata)
 
     if adata.var.index.has_duplicates:
         logger.info("Duplicate genes found from different protein groups")

@@ -7,12 +7,7 @@ import matplotlib.figure
 from opendvp.utils import logger
 
 
-def export_figure(
-    fig : matplotlib.figure.Figure,
-    path_to_dir : str,
-    suffix : str,
-    dpi :int = 300
-) -> None:
+def export_figure(fig: matplotlib.figure.Figure, path_to_dir: str, suffix: str, dpi: int = 300) -> None:
     """Save a matplotlib figure as both PDF and SVG files with a timestamped filename.
 
     The function creates the output directory if it does not exist, generates a
@@ -55,10 +50,10 @@ def export_figure(
 
     # Ensure editable text in SVG
     matplotlib.rcParams.update(matplotlib.rcParamsDefault)
-    matplotlib.rc('font', family='arial')
-    matplotlib.rcParams['svg.fonttype'] = 'none'
-    matplotlib.rcParams['pdf.fonttype'] = 42
-    matplotlib.rcParams['ps.fonttype'] = 42
+    matplotlib.rc("font", family="arial")
+    matplotlib.rcParams["svg.fonttype"] = "none"
+    matplotlib.rcParams["pdf.fonttype"] = 42
+    matplotlib.rcParams["ps.fonttype"] = 42
 
     datetime_str = time.strftime("%Y%m%d_%H%M")
     base_filename = f"{datetime_str}_{suffix}"

@@ -15,7 +15,7 @@ def density(
     color_dict: dict | None = None,
     return_fig: bool = False,
     ax: Axes | None = None,
-    **kwargs : Any,
+    **kwargs: Any,
 ) -> Figure | None:
     """Plot density (KDE) plots of protein abundance grouped by a categorical variable in AnnData.obs.
 
@@ -58,7 +58,7 @@ def density(
 
     if color_dict is None:
         unique_vals = df_kde[color_by].unique()
-        tab10 = plt.get_cmap('tab10')
+        tab10 = plt.get_cmap("tab10")
         color_dict = {g: tab10(i % 10) for i, g in enumerate(unique_vals)}
 
     if not set(color_dict.keys()) == set(adata_copy.obs[color_by].unique()):
@@ -72,7 +72,7 @@ def density(
         common_norm=False,
         ax=ax,
         palette=color_dict,
-        **kwargs
+        **kwargs,
     )
 
     ax.set_title(f"Density plot grouped by {color_by}")

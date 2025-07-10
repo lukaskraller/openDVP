@@ -22,15 +22,11 @@ def rescale_adata() -> ad.AnnData:
     X1_C = np.random.uniform(0, 1, 50)
 
     # Image 2 data
-    X2_A = np.concatenate(
-        [np.random.normal(2.5, 0.5, 25), np.random.normal(8.5, 0.5, 25)]
-    )
+    X2_A = np.concatenate([np.random.normal(2.5, 0.5, 25), np.random.normal(8.5, 0.5, 25)])
     X2_B = np.random.normal(5.5, 1, 50)
     X2_C = np.zeros(50)  # All zero, like a failed marker
 
-    X = np.vstack(
-        [np.column_stack([X1_A, X1_B, X1_C]), np.column_stack([X2_A, X2_B, X2_C])]
-    )
+    X = np.vstack([np.column_stack([X1_A, X1_B, X1_C]), np.column_stack([X2_A, X2_B, X2_C])])
 
     obs = pd.DataFrame(
         {"imageid": ["image1"] * 50 + ["image2"] * 50},
@@ -120,17 +116,18 @@ def test_rescale_log_transformation(rescale_adata: ad.AnnData):
     np.testing.assert_array_equal(adata_rescaled.raw.X, original_X)
 
     # Check that adata.X is transformed and scaled to [0, 1]
-    assert not np.array_equal(adata_rescaled.X, original_X) # Should be different due to log and scaling
+    assert not np.array_equal(adata_rescaled.X, original_X)  # Should be different due to log and scaling
     assert np.all(adata_rescaled.X >= 0) and np.all(adata_rescaled.X <= 1)
 
 
 def test_rescale_no_raw_data_initially(rescale_adata: ad.AnnData):
     """Test that adata.raw is created if it's initially None."""
     adata = ad.AnnData(rescale_adata.X.copy(), obs=rescale_adata.obs.copy(), var=rescale_adata.var.copy())
-    assert adata.raw is None # Ensure it starts as None
+    assert adata.raw is None  # Ensure it starts as None
     scimap_rescale(adata, log=False, verbose=False)
     assert adata.raw is not None
     np.testing.assert_array_equal(adata.raw.X, rescale_adata.X)
+
 
 def test_rescale_invalid_failed_markers_input(rescale_adata: ad.AnnData):
     """Test that non-dict input for failed_markers raises ValueError."""

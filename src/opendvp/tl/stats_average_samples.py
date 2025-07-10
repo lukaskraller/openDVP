@@ -5,10 +5,7 @@ import pandas as pd
 from opendvp.utils import logger
 
 
-def stats_average_samples(
-    adata: ad.AnnData,
-    categories: list[str]
-) -> ad.AnnData:
+def stats_average_samples(adata: ad.AnnData, categories: list[str]) -> ad.AnnData:
     """Average samples based on specified categories in adata.obs.
 
     This function groups cells by unique combinations of the provided `categories`
@@ -62,7 +59,7 @@ def stats_average_samples(
 
     # --- 5. Store Original Data for Provenance ---
     logger.info("Storing original AnnData object in `.uns['pre_averaged_adata']`.")
-    adata_res.uns['pre_averaged_adata'] = adata.copy()
+    adata_res.uns["pre_averaged_adata"] = adata.copy()
 
     logger.success(f"Averaging complete. New AnnData shape: {adata_res.shape}")
 

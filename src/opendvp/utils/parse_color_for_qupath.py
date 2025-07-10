@@ -7,11 +7,7 @@ from matplotlib import colors as mcolors
 from opendvp.utils import logger
 
 
-def parse_color_for_qupath(
-    color_dict : dict | None,
-    adata : ad.AnnData,
-    adata_obs_key : str
-) -> dict:
+def parse_color_for_qupath(color_dict: dict | None, adata: ad.AnnData, adata_obs_key: str) -> dict:
     """Parse and convert color definitions to a format compatible with QuPath.
 
     Parameters
@@ -49,10 +45,12 @@ def parse_color_for_qupath(
             if isinstance(color, tuple) and len(color) == 3:
                 # Handle RGB fraction tuples (0-1)
                 parsed_colors[name] = [int(c * 255) for c in color]
-            elif isinstance(color, list) and len(color) == 3 and all(isinstance(c, int) and 0 <= c <= 255 for c in color):
+            elif (
+                isinstance(color, list) and len(color) == 3 and all(isinstance(c, int) and 0 <= c <= 255 for c in color)
+            ):
                 # Already in [R, G, B] format with values 0-255
                 parsed_colors[name] = color
-            elif isinstance(color, str) and re.match(r'^#(?:[0-9a-fA-F]{3}){1,2}$', color):
+            elif isinstance(color, str) and re.match(r"^#(?:[0-9a-fA-F]{3}){1,2}$", color):
                 # Handle hex codes
                 parsed_colors[name] = mcolors.hex2color(color)
                 parsed_colors[name] = [int(c * 255) for c in parsed_colors[name]]

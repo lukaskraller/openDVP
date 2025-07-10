@@ -39,7 +39,7 @@ def mask_to_polygons(
         shape = tif.series[0].shape
         dtype = tif.series[0].dtype
         estimated_bytes = np.prod(shape) * np.dtype(dtype).itemsize
-        estimated_mb = estimated_bytes / (1024 ** 2)
+        estimated_mb = estimated_bytes / (1024**2)
         logger.info(f"  Mask shape: {shape}, dtype: {dtype}, estimated_mb: {estimated_mb:.1f}")
 
     if estimated_mb > max_memory_mb:
@@ -55,7 +55,7 @@ def mask_to_polygons(
 
     # Iterate through unique label values (excluding background 0)
     for label_value in np.unique(array[array > 0]):
-        binary_mask = (array == label_value).astype(np.uint8) #dtype depends
+        binary_mask = (array == label_value).astype(np.uint8)  # dtype depends
         contours = measure.find_contours(binary_mask, 0.5)
 
         polygons_for_label = []
@@ -75,20 +75,20 @@ def mask_to_polygons(
     records = []
     for cell_id, polygons in cell_geometries.items():
         geometry = polygons[0] if len(polygons) == 1 else MultiPolygon(polygons)
-        records.append({'cellId': cell_id, 'geometry': geometry})
+        records.append({"cellId": cell_id, "geometry": geometry})
 
     if not records:
         # If no polygons were found, return an empty GeoDataFrame with the correct schema and CRS
-        gdf = gpd.GeoDataFrame(columns=['cellId', 'geometry'], crs="EPSG:4326")
+        gdf = gpd.GeoDataFrame(columns=["cellId", "geometry"], crs="EPSG:4326")
     else:
         gdf = gpd.GeoDataFrame(records, crs="EPSG:4326")
 
     if simplify is not None:
         logger.info(f"Simplifying the geometry with tolerance {simplify}")
-        gdf['geometry'] = gdf['geometry'].simplify(simplify, preserve_topology=True)
+        gdf["geometry"] = gdf["geometry"].simplify(simplify, preserve_topology=True)
 
     # Ensure 'cellId' is integer type
-    gdf['cellId'] = gdf['cellId'].astype(int)
+    gdf["cellId"] = gdf["cellId"].astype(int)
 
     logger.success(" -- Created geodataframe from segmentation mask -- ")
 

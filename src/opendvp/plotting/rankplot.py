@@ -21,7 +21,7 @@ def rankplot(
     group_colors: dict[str, str] | None = None,
     return_fig: bool = False,
     ax: Any | None = None,
-    **kwargs
+    **kwargs,
 ) -> Figure | None:
     """Plot a rank plot of average protein abundance in an AnnData object.
 
@@ -68,7 +68,7 @@ def rankplot(
     if min_presence_fraction < 0.01 or min_presence_fraction > 1.0:
         raise ValueError("min_presence_fraction should be between 0.01 and 1.0 (inclusive).")
     if group_colors is None:
-        tab10 = matplotlib.cm.get_cmap('tab10')
+        tab10 = matplotlib.cm.get_cmap("tab10")
         group_colors = {g: matplotlib.colors.to_hex(tab10(i % 10)) for i, g in enumerate(groups)}
 
     df_sns = pd.DataFrame(columns=["group", "rank", "mean", "protein"])
@@ -89,52 +89,53 @@ def rankplot(
             logger.warning(f"No features passed the min_presence_fraction filter for group '{group}'. Skipping.")
             continue
 
-        mean_vals = np.nanmean(filtered_X_group,axis=0)
-        ranks = pd.Series(mean_vals, index=filtered_var_names).rank(ascending=False, method='min')
+        mean_vals = np.nanmean(filtered_X_group, axis=0)
+        ranks = pd.Series(mean_vals, index=filtered_var_names).rank(ascending=False, method="min")
         ranks = ranks.astype(int)
 
-        group_df = pd.DataFrame({
-            "group": group,
-            "rank": ranks,
-            "mean": mean_vals,
-            "protein": filtered_var_names
-        }).sort_values('rank')
+        group_df = pd.DataFrame(
+            {"group": group, "rank": ranks, "mean": mean_vals, "protein": filtered_var_names}
+        ).sort_values("rank")
 
         df_sns = pd.concat([df_sns, group_df])
 
     if df_sns.shape[0] < 1:
         raise ValueError("it seems filtering too strict, nothing to plot")
 
-    sns.scatterplot(data=df_sns, x="rank", y="mean", hue="group", palette=group_colors, ax=ax, s=40, linewidth=0, **kwargs)
-
+    sns.scatterplot(
+        data=df_sns, x="rank", y="mean", hue="group", palette=group_colors, ax=ax, s=40, linewidth=0, **kwargs
+    )
 
     texts = []
     if proteins_to_label:
-        labeled_df = df_sns[df_sns['protein'].isin(proteins_to_label)]
+        labeled_df = df_sns[df_sns["protein"].isin(proteins_to_label)]
         for _, row in labeled_df.iterrows():
-            group = row['group']
-            label_color = group_colors[group] if group_colors and group in group_colors else 'black'
+            group = row["group"]
+            label_color = group_colors[group] if group_colors and group in group_colors else "black"
             texts.append(
                 ax.text(
-                    row['rank'], row['mean'], row['protein'],
-                    fontsize=15, ha='center', color=label_color,
+                    row["rank"],
+                    row["mean"],
+                    row["protein"],
+                    fontsize=15,
+                    ha="center",
+                    color=label_color,
                 )
             )
     # adjust_text(texts, arrowprops=dict(arrowstyle='->', color='black'))
     adjust_text(
         texts,
-        arrowprops={"arrowstyle": '->', "color": 'black'},
+        arrowprops={"arrowstyle": "->", "color": "black"},
         expand_points=(2, 2),
         expand_text=(1.5, 1.5),
         force_text=0.5,
-        only_move={'points': 'none', 'text': 'xy'}
-        )
+        only_move={"points": "none", "text": "xy"},
+    )
 
     ax.set_xlabel("Rank (1 = most abundant)")
     ax.set_ylabel("Average abundance")
     ax.set_title("Protein abundance ranking")
-    ax.legend(title=adata_obs_key, loc='upper right',
-        bbox_to_anchor=(1, 1), borderaxespad=0.1, frameon=True )
+    ax.legend(title=adata_obs_key, loc="upper right", bbox_to_anchor=(1, 1), borderaxespad=0.1, frameon=True)
 
     plt.tight_layout()
     if return_fig:

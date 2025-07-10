@@ -10,24 +10,23 @@ from opendvp.tl.spatial_hyperparameter_search import spatial_hyperparameter_sear
 def simple_adata():
     np.random.seed(42)
     n = 10
-    obs = pd.DataFrame({
-        'x_centroid': np.random.uniform(0, 100, n),
-        'y_centroid': np.random.uniform(0, 100, n)
-    }, index=[f'cell{i}' for i in range(n)])
-    var = pd.DataFrame(index=[f'gene{i}' for i in range(3)])
+    obs = pd.DataFrame(
+        {"x_centroid": np.random.uniform(0, 100, n), "y_centroid": np.random.uniform(0, 100, n)},
+        index=[f"cell{i}" for i in range(n)],
+    )
+    var = pd.DataFrame(index=[f"gene{i}" for i in range(3)])
     X = np.random.randn(n, 3)
     return ad.AnnData(X=X, obs=obs, var=var)
 
+
 def test_returns_dataframe_and_plot(simple_adata):
     df, (fig, ax) = spatial_hyperparameter_search(
-        simple_adata,
-        x_y=['x_centroid', 'y_centroid'],
-        threshold_range=np.arange(1, 10, 2),
-        return_df=True
-    ) # type: ignore
+        simple_adata, x_y=["x_centroid", "y_centroid"], threshold_range=np.arange(1, 10, 2), return_df=True
+    )  # type: ignore
     assert isinstance(df, pd.DataFrame)
-    assert 'threshold' in df.columns
+    assert "threshold" in df.columns
     assert fig is not None and ax is not None
+
 
 def test_default_parameters(simple_adata):
     # Should not raise
@@ -35,9 +34,11 @@ def test_default_parameters(simple_adata):
     assert isinstance(result, tuple)
     assert len(result) == 2
 
+
 def test_invalid_column_raises(simple_adata):
     with pytest.raises(ValueError):
-        spatial_hyperparameter_search(simple_adata, x_y=['not_a_col', 'y_centroid'])
+        spatial_hyperparameter_search(simple_adata, x_y=["not_a_col", "y_centroid"])
+
 
 # def test_plot_network_at_threshold(monkeypatch, simple_adata):
 #     called = {}

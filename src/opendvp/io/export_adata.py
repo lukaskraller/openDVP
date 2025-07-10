@@ -12,11 +12,11 @@ def export_adata(
     adata: ad.AnnData,
     path_to_dir: str,
     checkpoint_name: str,
-    export_as_cvs : bool = False,
-    metadata_cols : list | None = None,
-    metadata_index : str | None = None,
-    parquet : bool = False,
-    perseus : bool = False,
+    export_as_cvs: bool = False,
+    metadata_cols: list | None = None,
+    metadata_index: str | None = None,
+    parquet: bool = False,
+    perseus: bool = False,
 ) -> None:
     """Save an AnnData object as both .h5ad and optionally .parquet, .csv, or Perseus files in a checkpoint directory.
 
@@ -51,19 +51,19 @@ def export_adata(
     >>> import numpy as np
     >>> import pandas as pd
     >>> X = np.random.rand(10, 5)
-    >>> obs = pd.DataFrame({'celltype': ['A']*5 + ['B']*5}, index=[f'cell{i}' for i in range(10)])
-    >>> var = pd.DataFrame(index=[f'gene{i}' for i in range(5)])
+    >>> obs = pd.DataFrame({"celltype": ["A"] * 5 + ["B"] * 5}, index=[f"cell{i}" for i in range(10)])
+    >>> var = pd.DataFrame(index=[f"gene{i}" for i in range(5)])
     >>> adata = ad.AnnData(X=X, obs=obs, var=var)
-    >>> export_adata(adata, path_to_dir='checkpoints', checkpoint_name='test', export_as_cvs=True, perseus=True)
+    >>> export_adata(adata, path_to_dir="checkpoints", checkpoint_name="test", export_as_cvs=True, perseus=True)
     """
     try:
         os.makedirs(path_to_dir, exist_ok=True)
-        os.makedirs(os.path.join(path_to_dir,checkpoint_name), exist_ok=True)
-    except (KeyError,ValueError) as e:
+        os.makedirs(os.path.join(path_to_dir, checkpoint_name), exist_ok=True)
+    except (KeyError, ValueError) as e:
         logger.error(f"Could not create folder, permission problem likely: {e}")
         return
 
-    basename = f"{os.path.join(path_to_dir,checkpoint_name)}/{get_datetime()}_{checkpoint_name}_adata"
+    basename = f"{os.path.join(path_to_dir, checkpoint_name)}/{get_datetime()}_{checkpoint_name}_adata"
 
     # Save h5ad file
     try:
@@ -75,11 +75,11 @@ def export_adata(
         return
 
     if export_as_cvs:
-        X_array = adata.X.toarray() if hasattr(adata.X, "toarray") else adata.X # type: ignore
+        X_array = adata.X.toarray() if hasattr(adata.X, "toarray") else adata.X  # type: ignore
         df_index = adata.obs[metadata_index] if metadata_index else adata.obs.index
         adata_obs_cols = metadata_cols if metadata_cols else adata.obs.columns.tolist()
 
-        data = pd.DataFrame(data=X_array, columns=adata.var_names, index=df_index) # type: ignore
+        data = pd.DataFrame(data=X_array, columns=adata.var_names, index=df_index)  # type: ignore
         metadata = pd.DataFrame(data=adata.obs[adata_obs_cols], index=df_index)
 
         if parquet:
@@ -102,9 +102,9 @@ def export_adata(
         data_file = os.path.join(perseus_dir, f"{timestamp}_data_{checkpoint_name}.txt")
         metadata_file = os.path.join(perseus_dir, f"{timestamp}_metadata_{checkpoint_name}.txt")
         # Export expression data
-        data = adata.X.toarray() if hasattr(adata.X, "toarray") else adata.X # type: ignore
+        data = adata.X.toarray() if hasattr(adata.X, "toarray") else adata.X  # type: ignore
         index = adata.obs[metadata_index] if metadata_index is not None else adata.obs_names
-        expression_df = pd.DataFrame(data=data, columns=adata.var_names, index=index) # type: ignore
+        expression_df = pd.DataFrame(data=data, columns=adata.var_names, index=index)  # type: ignore
         expression_df.index.name = "Name"  # Perseus requires this
         expression_df.to_csv(data_file, sep="\t")
         # Export metadata

@@ -10,7 +10,7 @@ def abundance_histograms(
     adata: AnnData,
     n_cols: int = 4,
     return_fig: bool = False,
-    **kwargs : dict,
+    **kwargs: dict,
 ) -> Figure | None:
     """Plot histograms of protein abundance for each sample in adata.
 
@@ -52,11 +52,11 @@ def abundance_histograms(
             s=f"Schapiro p: {res[1]:.3g}",
             transform=ax.transAxes,
             fontsize=12,
-            ha='center',
-            va='center',
-            bbox={"facecolor": 'white', "alpha": 0.8},
+            ha="center",
+            va="center",
+            bbox={"facecolor": "white", "alpha": 0.8},
         )
-        ax.set_title(f'file_id: {adata.obs.raw_file_id[i]}')
+        ax.set_title(f"file_id: {adata.obs.raw_file_id[i]}")
         ax.grid(False)
     fig.tight_layout()
     if return_fig:

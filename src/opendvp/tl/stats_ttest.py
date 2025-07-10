@@ -9,13 +9,8 @@ from opendvp.utils import logger
 
 date = datetime.now().strftime("%Y%m%d")
 
-def stats_ttest(
-    adata: ad.AnnData,
-    grouping: str,
-    group1: str,
-    group2: str,
-    FDR_threshold: float = 0.05
-) -> ad.AnnData:
+
+def stats_ttest(adata: ad.AnnData, grouping: str, group1: str, group2: str, FDR_threshold: float = 0.05) -> ad.AnnData:
     """Perform a t-test for all columns of an AnnData object between two groups.
 
     Parameters:
@@ -53,7 +48,7 @@ def stats_ttest(
         array_2 = X[mask2][:, col_idx].flatten()
         result = pg.ttest(x=array_1, y=array_2, paired=False, alternative="two-sided")
         t_values.append(result.iloc[0, 0])
-        p_values.append(result.iloc[0,3])
+        p_values.append(result.iloc[0, 3])
         diffs.append(np.mean(array_1) - np.mean(array_2))
 
     # Add results to adata object
@@ -61,10 +56,10 @@ def stats_ttest(
     adata_copy.var["p_val"] = p_values
     adata_copy.var["mean_diff"] = diffs
     # Correct for multiple testing
-    result_BH = smm.multipletests(adata_copy.var["p_val"].values, alpha=FDR_threshold, method='fdr_bh')
+    result_BH = smm.multipletests(adata_copy.var["p_val"].values, alpha=FDR_threshold, method="fdr_bh")
     adata_copy.var["sig"] = result_BH[0]
     adata_copy.var["p_corr"] = result_BH[1]
-    adata_copy.var['-log10_p_corr'] = -np.log10(adata_copy.var['p_corr'])
+    adata_copy.var["-log10_p_corr"] = -np.log10(adata_copy.var["p_corr"])
 
     logger.info(f"Using pingouin.ttest to perform unpaired two-sided t-test between {group1} and {group2}")
     logger.info(f"Using Benjamini-Hochberg for FDR correction, with a threshold of {FDR_threshold}")

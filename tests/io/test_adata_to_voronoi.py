@@ -10,11 +10,13 @@ from opendvp.io import adata_to_voronoi
 def basic_adata():
     n_cells = 100
     np.random.seed(42)
-    obs = pd.DataFrame({
-        "X_centroid": np.random.uniform(low=1, high=100, size=n_cells),
-        "Y_centroid": np.random.uniform(low=1, high=100, size=n_cells),
-        "celltype": pd.Series(np.random.choice(["A", "B", "C"], n_cells), dtype="category")
-    })
+    obs = pd.DataFrame(
+        {
+            "X_centroid": np.random.uniform(low=1, high=100, size=n_cells),
+            "Y_centroid": np.random.uniform(low=1, high=100, size=n_cells),
+            "celltype": pd.Series(np.random.choice(["A", "B", "C"], n_cells), dtype="category"),
+        }
+    )
     return ad.AnnData(obs=obs)
 
 

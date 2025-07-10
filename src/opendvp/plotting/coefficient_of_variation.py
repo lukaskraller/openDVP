@@ -9,11 +9,7 @@ from matplotlib.figure import Figure
 
 
 def coefficient_of_variation(
-    adata: AnnData,
-    group_by: str,
-    return_fig: bool = False,
-    ax: Any | None = None,
-    **kwargs
+    adata: AnnData, group_by: str, return_fig: bool = False, ax: Any | None = None, **kwargs
 ) -> Figure | None:
     """Plot coefficient of variation (CV) for each group in AnnData.obs[group_by].
 
@@ -54,7 +50,7 @@ def coefficient_of_variation(
         group_df = pd.DataFrame({f"{group}_cv": cvs, group_by: group})
         df_tmp = pd.concat([df_tmp, group_df], ignore_index=True)
 
-    df_tmp = df_tmp.melt(id_vars=[group_by], var_name='metric', value_name='cv')
+    df_tmp = df_tmp.melt(id_vars=[group_by], var_name="metric", value_name="cv")
     if ax is None:
         fig, ax = plt.subplots(figsize=(8, 6))
     else:

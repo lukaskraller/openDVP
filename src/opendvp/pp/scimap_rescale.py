@@ -2,11 +2,11 @@
 # @author: Ajit Johnson Nirmal
 
 """!!! abstract "Short Description"
-    `sm.pp.rescale`: The function allows users to rescale the data. This step is often performed to standardize the 
-    the expression of all markers to a common scale. The rescaling can be either performed automatically or manually. 
-    User defined gates can be passed to rescale the data manually, else the algorithm fits a GMM (gaussian mixed model) to 
-    identify the cutoff point. The resultant data is between 0-1 where values below 0.5 are considered non-expressing while 
-    above 0.5 is considered positive. 
+    `sm.pp.rescale`: The function allows users to rescale the data. This step is often performed to standardize the
+    the expression of all markers to a common scale. The rescaling can be either performed automatically or manually.
+    User defined gates can be passed to rescale the data manually, else the algorithm fits a GMM (gaussian mixed model) to
+    identify the cutoff point. The resultant data is between 0-1 where values below 0.5 are considered non-expressing while
+    above 0.5 is considered positive.
 
 ## Function
 """
@@ -27,9 +27,9 @@ def scimap_rescale(
     adata,
     gate=None,
     log=True,
-    imageid='imageid',
+    imageid="imageid",
     failed_markers=None,
-    method='all',
+    method="all",
     verbose=True,
     random_state=0,
     gmm_components=3,
@@ -77,18 +77,16 @@ def scimap_rescale(
 
     Example:
         ```python
-
         # Example with manual gates
-        manual_gate = pd.DataFrame({'marker': ['CD3D', 'KI67'], 'gate': [7, 8]})
-        adata = sm.pp.rescale(adata, gate=manual_gate, failed_markers={'all': ['CD20', 'CD21']})
+        manual_gate = pd.DataFrame({"marker": ["CD3D", "KI67"], "gate": [7, 8]})
+        adata = sm.pp.rescale(adata, gate=manual_gate, failed_markers={"all": ["CD20", "CD21"]})
 
         # Importing gates from a CSV
-        manual_gate = pd.read_csv('manual_gates.csv')
-        adata = sm.pp.rescale(adata, gate=manual_gate, failed_markers={'all': ['CD20', 'CD21']})
+        manual_gate = pd.read_csv("manual_gates.csv")
+        adata = sm.pp.rescale(adata, gate=manual_gate, failed_markers={"all": ["CD20", "CD21"]})
 
         # Running without manual gates to use GMM for automatic gate determination
-        adata = sm.pp.rescale(adata, gate=None, failed_markers={'all': ['CD20', 'CD21']})
-
+        adata = sm.pp.rescale(adata, gate=None, failed_markers={"all": ["CD20", "CD21"]})
         ```
 
     """
@@ -103,7 +101,7 @@ def scimap_rescale(
     dataset_images = adata.obs[imageid].unique().tolist()
     m = pd.DataFrame(index=dataset_markers, columns=dataset_images).reset_index()
     m = pd.melt(m, id_vars=[m.columns[0]])
-    m.columns = ['markers', 'imageid', 'gate']
+    m.columns = ["markers", "imageid", "gate"]
 
     # Manipulate m with and without provided manual gates
     if gate is None:
@@ -113,8 +111,8 @@ def scimap_rescale(
         matching_images = set(gate.columns) & set(dataset_images)
 
         # link to make sure index name is markers as we use reset_index later
-        if gate.index.name != 'markers' and 'markers' not in gate.columns:
-            gate.index.name = 'markers'
+        if gate.index.name != "markers" and "markers" not in gate.columns:
+            gate.index.name = "markers"
 
         if len(matching_images) == 0 and len(gate.columns) > 0:
             # Case 1: No matching images and single value column - apply globally
@@ -122,33 +120,28 @@ def scimap_rescale(
             gate_mapping = m.copy()
             gate_mapping.gate = gate_mapping.gate.fillna(
                 gate_mapping.markers.map(
-                    dict(
-                        zip(gate['markers'], gate['gates'], strict=False)
-                    )  # these columns are hardcoded in CSV
+                    dict(zip(gate["markers"], gate["gates"], strict=False))  # these columns are hardcoded in CSV
                 )
             )
         else:
             # Case 2: handles both if all imageid matches with gate columns or if they partially match
             gate = gate.reset_index()
-            manual_m = pd.melt(gate, id_vars=gate[['markers']])
-            manual_m.columns = ['markers', 'imageid', 'm_gate']
+            manual_m = pd.melt(gate, id_vars=gate[["markers"]])
+            manual_m.columns = ["markers", "imageid", "m_gate"]
             gate_mapping = pd.merge(
                 m,
                 manual_m,
-                how='left',
-                left_on=['markers', 'imageid'],
-                right_on=['markers', 'imageid'],
+                how="left",
+                left_on=["markers", "imageid"],
+                right_on=["markers", "imageid"],
             )
-            gate_mapping['gate'] = gate_mapping['gate'].fillna(gate_mapping['m_gate'])
-            gate_mapping = gate_mapping.drop(columns='m_gate')
+            gate_mapping["gate"] = gate_mapping["gate"].fillna(gate_mapping["m_gate"])
+            gate_mapping = gate_mapping.drop(columns="m_gate")
 
     # Addressing failed markers
     def process_failed(adata_subset, foramted_failed_markers):
         if verbose:
-            print(
-                'Processing Failed Marker in '
-                + str(adata_subset.obs[imageid].unique()[0])
-            )
+            print("Processing Failed Marker in " + str(adata_subset.obs[imageid].unique()[0]))
         # prepare data
         data_subset = pd.DataFrame(
             adata_subset.raw.X,
@@ -164,15 +157,13 @@ def scimap_rescale(
         def process_failed_internal(fail_mark, data_subset):
             return data_subset[fail_mark].max()
 
-        r_process_failed_internal = lambda x: process_failed_internal(
-            fail_mark=x, data_subset=data_subset
-        )
+        r_process_failed_internal = lambda x: process_failed_internal(fail_mark=x, data_subset=data_subset)
         f_g = list(map(r_process_failed_internal, [x[0] for x in fm_sub.values]))
         subset_gate = pd.DataFrame(
             {
-                'markers': [x[0] for x in fm_sub.values],
-                'imageid': adata_subset.obs[imageid].unique()[0],
-                'gate': f_g,
+                "markers": [x[0] for x in fm_sub.values],
+                "imageid": adata_subset.obs[imageid].unique()[0],
+                "gate": f_g,
             }
         )
         # return
@@ -182,17 +173,15 @@ def scimap_rescale(
     if failed_markers is not None:
         # check if failed marker is a dict
         if isinstance(failed_markers, dict) is False:
-            raise ValueError(
-                '`failed_markers` should be a python dictionary, please refer documentation'
-            )
+            raise ValueError("`failed_markers` should be a python dictionary, please refer documentation")
         # create a copy
         fm = failed_markers.copy()
         # seperate all from the rest
-        if 'all' in failed_markers:
-            all_failed = failed_markers['all']
+        if "all" in failed_markers:
+            all_failed = failed_markers["all"]
             if isinstance(all_failed, str):
                 all_failed = [all_failed]
-            failed_markers.pop('all', None)
+            failed_markers.pop("all", None)
 
             df = pd.DataFrame(columns=adata.obs[imageid].unique())
             for i in range(len(all_failed)):
@@ -201,41 +190,33 @@ def scimap_rescale(
             #    df.loc[i] = all_failed[i]
         # rest of the failed markers
         # fail = pd.DataFrame.from_dict(failed_markers)
-        fail = pd.DataFrame(
-            dict([(k, pd.Series(v)) for k, v in failed_markers.items()])
-        )
+        fail = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in failed_markers.items()]))
         # merge
-        if 'all' in fm:
+        if "all" in fm:
             foramted_failed_markers = pd.concat([fail, df], axis=0)
         else:
             foramted_failed_markers = fail
 
         # send the adata objects that need to be processed
         # Check if any image needs to pass through the GMM protocol
-        adata_list = [
-            adata[adata.obs[imageid] == i] for i in foramted_failed_markers.columns
-        ]
+        adata_list = [adata[adata.obs[imageid] == i] for i in foramted_failed_markers.columns]
         # apply the process_failed function
-        r_process_failed = lambda x: process_failed(
-            adata_subset=x, foramted_failed_markers=foramted_failed_markers
-        )
+        r_process_failed = lambda x: process_failed(adata_subset=x, foramted_failed_markers=foramted_failed_markers)
         failed_gates = list(map(r_process_failed, adata_list))
         # combine the results and merge with gate_mapping
         result = []
         for i in range(len(failed_gates)):
             result.append(failed_gates[i])
-        result = pd.concat(result, join='outer')
+        result = pd.concat(result, join="outer")
         # use this to merge with gate_mapping
-        x1 = gate_mapping.set_index(['markers', 'imageid'])['gate']
-        x2 = result.set_index(['markers', 'imageid'])['gate']
+        x1 = gate_mapping.set_index(["markers", "imageid"])["gate"]
+        x2 = result.set_index(["markers", "imageid"])["gate"]
         x1.update(x2)
         gate_mapping = x1.reset_index()
 
     # trim the data before applying GMM
     def clipping(x):
-        clip = x.clip(
-            lower=np.percentile(x, 0.01), upper=np.percentile(x, 99.99)
-        ).tolist()
+        clip = x.clip(lower=np.percentile(x, 0.01), upper=np.percentile(x, 99.99)).tolist()
         return clip
 
     # Find GMM based gates
@@ -255,9 +236,7 @@ def scimap_rescale(
         data_gm = data_gm[~np.isnan(data_gm), None]
 
         # Fit GMM with gmm_components
-        gmm = GaussianMixture(
-            n_components=gmm_components, random_state=random_state
-        ).fit(data_gm)
+        gmm = GaussianMixture(n_components=gmm_components, random_state=random_state).fit(data_gm)
 
         # Sort components by their means
         means = gmm.means_.flatten()
@@ -272,28 +251,22 @@ def scimap_rescale(
     # Running gmm_gating on the dataset
     def gmm_gating_internal(adata_subset, gate_mapping, method):
         if verbose:
-            print(
-                'Running GMM for image: ' + str(adata_subset.obs[imageid].unique()[0])
-            )
+            print("Running GMM for image: " + str(adata_subset.obs[imageid].unique()[0]))
         data_subset = pd.DataFrame(
             adata_subset.raw.X,
             columns=adata_subset.var.index,
             index=adata_subset.obs.index,
         )
         # find markers
-        if method == 'all':
+        if method == "all":
             image_specific = gate_mapping.copy()
-            marker_to_gate = list(
-                gate_mapping[gate_mapping.gate.isnull()].markers.unique()
-            )
+            marker_to_gate = list(gate_mapping[gate_mapping.gate.isnull()].markers.unique())
         else:
-            image_specific = gate_mapping[
-                gate_mapping['imageid'].isin(adata_subset.obs[imageid].unique())
-            ]
+            image_specific = gate_mapping[gate_mapping["imageid"].isin(adata_subset.obs[imageid].unique())]
             marker_to_gate = image_specific[image_specific.gate.isnull()].markers.values
 
         if verbose and len(marker_to_gate) > 0:
-            print('Applying GMM to markers: ' + ', '.join(marker_to_gate))
+            print("Applying GMM to markers: " + ", ".join(marker_to_gate))
 
         # Apply clipping
         data_subset_clipped = data_subset.apply(clipping)
@@ -301,15 +274,13 @@ def scimap_rescale(
         if log is True:
             data_subset_clipped = np.log1p(data_subset_clipped)
         # identify the gates for the markers
-        r_gmm_gating = lambda x: gmm_gating(
-            marker=x, data=data_subset_clipped, gmm_components=gmm_components
-        )
+        r_gmm_gating = lambda x: gmm_gating(marker=x, data=data_subset_clipped, gmm_components=gmm_components)
         gates = list(map(r_gmm_gating, marker_to_gate))
         # create a df with results
         result = image_specific[image_specific.gate.isnull()]
         mapping = dict(zip(marker_to_gate, gates, strict=False))
         for i in result.index:
-            result.loc[i, 'gate'] = mapping[result.loc[i, 'markers']]
+            result.loc[i, "gate"] = mapping[result.loc[i, "markers"]]
         # result['gate'] = result['gate'].fillna(result['markers'].map(dict(zip(marker_to_gate, gates))))
         # return
         return result
@@ -320,21 +291,19 @@ def scimap_rescale(
     # Check if any image needs to pass through the GMM protocol
     if len(gmm_images) > 0:
         # Create a list of adata that need to go through the GMM
-        if method == 'all':
+        if method == "all":
             adata_list = [adata]
         else:
             adata_list = [adata[adata.obs[imageid] == i] for i in gmm_images]
         # run function
-        r_gmm_gating_internal = lambda x: gmm_gating_internal(
-            adata_subset=x, gate_mapping=gate_mapping, method=method
-        )
+        r_gmm_gating_internal = lambda x: gmm_gating_internal(adata_subset=x, gate_mapping=gate_mapping, method=method)
         all_gates = list(map(r_gmm_gating_internal, adata_list))
 
         # combine the results and merge with gate_mapping
         result = []
         for i in range(len(all_gates)):
             result.append(all_gates[i])
-        result = pd.concat(result, join='outer')
+        result = pd.concat(result, join="outer")
         # use this to merge with gate_mapping
         gate_mapping.gate = gate_mapping.gate.fillna(
             gate_mapping.markers.map(dict(zip(result.markers, result.gate, strict=False)))
@@ -343,7 +312,7 @@ def scimap_rescale(
     # Rescaling function
     def data_scaler(adata_subset, gate_mapping):
         if verbose:
-            print('\nScaling Image: ' + str(adata_subset.obs[imageid].unique()[0]))
+            print("\nScaling Image: " + str(adata_subset.obs[imageid].unique()[0]))
         # Organise data
         data_subset = pd.DataFrame(
             adata_subset.raw.X,
@@ -353,27 +322,21 @@ def scimap_rescale(
         if log is True:
             data_subset = np.log1p(data_subset)
         # subset markers in the subset
-        gate_mapping_sub = gate_mapping[
-            gate_mapping['imageid'] == adata_subset.obs[imageid].unique()[0]
-        ]
+        gate_mapping_sub = gate_mapping[gate_mapping["imageid"] == adata_subset.obs[imageid].unique()[0]]
 
         # organise gates
         def data_scaler_internal(marker, gate_mapping_sub):
             if verbose:
-                gate_value = gate_mapping_sub[gate_mapping_sub.markers == marker][
-                    'gate'
-                ].values[0]
-                print(f'Scaling {marker} (gate: {gate_value:.3f})')
+                gate_value = gate_mapping_sub[gate_mapping_sub.markers == marker]["gate"].values[0]
+                print(f"Scaling {marker} (gate: {gate_value:.3f})")
             # find the gate
-            moi = gate_mapping_sub[gate_mapping_sub.markers == marker]['gate'].values[0]
+            moi = gate_mapping_sub[gate_mapping_sub.markers == marker]["gate"].values[0]
 
             # Find the closest value to the gate
             absolute_val_array = np.abs(data_subset[marker].values - float(moi))
             # throw error if the array has nan values
             if np.isnan(absolute_val_array).any():
-                raise ValueError(
-                    "An exception occurred: " + str(marker) + ' has nan values'
-                )
+                raise ValueError("An exception occurred: " + str(marker) + " has nan values")
             # smallest diff
             smallest_difference_index = absolute_val_array.argmin()
             closest_element = data_subset[marker].values[smallest_difference_index]
@@ -394,33 +357,25 @@ def scimap_rescale(
             scaler_high = MinMaxScaler(feature_range=(0.5, 1))
             scaler_low = MinMaxScaler(feature_range=(0, 0.5))
             # Scale it
-            h = pd.DataFrame(
-                scaler_high.fit_transform(high.values.reshape(-1, 1)), index=high.index
-            )
-            l = pd.DataFrame(
-                scaler_low.fit_transform(low.values.reshape(-1, 1)), index=low.index
-            )
+            h = pd.DataFrame(scaler_high.fit_transform(high.values.reshape(-1, 1)), index=high.index)
+            l = pd.DataFrame(scaler_low.fit_transform(low.values.reshape(-1, 1)), index=low.index)
             # Merge the high and low and resort it
             scaled_data = pd.concat([l, h])
-            scaled_data = scaled_data.loc[~scaled_data.index.duplicated(keep='first')]
+            scaled_data = scaled_data.loc[~scaled_data.index.duplicated(keep="first")]
             scaled_data = scaled_data.reindex(data_subset.index)
             # scaled_data[scaled_data > 0.5].count(axis=1).sum()
             # return
             return scaled_data
 
         # run internal function
-        r_data_scaler_internal = lambda x: data_scaler_internal(
-            marker=x, gate_mapping_sub=gate_mapping_sub
-        )
-        scaled_subset = list(
-            map(r_data_scaler_internal, gate_mapping_sub.markers.values)
-        )
+        r_data_scaler_internal = lambda x: data_scaler_internal(marker=x, gate_mapping_sub=gate_mapping_sub)
+        scaled_subset = list(map(r_data_scaler_internal, gate_mapping_sub.markers.values))
 
         # combine the results and merge with gate_mapping
         scaled_subset_result = []
         for i in range(len(scaled_subset)):
             scaled_subset_result.append(scaled_subset[i])
-        scaled_subset_result = pd.concat(scaled_subset_result, join='outer', axis=1)
+        scaled_subset_result = pd.concat(scaled_subset_result, join="outer", axis=1)
         scaled_subset_result.columns = gate_mapping_sub.markers.values
         # scaled_subset_result[scaled_subset_result['CD3E'] > 0.5]['CD3E'].count(axis=1).sum()
 
@@ -438,15 +393,13 @@ def scimap_rescale(
     final_result = []
     for i in range(len(scaled_subset)):
         final_result.append(scaled_subset[i])
-    final_result = pd.concat(final_result, join='outer')
+    final_result = pd.concat(final_result, join="outer")
 
     # reindex the final_results
     final_result = final_result.reindex(adata.obs.index)
 
     # save final gates
-    adata.uns['gates'] = gate_mapping.pivot_table(
-        index=['markers'], columns=['imageid']
-    ).droplevel(
+    adata.uns["gates"] = gate_mapping.pivot_table(index=["markers"], columns=["imageid"]).droplevel(
         0, axis=1
     )  # .reset_index()
 
@@ -458,60 +411,54 @@ def scimap_rescale(
 
 
 # Make the Function CLI compatible
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description='The function allows users to rescale the data.'
-    )
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="The function allows users to rescale the data.")
 
-    parser.add_argument('--adata', type=str, help='Path to AnnData object file (.h5ad)')
+    parser.add_argument("--adata", type=str, help="Path to AnnData object file (.h5ad)")
 
     parser.add_argument(
-        '--gate',
+        "--gate",
         type=str,
-        help='Path to gates CSV file. First column should be markers, subsequent columns should be gate values',
+        help="Path to gates CSV file. First column should be markers, subsequent columns should be gate values",
     )
 
     parser.add_argument(
-        '--log',
+        "--log",
         type=bool,
         default=True,
-        help='If True, log transform (log1p) before applying gates',
+        help="If True, log transform (log1p) before applying gates",
     )
 
     parser.add_argument(
-        '--imageid',
+        "--imageid",
         type=str,
-        default='imageid',
-        help='Column name containing Image IDs',
+        default="imageid",
+        help="Column name containing Image IDs",
     )
 
     parser.add_argument(
-        '--failed_markers',
+        "--failed_markers",
         type=str,
-        help='Path to JSON file containing failed markers dictionary',
+        help="Path to JSON file containing failed markers dictionary",
     )
 
     parser.add_argument(
-        '--method',
+        "--method",
         type=str,
-        default='all',
-        choices=['all', 'by_image'],
-        help='Method for GMM: all or by_image',
+        default="all",
+        choices=["all", "by_image"],
+        help="Method for GMM: all or by_image",
     )
 
-    parser.add_argument(
-        '--verbose', type=bool, default=True, help='Print detailed progress messages'
-    )
+    parser.add_argument("--verbose", type=bool, default=True, help="Print detailed progress messages")
+
+    parser.add_argument("--random_state", type=int, default=0, help="Random seed for GMM")
 
     parser.add_argument(
-        '--random_state', type=int, default=0, help='Random seed for GMM'
-    )
-
-    parser.add_argument(
-        '--gmm_components',
+        "--gmm_components",
         type=int,
         default=3,
-        help='Number of components for GMM (minimum 2)',
+        help="Number of components for GMM (minimum 2)",
     )
 
     args = parser.parse_args()

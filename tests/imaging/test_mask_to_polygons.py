@@ -22,6 +22,7 @@ def _count_coords(geometry):
         return total_coords
     return 0
 
+
 @pytest.fixture
 def create_temp_mask_tif():
     """Fixture to create a temporary TIFF file for testing."""
@@ -75,10 +76,10 @@ def test_basic_polygon_extraction(create_temp_mask_tif):
 
     assert isinstance(gdf, gpd.GeoDataFrame)
     assert len(gdf) == 1
-    assert gdf.iloc[0]['cellId'] == 1
-    assert isinstance(gdf.iloc[0]['geometry'], Polygon)
+    assert gdf.iloc[0]["cellId"] == 1
+    assert isinstance(gdf.iloc[0]["geometry"], Polygon)
     # Check approximate area (6x6 square = 36 units)
-    assert gdf.iloc[0]['geometry'].area == pytest.approx(36, abs=1)  # Allow for slight differences due to contouring
+    assert gdf.iloc[0]["geometry"].area == pytest.approx(36, abs=1)  # Allow for slight differences due to contouring
 
 
 def test_multiple_polygons_extraction(create_temp_mask_tif):
@@ -93,9 +94,9 @@ def test_multiple_polygons_extraction(create_temp_mask_tif):
     gdf = mask_to_polygons(mask_path)
 
     assert len(gdf) == 3
-    assert set(gdf['cellId'].tolist()) == {1, 2, 3}
+    assert set(gdf["cellId"].tolist()) == {1, 2, 3}
     for _, row in gdf.iterrows():
-        assert isinstance(row['geometry'], Polygon)
+        assert isinstance(row["geometry"], Polygon)
 
 
 def test_multipolygon_extraction(create_temp_mask_tif):
@@ -109,11 +110,11 @@ def test_multipolygon_extraction(create_temp_mask_tif):
     gdf = mask_to_polygons(mask_path)
 
     assert len(gdf) == 1
-    assert gdf.iloc[0]['cellId'] == 1
-    assert isinstance(gdf.iloc[0]['geometry'], MultiPolygon)
-    assert len(gdf.iloc[0]['geometry'].geoms) == 2
+    assert gdf.iloc[0]["cellId"] == 1
+    assert isinstance(gdf.iloc[0]["geometry"], MultiPolygon)
+    assert len(gdf.iloc[0]["geometry"].geoms) == 2
     # Check approximate total area (2 * 3x3 squares = 18 units)
-    assert gdf.iloc[0]['geometry'].area == pytest.approx(18, abs=1)
+    assert gdf.iloc[0]["geometry"].area == pytest.approx(18, abs=1)
 
 
 def test_background_label_ignored(create_temp_mask_tif):
@@ -142,9 +143,9 @@ def test_simplify_geometry(create_temp_mask_tif):
     assert len(gdf_original) == 1
     assert len(gdf_simplified) == 1
     # Simplified geometry should have fewer or equal points
-    assert _count_coords(gdf_simplified.iloc[0]['geometry']) <= _count_coords(gdf_original.iloc[0]['geometry'])
+    assert _count_coords(gdf_simplified.iloc[0]["geometry"]) <= _count_coords(gdf_original.iloc[0]["geometry"])
     # Area should be approximately the same
-    assert gdf_simplified.iloc[0]['geometry'].area == pytest.approx(gdf_original.iloc[0]['geometry'].area, rel=0.1)
+    assert gdf_simplified.iloc[0]["geometry"].area == pytest.approx(gdf_original.iloc[0]["geometry"].area, rel=0.1)
 
 
 def test_max_memory_mb_raises_error(create_temp_mask_tif):
@@ -166,20 +167,20 @@ def test_blobs_labels_tif_scenario(create_blobs_labels_tif):
 
     assert isinstance(gdf, gpd.GeoDataFrame)
     assert len(gdf) == 3  # Should have labels 1, 2, 3
-    assert set(gdf['cellId'].tolist()) == {1, 2, 3}
+    assert set(gdf["cellId"].tolist()) == {1, 2, 3}
 
     # Check label 1 (Polygon)
-    cell1_geom = gdf[gdf['cellId'] == 1]['geometry'].iloc[0]
+    cell1_geom = gdf[gdf["cellId"] == 1]["geometry"].iloc[0]
     assert isinstance(cell1_geom, Polygon)
     assert cell1_geom.area == pytest.approx(100, abs=1)  # 10x10 square
 
     # Check label 2 (Polygon)
-    cell2_geom = gdf[gdf['cellId'] == 2]['geometry'].iloc[0]
+    cell2_geom = gdf[gdf["cellId"] == 2]["geometry"].iloc[0]
     assert isinstance(cell2_geom, Polygon)
     assert cell2_geom.area == pytest.approx(100, abs=1)  # 10x10 square
 
     # Check label 3 (MultiPolygon)
-    cell3_geom = gdf[gdf['cellId'] == 3]['geometry'].iloc[0]
+    cell3_geom = gdf[gdf["cellId"] == 3]["geometry"].iloc[0]
     assert isinstance(cell3_geom, MultiPolygon)
     assert len(cell3_geom.geoms) == 2
     assert cell3_geom.area == pytest.approx(2 * 5 * 5, abs=1)  # Two 5x5 squares = 50
@@ -194,12 +195,12 @@ def test_mask_with_single_pixel_label(create_temp_mask_tif):
 
     gdf = mask_to_polygons(mask_path)
     assert len(gdf) == 1
-    assert gdf.iloc[0]['cellId'] == 1
-    assert isinstance(gdf.iloc[0]['geometry'], Polygon)
+    assert gdf.iloc[0]["cellId"] == 1
+    assert isinstance(gdf.iloc[0]["geometry"], Polygon)
     # A single pixel contour might result in a very small polygon, or even a point/line
     # depending on skimage version and exact pixel value.
     # We expect a polygon with area close to 1.
-    assert gdf.iloc[0]['geometry'].area == pytest.approx(1, abs=0.5)
+    assert gdf.iloc[0]["geometry"].area == pytest.approx(1, abs=0.5)
 
 
 def test_mask_with_no_labels(create_temp_mask_tif):
@@ -211,5 +212,5 @@ def test_mask_with_no_labels(create_temp_mask_tif):
     gdf = mask_to_polygons(mask_path)
     assert len(gdf) == 0
     assert gdf.empty
-    assert list(gdf.columns) == ['cellId', 'geometry'] # Ensure columns are still defined
-    assert gdf.crs == "EPSG:4326" # Ensure CRS is set even for empty GeoDataFrame
+    assert list(gdf.columns) == ["cellId", "geometry"]  # Ensure columns are still defined
+    assert gdf.crs == "EPSG:4326"  # Ensure CRS is set even for empty GeoDataFrame

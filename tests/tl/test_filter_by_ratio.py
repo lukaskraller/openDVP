@@ -11,7 +11,7 @@ def sample_adata() -> ad.AnnData:
     """Create a sample AnnData object for testing."""
     n_obs = 100
     var_names = ["marker_A", "marker_B", "other_marker"]
-    X = np.random.rand(n_obs, len(var_names)) * 10 # scale to get ratios > 1 sometimes
+    X = np.random.rand(n_obs, len(var_names)) * 10  # scale to get ratios > 1 sometimes
     return ad.AnnData(X=X, var=pd.DataFrame(index=var_names))
 
 
@@ -49,10 +49,7 @@ def test_filter_add_detailed(sample_adata):
     assert "DAPI_ratio_pass_nottoohigh" in adata_filtered.obs.columns
 
     # Check that _pass is the logical AND of _pass_nottoolow and _pass_nottoohigh
-    expected_pass = (
-        adata_filtered.obs["DAPI_ratio_pass_nottoolow"] &
-        adata_filtered.obs["DAPI_ratio_pass_nottoohigh"]
-    )
+    expected_pass = adata_filtered.obs["DAPI_ratio_pass_nottoolow"] & adata_filtered.obs["DAPI_ratio_pass_nottoohigh"]
     assert (adata_filtered.obs["DAPI_ratio_pass"] == expected_pass).all()
 
 

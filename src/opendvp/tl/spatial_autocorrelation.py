@@ -14,9 +14,9 @@ def spatial_autocorrelation(
     adata: ad.AnnData,
     method: str = "moran",
     x_y: Sequence[str] = ("x_centroid", "y_centroid"),
-    k : int = 8,
-    threshold : int | float = 10.0,
-    island_threshold : float = 0.1
+    k: int = 8,
+    threshold: int | float = 10.0,
+    island_threshold: float = 0.1,
 ) -> None:
     """Compute spatial autocorrelation statistics (Moran's I or Geary's C) for each gene in an AnnData object.
 
@@ -67,8 +67,7 @@ def spatial_autocorrelation(
 
         if frac_islands > island_threshold:
             logger.error(
-                f"Too many islands (> {island_threshold:.0%}). "
-                f"Consider adjusting the threshold or coordinates."
+                f"Too many islands (> {island_threshold:.0%}). Consider adjusting the threshold or coordinates."
             )
             raise RuntimeError(
                 f"Too many islands ({frac_islands:.2%} > {island_threshold:.0%}) in DistanceBand graph. "
@@ -114,26 +113,21 @@ def spatial_autocorrelation(
         logger.warning(f"{len(failed_genes)} genes failed during {method.upper()} calculation")
 
     if method.lower() == "moran":
-        adata.var[f'Moran_I_k{k}'] = pd.Series(
-            [getattr(r, 'I', np.nan) if pd.notna(r) else np.nan for r in results],
-            index=adata.var.index
+        adata.var[f"Moran_I_k{k}"] = pd.Series(
+            [getattr(r, "I", np.nan) if pd.notna(r) else np.nan for r in results], index=adata.var.index
         )
-        adata.var[f'Moran_p_sim_k{k}'] = pd.Series(
-            [getattr(r, 'p_sim', np.nan) if pd.notna(r) else np.nan for r in results],
-            index=adata.var.index
+        adata.var[f"Moran_p_sim_k{k}"] = pd.Series(
+            [getattr(r, "p_sim", np.nan) if pd.notna(r) else np.nan for r in results], index=adata.var.index
         )
-        adata.var[f'Moran_Zscore_k{k}'] = pd.Series(
-            [getattr(r, 'z_sim', np.nan) if pd.notna(r) else np.nan for r in results],
-            index=adata.var.index
+        adata.var[f"Moran_Zscore_k{k}"] = pd.Series(
+            [getattr(r, "z_sim", np.nan) if pd.notna(r) else np.nan for r in results], index=adata.var.index
         )
     elif method.lower() == "geary":
-        adata.var[f'Geary_C_threshold{threshold}'] = pd.Series(
-            [getattr(r, 'C', np.nan) if pd.notna(r) else np.nan for r in results],
-            index=adata.var.index
+        adata.var[f"Geary_C_threshold{threshold}"] = pd.Series(
+            [getattr(r, "C", np.nan) if pd.notna(r) else np.nan for r in results], index=adata.var.index
         )
-        adata.var[f'Geary_p_sim_threshold{threshold}'] = pd.Series(
-            [getattr(r, 'p_sim', np.nan) if pd.notna(r) else np.nan for r in results],
-            index=adata.var.index
+        adata.var[f"Geary_p_sim_threshold{threshold}"] = pd.Series(
+            [getattr(r, "p_sim", np.nan) if pd.notna(r) else np.nan for r in results], index=adata.var.index
         )
 
     logger.success(f"Finished spatial autocorrelation ({method.upper()}) computation.")

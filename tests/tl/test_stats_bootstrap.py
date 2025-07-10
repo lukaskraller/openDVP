@@ -40,15 +40,14 @@ def test_return_summary_only(sample_df: pd.DataFrame) -> None:
     assert isinstance(summary_df, pd.DataFrame)
     assert "cv_summary" in summary_df.columns
 
+
 def test_return_both_dataframes(sample_df: pd.DataFrame) -> None:
     """Test returning both raw and summary dataframes."""
     n_bootstrap = 10
     subset_sizes = [10, 20]
     raw_df, summary_df = stats_bootstrap(
-        sample_df, n_bootstrap=n_bootstrap,
-        subset_sizes=subset_sizes, return_raw=True,
-        return_summary=True, plot=False
-    ) # type: ignore
+        sample_df, n_bootstrap=n_bootstrap, subset_sizes=subset_sizes, return_raw=True, return_summary=True, plot=False
+    )  # type: ignore
 
     assert isinstance(raw_df, pd.DataFrame)
     assert isinstance(summary_df, pd.DataFrame)
@@ -83,9 +82,7 @@ def test_reproducibility_with_seed(sample_df: pd.DataFrame) -> None:
 def test_summary_func_count_above_threshold(sample_df: pd.DataFrame) -> None:
     """Test the 'count_above_threshold' summary function."""
     cv_thresh = 0.05
-    summary_df = stats_bootstrap(
-        sample_df, summary_func="count_above_threshold", cv_threshold=cv_thresh, plot=False
-    )
+    summary_df = stats_bootstrap(sample_df, summary_func="count_above_threshold", cv_threshold=cv_thresh, plot=False)
 
     assert "cv_count_above_threshold" in summary_df.columns
     # The CV for 'high_variance' should be high, so the count should be > 0
@@ -125,7 +122,7 @@ def test_nan_policy_omit(sample_df: pd.DataFrame) -> None:
 
 def test_nan_policy_raise(sample_df: pd.DataFrame) -> None:
     """Test that nan_policy='raise' raises an error for columns with NaNs."""
-    with pytest.raises(ValueError): # Or the specific error raised by the CV function
+    with pytest.raises(ValueError):  # Or the specific error raised by the CV function
         stats_bootstrap(sample_df, nan_policy="raise", plot=False)
 
 

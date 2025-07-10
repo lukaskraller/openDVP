@@ -4,10 +4,10 @@ from opendvp.utils import logger
 
 
 def segmask_to_qupath(
-    path_to_mask : str,
-    simplify_value : float = 1.0,
+    path_to_mask: str,
+    simplify_value: float = 1.0,
     save_as_detection: bool = True,
-    ) -> geopandas.GeoDataFrame | None:
+) -> geopandas.GeoDataFrame | None:
     """Convert a segmentation mask (TIFF) to QuPath-compatible detections as a GeoDataFrame or GeoJSON file.
 
     This function loads a 2D segmentation mask image, converts it to polygons using spatialdata,
@@ -52,25 +52,25 @@ def segmask_to_qupath(
     # checks
     if not isinstance(path_to_mask, str):
         raise ValueError("path_to_mask must be a string")
-    if not path_to_mask.endswith('.tif'):
+    if not path_to_mask.endswith(".tif"):
         raise ValueError("path_to_mask must end with .tif")
 
-    #create empty sdata
+    # create empty sdata
     sdata = spatialdata.SpatialData()
     # load image
     mask = dask_image.imread.imread(path_to_mask)
     mask = da.squeeze(mask)
-    sdata['mask'] = spatialdata.models.Labels2DModel.parse(mask)
+    sdata["mask"] = spatialdata.models.Labels2DModel.parse(mask)
     # convert to polygons
-    sdata['mask_polygons'] = spatialdata.to_polygons(sdata['mask'])
-    gdf = sdata['mask_polygons']
+    sdata["mask_polygons"] = spatialdata.to_polygons(sdata["mask"])
+    gdf = sdata["mask_polygons"]
     if save_as_detection:
-        gdf['objectType'] = "detection"
-    #simplify the geometry
+        gdf["objectType"] = "detection"
+    # simplify the geometry
     if simplify_value is not None:
         logger.info(f"Simplifying the geometry with tolerance {simplify_value}")
-        gdf['geometry'] = gdf['geometry'].simplify(simplify_value, preserve_topology=True)
-    #remove label column
-    gdf = gdf.drop(columns='label')
+        gdf["geometry"] = gdf["geometry"].simplify(simplify_value, preserve_topology=True)
+    # remove label column
+    gdf = gdf.drop(columns="label")
 
     return gdf

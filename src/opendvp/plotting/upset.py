@@ -14,8 +14,8 @@ def upset(
     min_presence_fraction: float = 0.7,
     sort_by: str = "cardinality",
     return_fig: bool = False,
-    ax : Axes | None = None,
-    **kwargs : Mapping[str, Any]
+    ax: Axes | None = None,
+    **kwargs: Mapping[str, Any],
 ) -> Figure | None:
     """Generate an UpSet plot from an AnnData object based on variable presence across groups.
 
@@ -75,7 +75,7 @@ def upset(
 
     # Convert to UpSet input format
     upset_data = from_indicators(grouped_presence)
-    upset = UpSet(upset_data, subset_size='count', sort_by=sort_by, **kwargs)
+    upset = UpSet(upset_data, subset_size="count", sort_by=sort_by, **kwargs)
     upset.plot(fig=fig)
 
     if return_fig:

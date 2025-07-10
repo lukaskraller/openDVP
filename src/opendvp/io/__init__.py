@@ -17,5 +17,5 @@ __all__ = [
     "quant_to_adata",
     "segmask_to_qupath",
     "adata_to_voronoi",
-    "adata_to_qupath"
+    "adata_to_qupath",
 ]

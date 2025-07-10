@@ -3,10 +3,7 @@ import pandas as pd
 
 
 def coefficient_of_variation(
-    df: pd.DataFrame,
-    axis: int = 0,
-    nan_policy: str = "propagate",
-    ddof: int = 1
+    df: pd.DataFrame, axis: int = 0, nan_policy: str = "propagate", ddof: int = 1
 ) -> pd.Series:
     """Calculate the coefficient of variation.
 

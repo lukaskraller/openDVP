@@ -11,7 +11,7 @@ def filter_by_abs_value(
     feature_name: str,
     lower_bound: float | int | None = None,
     upper_bound: float | int | None = None,
-    mode: Literal['absolute', 'quantile'] = "absolute", # How to interpret bounds
+    mode: Literal["absolute", "quantile"] = "absolute",  # How to interpret bounds
 ) -> ad.AnnData:
     """Filter cells in an AnnData object by a range of values for a specified feature.
 
@@ -63,23 +63,26 @@ def filter_by_abs_value(
     is_in_var = feature_name in adata_copy.var_names
     is_in_obs = feature_name in adata_copy.obs.columns
 
-    source_determined: Literal['X', 'obs']
+    source_determined: Literal["X", "obs"]
 
     if is_in_var and is_in_obs:
         raise ValueError(
             f"Feature '{feature_name}' found in both adata.var_names and adata.obs.columns. "
-            "Please ensure the feature name is unique or specify its source if ambiguity is intended.")
+            "Please ensure the feature name is unique or specify its source if ambiguity is intended."
+        )
     elif is_in_var:
-        source_determined = 'X'
+        source_determined = "X"
         data = adata_copy[:, feature_name].X
-        data = data.to_array() if hasattr(data, 'to_array') else data
+        data = data.to_array() if hasattr(data, "to_array") else data
         data_series = pd.Series(data.flatten(), index=adata_copy.obs_names)
     elif is_in_obs:
-        source_determined = 'obs'
+        source_determined = "obs"
         data_series = adata_copy.obs[feature_name]
         if not pd.api.types.is_numeric_dtype(data_series):
-            raise ValueError(f"Feature '{feature_name}' in adata.obs is not numeric. "
-                             "Filtering by value/quantile requires a numeric column.")
+            raise ValueError(
+                f"Feature '{feature_name}' in adata.obs is not numeric. "
+                "Filtering by value/quantile requires a numeric column."
+            )
     else:
         raise ValueError(f"Feature '{feature_name}' not found in either adata.var_names or adata.obs.columns.")
 
@@ -89,14 +92,14 @@ def filter_by_abs_value(
         raise ValueError("At least one of 'lower_bound' or 'upper_bound' must be provided.")
     if lower_bound is not None and upper_bound is not None and lower_bound > upper_bound:
         raise ValueError("'lower_bound' cannot be greater than 'upper_bound'.")
-    if mode not in ['absolute', 'quantile']:
+    if mode not in ["absolute", "quantile"]:
         raise ValueError(f"Invalid 'mode' specified: '{mode}'. Must be 'absolute' or 'quantile'.")
 
-    if mode == 'quantile':
+    if mode == "quantile":
         # Quantile bounds must be floats between 0 and 1
-        if (lower_bound is not None and not (0 <= lower_bound <= 1)):
+        if lower_bound is not None and not (0 <= lower_bound <= 1):
             raise ValueError("For 'quantile' mode, 'lower_bound' must be between 0 and 1 (inclusive).")
-        if (upper_bound is not None and not (0 <= upper_bound <= 1)):
+        if upper_bound is not None and not (0 <= upper_bound <= 1):
             raise ValueError("For 'quantile' mode, 'upper_bound' must be between 0 and 1 (inclusive).")
         # Convert to float if provided as int (e.g., 0 or 1) to ensure consistent quantile behavior
         if lower_bound is not None:
@@ -104,17 +107,16 @@ def filter_by_abs_value(
         if upper_bound is not None:
             upper_bound = float(upper_bound)
 
-
     # --- 2. Determine Actual Thresholds ---
     actual_lower_bound = None
     actual_upper_bound = None
 
-    if mode == 'quantile':
+    if mode == "quantile":
         if lower_bound is not None:
             actual_lower_bound = data_series.quantile(lower_bound)
         if upper_bound is not None:
             actual_upper_bound = data_series.quantile(upper_bound)
-    else: # mode == 'absolute'
+    else:  # mode == 'absolute'
         actual_lower_bound = lower_bound
         actual_upper_bound = upper_bound
 
@@ -124,12 +126,16 @@ def filter_by_abs_value(
 
     if actual_lower_bound is not None:
         pass_filter = pass_filter & (data_series >= actual_lower_bound)
-        logger.info(f"Keeping cells with '{feature_name}' >= {actual_lower_bound:.4f} "
-                    f"(from {'quantile' if mode == 'quantile' else 'absolute'} bound: {lower_bound}).")
+        logger.info(
+            f"Keeping cells with '{feature_name}' >= {actual_lower_bound:.4f} "
+            f"(from {'quantile' if mode == 'quantile' else 'absolute'} bound: {lower_bound})."
+        )
     if actual_upper_bound is not None:
         pass_filter = pass_filter & (data_series <= actual_upper_bound)
-        logger.info(f"Keeping cells with '{feature_name}' <= {actual_upper_bound:.4f} "
-                    f"(from {'quantile' if mode == 'quantile' else 'absolute'} bound: {upper_bound}).")
+        logger.info(
+            f"Keeping cells with '{feature_name}' <= {actual_upper_bound:.4f} "
+            f"(from {'quantile' if mode == 'quantile' else 'absolute'} bound: {upper_bound})."
+        )
 
     # --- 4. Store Results and Return ---
     # Create a descriptive label for the new obs column
@@ -139,7 +145,7 @@ def filter_by_abs_value(
 
     num_cells_kept = pass_filter.sum()
     total_cells = len(pass_filter)
-    logger.success(f"{num_cells_kept} of {total_cells} cells ({num_cells_kept/total_cells:.2%}) passed the filter.")
+    logger.success(f"{num_cells_kept} of {total_cells} cells ({num_cells_kept / total_cells:.2%}) passed the filter.")
     logger.info(f"New boolean column '{new_obs_column_name}' added to adata.obs.")
 
     return adata_copy
