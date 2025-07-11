@@ -46,6 +46,7 @@ dev = [
     "pytest",
     "tox",
     "hatchling",
+    "pre-commit",
 ]
 
 docs = [

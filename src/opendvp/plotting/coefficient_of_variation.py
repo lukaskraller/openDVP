@@ -60,6 +60,7 @@ def coefficient_of_variation(
     ax.set_ylabel("CV (std/mean)")
     ax.set_xlabel(group_by)
     ax.grid(False)
+
     if return_fig:
         return fig
     else:
