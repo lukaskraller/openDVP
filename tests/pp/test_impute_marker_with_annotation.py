@@ -10,9 +10,7 @@ from opendvp.pp import impute_marker_with_annotation
 @pytest.fixture
 def sample_adata() -> ad.AnnData:
     """Creates a sample AnnData object for testing."""
-    X = np.array(
-        [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12], [0, 0, 0]], dtype=np.float32
-    )
+    X = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12], [0, 0, 0]], dtype=np.float32)
     obs = pd.DataFrame(
         {"annotation": [True, False, True, False, True]},
         index=[f"cell_{i}" for i in range(5)],
@@ -77,9 +75,7 @@ def test_no_rows_to_impute(sample_adata: ad.AnnData):
     sample_adata.obs["annotation"] = False
     adata_original_X = sample_adata.X.copy()
 
-    adata_imputed = impute_marker_with_annotation(
-        sample_adata, "gene_C", "annotation"
-    )
+    adata_imputed = impute_marker_with_annotation(sample_adata, "gene_C", "annotation")
     np.testing.assert_array_equal(adata_imputed.X, adata_original_X)
 
 

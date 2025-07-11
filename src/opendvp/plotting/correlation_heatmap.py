@@ -58,8 +58,8 @@ def correlation_heatmap(
     sns.heatmap(
         correlation_matrix,
         annot=True,
-        cmap='magma',
-        fmt='.2f',
+        cmap="magma",
+        fmt=".2f",
         linewidths=0.5,
         vmin=0.7,
         mask=mask_top_right,
@@ -71,8 +71,8 @@ def correlation_heatmap(
     sns.heatmap(
         correlation_matrix,
         annot=False,
-        cmap='magma',
-        fmt='.2f',
+        cmap="magma",
+        fmt=".2f",
         linewidths=0.5,
         vmin=0.7,
         mask=mask_bottom_left,

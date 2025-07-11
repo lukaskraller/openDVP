@@ -4,16 +4,16 @@ import geopandas
 from opendvp.utils import logger, parse_color_for_qupath
 
 
-def adata_to_qupath(  # noqa: C901
+def adata_to_qupath(
     adata: ad.AnnData,
     geodataframe: geopandas.GeoDataFrame,
     adataobs_on: str = "CellID",
     gdf_on: str | None = "CellID",
-    gdf_index : bool = False,
+    gdf_index: bool = False,
     classify_by: str | None = None,
     color_dict: dict | None = None,
     simplify_value: float | None = 1.0,
-    save_as_detection : bool = True,
+    save_as_detection: bool = True,
 ) -> geopandas.GeoDataFrame | None:
     """Export a GeoDataFrame with QuPath-compatible annotations, using AnnData for classification and color mapping.
 
@@ -57,11 +57,11 @@ def adata_to_qupath(  # noqa: C901
         >>> from opendvp.io.adata_to_qupath import adata_to_qupath
         >>> # Create example AnnData
         >>> import pandas as pd
-        >>> obs = pd.DataFrame({'CellID': [1, 2, 3], 'celltype': ['A', 'B', 'A']})
+        >>> obs = pd.DataFrame({"CellID": [1, 2, 3], "celltype": ["A", "B", "A"]})
         >>> adata = ad.AnnData(obs=obs)
         >>> # Create example GeoDataFrame
         >>> from shapely.geometry import Point
-        >>> gdf = gpd.GeoDataFrame({'CellID': [1, 2, 3]}, geometry=[Point(0,0), Point(1,1), Point(2,2)])
+        >>> gdf = gpd.GeoDataFrame({"CellID": [1, 2, 3]}, geometry=[Point(0, 0), Point(1, 1), Point(2, 2)])
         >>> # Export with classification
         >>> result = adata_to_qupath(
         ...     adata=adata,
@@ -69,9 +69,9 @@ def adata_to_qupath(  # noqa: C901
         ...     adataobs_on="CellID",
         ...     gdf_on="CellID",
         ...     classify_by="celltype",
-        ...     color_dict={"A": [255,0,0], "B": [0,255,0]},
+        ...     color_dict={"A": [255, 0, 0], "B": [0, 255, 0]},
         ...     simplify_value=0.5,
-        ...     save_as_detection=True
+        ...     save_as_detection=True,
         ... )
         >>> print(result.head())
     """
@@ -90,12 +90,12 @@ def adata_to_qupath(  # noqa: C901
             raise ValueError(f"{classify_by} not in adata.obs.columns")
         if adata.obs[classify_by].isna().any():
             raise ValueError(f"The {classify_by} contains NaN values")
-        if adata.obs[classify_by].dtype.name != 'category':
+        if adata.obs[classify_by].dtype.name != "category":
             logger.warning(f"{classify_by} is not a categorical, converting to categorical")
-            adata.obs[classify_by] = adata.obs[classify_by].astype('category')        
-    if color_dict and not isinstance(color_dict,dict):
+            adata.obs[classify_by] = adata.obs[classify_by].astype("category")
+    if color_dict and not isinstance(color_dict, dict):
         raise ValueError("provided color_dict is not a dict")
-    
+
     # Check matches between adata and geodataframe
     adata_index_values = set(adata.obs[adataobs_on])
     gdf_index_values = set(geodataframe[gdf_on]) if gdf_on else set(geodataframe.index)
@@ -106,7 +106,7 @@ def adata_to_qupath(  # noqa: C901
 
     gdf = geodataframe.copy()
     if save_as_detection:
-        gdf['objectType'] = "detection"
+        gdf["objectType"] = "detection"
 
     # Filter shapes of gdf by adata
     gdf = gdf[gdf[gdf_on].isin(adata.obs[adataobs_on])] if gdf_on else gdf[gdf.index.isin(adata.obs[adataobs_on])]
@@ -114,18 +114,17 @@ def adata_to_qupath(  # noqa: C901
     if classify_by:
         index_class = adata.obs.set_index(adataobs_on)[classify_by].copy()
         if gdf_on:
-            gdf['class'] = gdf[gdf_on].map(index_class).astype(str).fillna('filtered_out')
+            gdf["class"] = gdf[gdf_on].map(index_class).astype(str).fillna("filtered_out")
         elif gdf_index:
-            gdf['class'] = gdf.index.map(index_class).astype(str).fillna('filtered_out')
+            gdf["class"] = gdf.index.map(index_class).astype(str).fillna("filtered_out")
         logger.info(f"Classes now in shapes: {gdf['class'].unique()}")
         color_dict = parse_color_for_qupath(color_dict, adata=adata, adata_obs_key=classify_by)
-        gdf['classification'] = gdf.apply(
-            lambda row: {'name': row['class'], 'color': color_dict[row['class']]}, axis=1)
-        gdf = gdf.drop(columns='class')
+        gdf["classification"] = gdf.apply(lambda row: {"name": row["class"], "color": color_dict[row["class"]]}, axis=1)
+        gdf = gdf.drop(columns="class")
 
     # Simplify geometry
     if simplify_value is not None:
         logger.info(f"Simplifying the geometry with tolerance {simplify_value}")
-        gdf['geometry'] = gdf['geometry'].simplify(simplify_value, preserve_topology=True)
+        gdf["geometry"] = gdf["geometry"].simplify(simplify_value, preserve_topology=True)
 
     return gdf

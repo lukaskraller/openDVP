@@ -4,10 +4,7 @@ from perseuspy import pd
 from opendvp.utils import logger
 
 
-def import_perseus(
-    path_to_perseus_txt: str,
-    n_var_metadata_rows: int = 4
-) -> ad.AnnData:
+def import_perseus(path_to_perseus_txt: str, n_var_metadata_rows: int = 4) -> ad.AnnData:
     """Convert a Perseus text file to an AnnData object.
 
     Parameters
@@ -23,32 +20,32 @@ def import_perseus(
         AnnData object with imported data.
     """
     logger.info(f"Reading Perseus file from: {path_to_perseus_txt}")
-    perseus_df = pd.read_perseus(path_to_perseus_txt) # type: ignore
+    perseus_df = pd.read_perseus(path_to_perseus_txt)  # type: ignore
     logger.info(f"Perseus DataFrame shape: {perseus_df.shape}")
     # get obs headers
     obs_headers = list(perseus_df.columns.names)
     logger.debug(f"Observation headers: {obs_headers}")
     # get obs contents
-    obs = [col for col in perseus_df.columns.values] #tuples
+    obs = list(perseus_df.columns.values)  # tuples
     obs = pd.DataFrame(obs)
     logger.debug(f"Observation DataFrame shape before cleaning: {obs.shape}")
     # var headers configurable
-    var_headers = obs.iloc[-n_var_metadata_rows:,0].values.tolist()
+    var_headers = obs.iloc[-n_var_metadata_rows:, 0].values.tolist()
     logger.debug(f"Variable headers: {var_headers}")
-    #remove rows with empty strings
-    obs = obs[obs != '']
+    # remove rows with empty strings
+    obs = obs[obs != ""]
     obs = obs.dropna()
     logger.debug(f"Observation DataFrame shape after cleaning: {obs.shape}")
-    #rename headers
+    # rename headers
     obs.columns = obs_headers
-    #var 
+    # var
     var = perseus_df[var_headers]
     var.columns = var_headers
     logger.debug(f"Variable DataFrame shape: {var.shape}")
-    #get data
-    data = perseus_df.iloc[:,:-(len(var_headers))].values.T
+    # get data
+    data = perseus_df.iloc[:, : -(len(var_headers))].values.T
     logger.info(f"Data matrix shape: {data.shape}")
-    #to prevent implicit modification
+    # to prevent implicit modification
     obs.index = obs.index.astype(str)
     var.index = var.index.astype(str)
 

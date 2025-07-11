@@ -1,7 +1,7 @@
 from .impute_marker_with_annotation import impute_marker_with_annotation
-from .rescale import rescale
+from .scimap_rescale import scimap_rescale
 
 __all__ = [
     "impute_marker_with_annotation",
-    "rescale",
+    "scimap_rescale",
 ]

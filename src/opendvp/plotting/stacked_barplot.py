@@ -12,7 +12,7 @@ def stacked_barplot(
     normalize: bool = True,
     ax: Axes | None = None,
     figsize: tuple[int, int] = (8, 6),
-    **bar_kwargs: dict
+    **bar_kwargs: dict,
 ) -> tuple[Figure, Axes]:
     """Plot a stacked barplot showing phenotype composition per RCN motif.
 
@@ -58,18 +58,11 @@ def stacked_barplot(
     bottoms = [0] * len(count_df)
     for phenotype, color in phenotype_colors.items():
         if phenotype in count_df.columns:
-            ax.bar(
-                count_df.index,
-                count_df[phenotype],
-                bottom=bottoms,
-                color=color,
-                label=phenotype,
-                **bar_kwargs
-            )
+            ax.bar(count_df.index, count_df[phenotype], bottom=bottoms, color=color, label=phenotype, **bar_kwargs)
             bottoms = [i + j for i, j in zip(bottoms, count_df[phenotype], strict=False)]
 
     # Customize plot
-    ax.legend(title="Phenotype", bbox_to_anchor=(1.05, 1), loc='upper left')
+    ax.legend(title="Phenotype", bbox_to_anchor=(1.05, 1), loc="upper left")
     ax.set_ylabel("Proportion" if normalize else "Count")
     ax.set_xlabel("RCN Motif")
     ax.set_title("Phenotype Composition per RCN Motif")

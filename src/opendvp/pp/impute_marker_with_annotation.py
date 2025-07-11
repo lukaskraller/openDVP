@@ -5,13 +5,10 @@ from opendvp.utils import logger
 
 
 def impute_marker_with_annotation(
-    adata : ad.AnnData, 
-    target_variable : str,
-    target_annotation_column : str, 
-    quantile_for_imputation : float = 0.05
+    adata: ad.AnnData, target_variable: str, target_annotation_column: str, quantile_for_imputation: float = 0.05
 ) -> ad.AnnData:
     """Change value of a feature in an AnnData object for rows matching a specific annotation.
-    
+
     Using a specified quantile value from the variable's distribution.
 
     Parameters:
@@ -44,12 +41,8 @@ def impute_marker_with_annotation(
     target_rows_mask = adata_copy.obs[target_annotation_column].values
     # Convert X to dense numpy array for assignment
     X_dense = adata_copy.X.toarray() if hasattr(adata_copy.X, "toarray") else np.array(adata_copy.X)
-    value_to_impute = np.quantile(
-        X_dense[:, target_var_idx], quantile_for_imputation
-    )
-    logger.info(
-        f"Imputing with {quantile_for_imputation}% percentile value = {value_to_impute}"
-    )
+    value_to_impute = np.quantile(X_dense[:, target_var_idx], quantile_for_imputation)
+    logger.info(f"Imputing with {quantile_for_imputation}% percentile value = {value_to_impute}")
 
     X_dense[target_rows_mask, target_var_idx] = value_to_impute
     adata_copy.X = X_dense

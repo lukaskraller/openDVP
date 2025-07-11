@@ -16,7 +16,7 @@ def adata_to_voronoi(
     save_as_detection: bool = True,
 ) -> gpd.GeoDataFrame | None:
     """Generate a GeoDataFrame of Voronoi polygons from AnnData centroids.
-    
+
     This function computes Voronoi polygons from centroid coordinates in AnnData.obs
     Optionally annotates them with class labels and colors for QuPath, and returns a GeoDataFrame.
 
@@ -53,13 +53,11 @@ def adata_to_voronoi(
     >>> import pandas as pd
     >>> import numpy as np
     >>> from opendvp.io.adata_to_voronoi import adata_to_voronoi
-    >>> obs = pd.DataFrame({
-    ...     'X_centroid': np.random.rand(5),
-    ...     'Y_centroid': np.random.rand(5),
-    ...     'celltype': ['A', 'B', 'A', 'B', 'A']
-    ... })
+    >>> obs = pd.DataFrame(
+    ...     {"X_centroid": np.random.rand(5), "Y_centroid": np.random.rand(5), "celltype": ["A", "B", "A", "B", "A"]}
+    ... )
     >>> adata = ad.AnnData(obs=obs)
-    >>> gdf = adata_to_voronoi(adata, classify_by='celltype')
+    >>> gdf = adata_to_voronoi(adata, classify_by="celltype")
     >>> print(gdf.head())
     """
     if not isinstance(adata, ad.AnnData):
@@ -71,9 +69,9 @@ def adata_to_voronoi(
             raise ValueError(f"{classify_by} not in adata.obs.columns")
         if adata.obs[classify_by].isna().any():
             raise ValueError(f"The {classify_by} contains NaN values")
-        if adata.obs[classify_by].dtype.name != 'category':
+        if adata.obs[classify_by].dtype.name != "category":
             logger.warning(f"{classify_by} is not a categorical, converting to categorical")
-            adata.obs[classify_by] = adata.obs[classify_by].astype('category')
+            adata.obs[classify_by] = adata.obs[classify_by].astype("category")
     if color_dict and not isinstance(color_dict, dict):
         raise ValueError("provided color_dict is not a dict")
 
@@ -96,8 +94,8 @@ def adata_to_voronoi(
             return None
         return polygon
 
-    obs_df['geometry'] = [safe_voronoi_polygon(vor, i) for i in range(len(obs_df))]
-    gdf = gpd.GeoDataFrame(obs_df, geometry='geometry')
+    obs_df["geometry"] = [safe_voronoi_polygon(vor, i) for i in range(len(obs_df))]
+    gdf = gpd.GeoDataFrame(obs_df, geometry="geometry")
     logger.info("Transformed to geodataframe")
 
     # Filter polygons outside bounding box
@@ -111,11 +109,11 @@ def adata_to_voronoi(
 
     # Area filter
     if voronoi_area_quantile:
-        gdf['area'] = gdf['geometry'].area
-        gdf = gdf[gdf['area'] < gdf['area'].quantile(voronoi_area_quantile)]
+        gdf["area"] = gdf["geometry"].area
+        gdf = gdf[gdf["area"] < gdf["area"].quantile(voronoi_area_quantile)]
         logger.info(f"Filtered out large polygons larger than {voronoi_area_quantile} quantile")
     if save_as_detection:
-        gdf['objectType'] = "detection"
+        gdf["objectType"] = "detection"
 
     if classify_by:
         if merge_adjacent_shapes:
@@ -124,12 +122,11 @@ def adata_to_voronoi(
             gdf[classify_by] = gdf.index
             gdf = gdf.explode(index_parts=True)
             gdf = gdf.reset_index(drop=True)
-        
-        gdf['class'] = gdf[classify_by].astype(str)
+
+        gdf["class"] = gdf[classify_by].astype(str)
         color_dict = parse_color_for_qupath(color_dict, adata=adata, adata_obs_key=classify_by)
-        gdf['classification'] = gdf.apply(
-            lambda row: {'name': row['class'], 'color': color_dict[row['class']]}, axis=1)
-        gdf = gdf.drop(columns='class')
+        gdf["classification"] = gdf.apply(lambda row: {"name": row["class"], "color": color_dict[row["class"]]}, axis=1)
+        gdf = gdf.drop(columns="class")
 
     cols_to_keep = ["objectType", "geometry", "classification"]
     existing_cols_to_keep = [col for col in cols_to_keep if col in gdf.columns]

@@ -3,9 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 
-def dynamic_histogram(
-    df: pd.DataFrame, column: str, bins: int = 100
-) -> None:
+def dynamic_histogram(df: pd.DataFrame, column: str, bins: int = 100) -> None:
     """Plot a dynamic histogram with a threshold slider and count annotations.
 
     This function creates an interactive histogram using Plotly, allowing the user to adjust a threshold slider.
@@ -60,17 +58,35 @@ def dynamic_histogram(
     # Add initial annotations for counts
     fig.update_layout(
         annotations=[
-            dict(x=0.02, y=1.1, xref="paper", yref="paper", text=f"Left Count: {left_count}", showarrow=False),
-            dict(x=0.98, y=1.1, xref="paper", yref="paper", text=f"Right Count: {right_count}", showarrow=False),
+            {
+                "x": 0.02,
+                "y": 1.1,
+                "xref": "paper",
+                "yref": "paper",
+                "text": f"Left Count: {left_count}",
+                "showarrow": False,
+            },
+            {
+                "x": 0.98,
+                "y": 1.1,
+                "xref": "paper",
+                "yref": "paper",
+                "text": f"Right Count: {right_count}",
+                "showarrow": False,
+            },
         ]
     )
 
     # Initial vertical line at threshold
     fig.add_shape(
         type="line",
-        x0=initial_threshold, y0=0, x1=initial_threshold, y1=1,
-        xref="x", yref="paper",
-        line=dict(color="red", width=2, dash="dash")
+        x0=initial_threshold,
+        y0=0,
+        x1=initial_threshold,
+        y1=1,
+        xref="x",
+        yref="paper",
+        line={"color": "red", "width": 2, "dash": "dash"},
     )
 
     # Function to update both the annotations and line
@@ -79,14 +95,36 @@ def dynamic_histogram(
         left_count, right_count = calculate_counts(data, threshold)
         # Update annotations
         annotations = [
-            dict(x=0.02, y=1.1, xref="paper", yref="paper", text=f"Left Count: {left_count}", showarrow=False),
-            dict(x=0.98, y=1.1, xref="paper", yref="paper", text=f"Right Count: {right_count}", showarrow=False)]
+            {
+                "x": 0.02,
+                "y": 1.1,
+                "xref": "paper",
+                "yref": "paper",
+                "text": f"Left Count: {left_count}",
+                "showarrow": False,
+            },
+            {
+                "x": 0.98,
+                "y": 1.1,
+                "xref": "paper",
+                "yref": "paper",
+                "text": f"Right Count: {right_count}",
+                "showarrow": False,
+            },
+        ]
         # Update line position
-        shapes = [dict(
-            type="line",
-            x0=threshold, y0=0, x1=threshold, y1=1,
-            xref="x", yref="paper",
-            line=dict(color="red", width=2, dash="dash"))]
+        shapes = [
+            {
+                "type": "line",
+                "x0": threshold,
+                "y0": 0,
+                "x1": threshold,
+                "y1": 1,
+                "xref": "x",
+                "yref": "paper",
+                "line": {"color": "red", "width": 2, "dash": "dash"},
+            }
+        ]
         return {"annotations": annotations, "shapes": shapes}
 
     # Add slider with threshold steps

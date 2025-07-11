@@ -14,8 +14,8 @@ def upset(
     min_presence_fraction: float = 0.7,
     sort_by: str = "cardinality",
     return_fig: bool = False,
-    ax : Axes | None = None,
-    **kwargs : Mapping[str, Any]
+    ax: Axes | None = None,
+    **kwargs: Mapping[str, Any],
 ) -> Figure | None:
     """Generate an UpSet plot from an AnnData object based on variable presence across groups.
 
@@ -24,7 +24,7 @@ def upset(
     Variables that are completely NaN across all samples are excluded.
     Variables that do not pass min_presence_fraction of the selected group are removed.
     e.g if 0.5, if only 40% of samples have a valid value that variable is not counted for that group.
-    The final UpSet plot shows presence/absence of variables across the specified groups.  
+    The final UpSet plot shows presence/absence of variables across the specified groups.
 
     Parameters:
     -----------
@@ -69,13 +69,13 @@ def upset(
         .agg(lambda x: x.sum() / len(x) >= min_presence_fraction)
         .T  # transpose to have variables as rows, groups as columns
     )
-    
+
     if grouped_presence.shape[1] == 0:
         raise ValueError("No variables passed the presence filter for any group.")
 
     # Convert to UpSet input format
     upset_data = from_indicators(grouped_presence)
-    upset = UpSet(upset_data, subset_size='count', sort_by=sort_by, **kwargs)
+    upset = UpSet(upset_data, subset_size="count", sort_by=sort_by, **kwargs)
     upset.plot(fig=fig)
 
     if return_fig:

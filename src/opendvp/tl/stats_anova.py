@@ -48,25 +48,25 @@ def stats_anova(
     for column in adata_copy.var.index:
         col_idx = adata_copy.var.index.get_loc(column)
         values = X[:, col_idx].flatten()
-        df_feature = pd.DataFrame({'group': group_labels.to_numpy(), 'value': values})
+        df_feature = pd.DataFrame({"group": group_labels.to_numpy(), "value": values})
 
         # Check for conditions that would cause ANOVA to fail
-        if df_feature['value'].isna().all() or df_feature.groupby('group')['value'].nunique().le(1).any():
+        if df_feature["value"].isna().all() or df_feature.groupby("group")["value"].nunique().le(1).any():
             F_vals.append(np.nan)
             p_vals.append(np.nan)
             continue
 
         try:
             result = pg.anova(data=df_feature, dv="value", between="group", detailed=False)
-            F_vals.append(result['F'].to_numpy()[0])
-            p_vals.append(result['p-unc'].to_numpy()[0])
-        except Exception:
+            F_vals.append(result["F"].to_numpy()[0])
+            p_vals.append(result["p-unc"].to_numpy()[0])
+        except (ValueError, KeyError):
             F_vals.append(np.nan)
             p_vals.append(np.nan)
 
     # --- 2. Add ANOVA results and perform multiple testing correction ---
-    adata_copy.var['anova_F'] = F_vals
-    adata_copy.var['anova_p-unc'] = p_vals
+    adata_copy.var["anova_F"] = F_vals
+    adata_copy.var["anova_p-unc"] = p_vals
 
     p_vals_array = np.array(p_vals)
     valid_p_mask = ~np.isnan(p_vals_array)
@@ -75,13 +75,13 @@ def stats_anova(
 
     if np.any(valid_p_mask):
         pvals_to_correct = p_vals_array[valid_p_mask]
-        result_BH = smm.multipletests(pvals_to_correct, alpha=FDR_threshold, method='fdr_bh')
+        result_BH = smm.multipletests(pvals_to_correct, alpha=FDR_threshold, method="fdr_bh")
         significant_bh[valid_p_mask] = result_BH[0]
         p_corr_bh[valid_p_mask] = result_BH[1]
 
-    adata_copy.var['anova_sig_BH'] = significant_bh
-    adata_copy.var['anova_p_corr'] = p_corr_bh
-    adata_copy.var['-log10_anova_p_corr'] = -np.log10(p_corr_bh)
+    adata_copy.var["anova_sig_BH"] = significant_bh
+    adata_copy.var["anova_p_corr"] = p_corr_bh
+    adata_copy.var["-log10_anova_p_corr"] = -np.log10(p_corr_bh)
 
     n_significant = np.sum(significant_bh)
     logger.info(f"ANOVA found {n_significant} significant features at FDR < {FDR_threshold}.")
@@ -95,14 +95,14 @@ def stats_anova(
         for feature_name in significant_features:
             col_idx = adata_copy.var.index.get_loc(feature_name)
             values = X[:, col_idx].flatten()
-            df_feature = pd.DataFrame({'group': group_labels.to_numpy(), 'value': values})
+            df_feature = pd.DataFrame({"group": group_labels.to_numpy(), "value": values})
             results_posthoc = pg.pairwise_tukey(data=df_feature, dv="value", between="group", effsize="hedges")
             results_posthoc.insert(0, "feature", feature_name)
             posthoc_results.append(results_posthoc)
 
         if posthoc_results:
             posthoc_df = pd.concat(posthoc_results, ignore_index=True)
-            adata_copy.uns['anova_posthoc'] = posthoc_df
+            adata_copy.uns["anova_posthoc"] = posthoc_df
             logger.success("Post-hoc analysis complete. Results stored in `adata.uns['anova_posthoc']`.")
 
     return adata_copy

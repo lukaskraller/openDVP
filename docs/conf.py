@@ -1,7 +1,5 @@
 from importlib.metadata import metadata
-from datetime import datetime
 from pathlib import Path
-import os
 import sys
 
 HERE = Path(__file__).parent
@@ -56,8 +54,8 @@ extensions = [
 autosummary_generate = True
 autodoc_member_order = "groupwise"
 default_role = "literal"
-napoleon_google_docstring = True #changed this
-napoleon_numpy_docstring = False #changed this
+napoleon_google_docstring = True  # changed this
+napoleon_numpy_docstring = False  # changed this
 napoleon_include_init_with_doc = False
 napoleon_use_rtype = True
 napoleon_use_param = True
@@ -90,7 +88,7 @@ intersphinx_mapping = {
     "scanpy": ("https://scanpy.readthedocs.io/en/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
     "matplotlib": ("https://matplotlib.org/stable/", None),
-    'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
 }
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]

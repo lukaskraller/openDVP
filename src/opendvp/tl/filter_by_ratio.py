@@ -12,7 +12,7 @@ def filter_by_ratio(
     label: str = "DAPI",
     min_ratio: float = 0.5,
     max_ratio: float = 1.05,
-    add_detailed_pass_fail: bool = False
+    add_detailed_pass_fail: bool = False,
 ) -> ad.AnnData:
     """Filter cells by the ratio of two markers in an AnnData object.
 
@@ -65,9 +65,9 @@ def filter_by_ratio(
     start_cycle_values = adata_copy[:, start_cycle].X.toarray().flatten()
 
     # Calculate the ratio, handling potential division by zero by replacing with NaN.
-    with np.errstate(divide='ignore', invalid='ignore'):
+    with np.errstate(divide="ignore", invalid="ignore"):
         ratio = end_cycle_values / start_cycle_values
-    ratio[start_cycle_values == 0] = np.nan # Explicitly set ratio to NaN where denominator is 0
+    ratio[start_cycle_values == 0] = np.nan  # Explicitly set ratio to NaN where denominator is 0
 
     # --- 3. Create Boolean Masks ---
     pass_nottoolow = ratio > min_ratio
@@ -76,11 +76,11 @@ def filter_by_ratio(
     pass_final = pd.Series(pass_nottoolow & pass_nottoohigh).fillna(False).to_numpy()
 
     # --- 4. Store Results in adata.obs ---
-    adata_copy.obs[f'{label}_ratio'] = ratio
-    adata_copy.obs[f'{label}_ratio_pass'] = pass_final
+    adata_copy.obs[f"{label}_ratio"] = ratio
+    adata_copy.obs[f"{label}_ratio_pass"] = pass_final
     if add_detailed_pass_fail:
-        adata_copy.obs[f'{label}_ratio_pass_nottoolow'] = pass_nottoolow
-        adata_copy.obs[f'{label}_ratio_pass_nottoohigh'] = pass_nottoohigh
+        adata_copy.obs[f"{label}_ratio_pass_nottoolow"] = pass_nottoolow
+        adata_copy.obs[f"{label}_ratio_pass_nottoohigh"] = pass_nottoohigh
 
     # --- 5. Logging ---
     # Use the calculated boolean masks for logging to be consistent.
@@ -88,7 +88,7 @@ def filter_by_ratio(
     num_too_high = np.sum(ratio > max_ratio)
     num_passed = np.sum(pass_final)
     total_cells = adata_copy.n_obs
-    
+
     logger.info(f"Number of cells with {label} ratio < {min_ratio}: {num_too_low}")
     logger.info(f"Number of cells with {label} ratio > {max_ratio}: {num_too_high}")
     logger.info(f"Cells with {label} ratio between {min_ratio} and {max_ratio}: {num_passed}")

@@ -1,44 +1,41 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Created on Mon Oct 12 17:03:56 2020
 # @author: Ajit Johnson Nirmal
-"""
-!!! abstract "Short Description"
+"""!!! abstract "Short Description"
     `sm.tl.cluster`: This function is designed for clustering cells within the dataset, facilitating the identification of distinct cell populations based on their expression profiles or other relevant features. It supports three popular clustering algorithms:
-    
+
     - **kmeans**: A partitioning method that divides the dataset into `k` clusters, each represented by the centroid of the data points in the cluster. It is suitable for identifying spherical clusters in the feature space.
-        
+
     - **leiden**: An algorithm that refines the cluster partitioning by optimizing a modularity score, leading to the detection of highly connected communities. It is known for its ability to uncover fine-grained and highly cohesive clusters.
-        
+
     Each algorithm has its own set of parameters and assumptions, making some more suitable than others for specific types of dataset characteristics. Users are encouraged to select the clustering algorithm that best matches their data's nature and their analytical goals.
 
 ## Function
 """
 
 # Import library
+import pathlib
+import sys
+
+import anndata
 import numpy as np
 import pandas as pd
 import scanpy as sc
-import scanpy.external as sce
 from sklearn.cluster import KMeans
-import argparse
-import sys
-import anndata
-import pathlib
 
 
 def scimap_spatial_cluster(
     adata,
-    method='kmeans',
-    layer='log',
+    method="kmeans",
+    layer="log",
     subset_genes=None,
     sub_cluster=False,
-    sub_cluster_column='phenotype',
+    sub_cluster_column="phenotype",
     sub_cluster_group=None,
     k=10,
     n_pcs=None,
     resolution=1,
-    phenograph_clustering_metric='euclidean',
+    phenograph_clustering_metric="euclidean",
     nearest_neighbors=30,
     use_raw=True,
     log=True,
@@ -50,7 +47,7 @@ def scimap_spatial_cluster(
 ):
     # Load the andata object
     if isinstance(adata, str):
-        imid = str(adata.rsplit('/', 1)[-1])
+        imid = str(adata.rsplit("/", 1)[-1])
         adata = anndata.read_h5ad(adata)
     else:
         adata = adata
@@ -63,7 +60,6 @@ def scimap_spatial_cluster(
 
     # Leiden clustering
     def leiden_clustering(pheno, adata, nearest_neighbors, n_pcs, resolution):
-
         # subset the data to be clustered
         if pheno is not None:
             cell_subset = adata.obs[adata.obs[sub_cluster_column] == pheno].index
@@ -82,10 +78,10 @@ def scimap_spatial_cluster(
         # clustering
         if pheno is not None:
             if verbose:
-                print('Leiden clustering ' + str(pheno))
+                print("Leiden clustering " + str(pheno))
         else:
             if verbose:
-                print('Leiden clustering')
+                print("Leiden clustering")
 
         sc.tl.pca(data_subset)
         if n_pcs is None:
@@ -94,11 +90,9 @@ def scimap_spatial_cluster(
         sc.tl.leiden(data_subset, resolution=resolution, random_state=random_state)
 
         # Rename the labels
-        cluster_labels = list(map(str, list(data_subset.obs['leiden'])))
+        cluster_labels = list(map(str, list(data_subset.obs["leiden"])))
         if pheno is not None:
-            cluster_labels = list(
-                map(lambda orig_string: pheno + '-' + orig_string, cluster_labels)
-            )
+            cluster_labels = list(map(lambda orig_string: pheno + "-" + orig_string, cluster_labels))
 
         # Make it into a dataframe
         cluster_labels = pd.DataFrame(cluster_labels, index=data_subset.obs.index)
@@ -108,7 +102,6 @@ def scimap_spatial_cluster(
 
     # Kmeans clustering
     def k_clustering(pheno, adata, k, sub_cluster_column, use_raw, random_state):
-
         # subset the data to be clustered
         if pheno is not None:
             cell_subset = adata.obs[adata.obs[sub_cluster_column] == pheno].index
@@ -139,21 +132,17 @@ def scimap_spatial_cluster(
         # K-means clustering
         if pheno is not None:
             if verbose:
-                print('Kmeans clustering ' + str(pheno))
+                print("Kmeans clustering " + str(pheno))
         else:
             if verbose:
-                print('Kmeans clustering')
+                print("Kmeans clustering")
 
-        kmeans = KMeans(n_clusters=k, random_state=random_state, n_init=10).fit(
-            data_subset
-        )
+        kmeans = KMeans(n_clusters=k, random_state=random_state, n_init=10).fit(data_subset)
 
         # Rename the labels
         cluster_labels = list(map(str, kmeans.labels_))
         if pheno is not None:
-            cluster_labels = list(
-                map(lambda orig_string: pheno + '-' + orig_string, cluster_labels)
-            )
+            cluster_labels = list(map(lambda orig_string: pheno + "-" + orig_string, cluster_labels))
 
         # Make it into a
         cluster_labels = pd.DataFrame(cluster_labels, index=data_subset.index)
@@ -178,23 +167,21 @@ def scimap_spatial_cluster(
                 pheno = [sub_cluster_group]
         else:
             # Make sure number of clusters is not greater than number of cells available
-            if method == 'kmeans':
+            if method == "kmeans":
                 pheno = (bdata.obs[sub_cluster_column].value_counts() > k + 1).index[
                     bdata.obs[sub_cluster_column].value_counts() > k + 1
                 ]
-            if method == 'phenograph':
-                pheno = (
-                    bdata.obs[sub_cluster_column].value_counts() > nearest_neighbors + 1
-                ).index[
+            if method == "phenograph":
+                pheno = (bdata.obs[sub_cluster_column].value_counts() > nearest_neighbors + 1).index[
                     bdata.obs[sub_cluster_column].value_counts() > nearest_neighbors + 1
                 ]
-            if method == 'leiden':
+            if method == "leiden":
                 pheno = (bdata.obs[sub_cluster_column].value_counts() > 1).index[
                     bdata.obs[sub_cluster_column].value_counts() > 1
                 ]
 
     # Run the specified method
-    if method == 'kmeans':
+    if method == "kmeans":
         if sub_cluster == True:
             # Apply the Kmeans function
             r_k_clustering = lambda x: k_clustering(
@@ -216,7 +203,7 @@ def scimap_spatial_cluster(
                 random_state=random_state,
             )
 
-    if method == 'leiden':
+    if method == "leiden":
         if sub_cluster == True:
             r_leiden_clustering = lambda x: leiden_clustering(
                 pheno=x,
@@ -243,15 +230,11 @@ def scimap_spatial_cluster(
 
     # Merge with all cells
     # sub_clusters = pd.DataFrame(bdata.obs[sub_cluster_column]).merge(sub_clusters, how='outer', left_index=True, right_index=True)
-    sub_clusters = pd.DataFrame(bdata.obs).merge(
-        sub_clusters, how='outer', left_index=True, right_index=True
-    )
+    sub_clusters = pd.DataFrame(bdata.obs).merge(sub_clusters, how="outer", left_index=True, right_index=True)
 
     # Transfer labels
     if collapse_labels is False and sub_cluster is True:
-        sub_clusters = pd.DataFrame(
-            sub_clusters[0].fillna(sub_clusters[sub_cluster_column])
-        )
+        sub_clusters = pd.DataFrame(sub_clusters[0].fillna(sub_clusters[sub_cluster_column]))
 
     # Get only the required column
     sub_clusters = sub_clusters[0]

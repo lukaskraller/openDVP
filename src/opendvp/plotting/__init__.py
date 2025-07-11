@@ -25,5 +25,5 @@ __all__ = [
     "dual_axis_boxplots",
     "histogram_w_imputation",
     "pca_loadings",
-    "upset"
+    "upset",
 ]

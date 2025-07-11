@@ -12,17 +12,17 @@ from opendvp.utils import logger
 
 
 def stats_bootstrap(
-    dataframe : pd.DataFrame,
-    n_bootstrap : int = 100,
-    subset_sizes : list | None = None,
-    summary_func : Callable | Literal["count_above_threshold"] = np.mean,
-    replace : bool = True,
-    return_raw : bool = False,
-    return_summary : bool = True,
-    plot : bool =True,
-    random_seed : int = 42,
-    nan_policy : str = "omit",
-    cv_threshold : float | None = None,
+    dataframe: pd.DataFrame,
+    n_bootstrap: int = 100,
+    subset_sizes: list | None = None,
+    summary_func: Callable | Literal["count_above_threshold"] = np.mean,
+    replace: bool = True,
+    return_raw: bool = False,
+    return_summary: bool = True,
+    plot: bool = True,
+    random_seed: int = 42,
+    nan_policy: str = "omit",
+    cv_threshold: float | None = None,
 ):
     """Evaluate the variability of feature-level coefficient of variation (CV) via bootstrapping.
 
@@ -97,7 +97,9 @@ def stats_bootstrap(
     if subset_sizes is None:
         subset_sizes = [10, 50, 100]
     if not replace and max(subset_sizes) > dataframe.shape[0]:
-        raise ValueError("A subset size is larger than the number of rows in the dataframe when sampling without replacement.")
+        raise ValueError(
+            "A subset size is larger than the number of rows in the dataframe when sampling without replacement."
+        )
 
     rng = np.random.default_rng(seed=random_seed)
     all_results = []
@@ -107,20 +109,24 @@ def stats_bootstrap(
             # Use a new random state for each sample to ensure independence
             subset = dataframe.sample(n=size, replace=replace, random_state=rng.integers(0, int(1e9)))
             cv = coefficient_of_variation(subset, axis=0, nan_policy=nan_policy)  # Series
-            
+
             # Create a small long-format df for this iteration
             iter_df = cv.reset_index()
-            iter_df.columns = ['feature', 'cv']
-            iter_df['subset_size'] = size
-            iter_df['bootstrap_id'] = i + 1
+            iter_df.columns = ["feature", "cv"]
+            iter_df["subset_size"] = size
+            iter_df["bootstrap_id"] = i + 1
             all_results.append(iter_df)
 
     # Combine all subset sizes
     if not all_results:
         logger.warning("No bootstrap results were generated. Returning empty dataframes.")
-        empty_df = pd.DataFrame(columns=['feature', 'cv', 'subset_size', 'bootstrap_id'])
-        empty_summary = pd.DataFrame(columns=['subset_size', 'feature', 'cv_summary'])
-        return (empty_df, empty_summary) if return_raw and return_summary else (empty_summary if return_summary else (empty_df if return_raw else None))
+        empty_df = pd.DataFrame(columns=["feature", "cv", "subset_size", "bootstrap_id"])
+        empty_summary = pd.DataFrame(columns=["subset_size", "feature", "cv_summary"])
+        return (
+            (empty_df, empty_summary)
+            if return_raw and return_summary
+            else (empty_summary if return_summary else (empty_df if return_raw else None))
+        )
 
     results_df = pd.concat(all_results, ignore_index=True)
 
@@ -130,17 +136,17 @@ def stats_bootstrap(
         if cv_threshold is None:
             raise ValueError("cv_threshold must be set when using 'count_above_threshold' as summary_func.")
         summary_df = (
-            results_df.groupby(['subset_size', 'feature'])['cv']
+            results_df.groupby(["subset_size", "feature"])["cv"]
             .apply(lambda x: (x > cv_threshold).sum())
             .reset_index()
-            .rename(columns={'cv': 'cv_count_above_threshold'})
+            .rename(columns={"cv": "cv_count_above_threshold"})
         )
     else:
         summary_df = (
-            results_df.groupby(['subset_size', 'feature'])['cv']
+            results_df.groupby(["subset_size", "feature"])["cv"]
             .agg(summary_func)
             .reset_index()
-            .rename(columns={'cv': 'cv_summary'})
+            .rename(columns={"cv": "cv_summary"})
         )
 
     if plot:
