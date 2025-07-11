@@ -8,7 +8,6 @@
 .. autosummary::
     :toctree: generated
     
-    plotting.dynamic_histogram
     plotting.plot_graph_network
     plotting.stacked_barplot
 ```

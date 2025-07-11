@@ -130,4 +130,3 @@ def volcano(
     elif internal_ax:
         plt.show()
     return None
-    # plotting logic
