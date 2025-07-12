@@ -1,6 +1,6 @@
 [project]
 name = "openDVP"
-version = "0.5.6"
+version = "0.5.7"
 description = "open-sourced Deep Visual Proteomics toolkit"
 readme = "README.md"
 requires-python = ">=3.10, <3.13"
@@ -13,12 +13,8 @@ dependencies = [
     "geopandas>=0.14",
     "ipykernel",
     "numba>=0.55.0",
-    "numpy",
-    "pandas",
     "matplotlib<3.9.0",
-    "seaborn",
     "scanpy==1.11.0",
-    "plotly>=5.24.1,<6",
     "shapely>=2.0.1",
     "loguru",
     "scipy<1.13", #gensim breaks above
@@ -26,21 +22,19 @@ dependencies = [
     "scikit-image",
     "adjusttext",
     "pingouin",
-    "libpysal",
     "esda",
     "upsetplot",
     "perseuspy>=0.3.9,<0.4",
     "gensim>= 4.3.2",
+    "spatialdata==0.4.0", #added spatialdata to default
+    "napari-spatialdata",
+    "pyqt5",
+    "spatialdata-plot",
     # "pyproj>=3.6", moved to pixi.tools.dependencies
     ]
 
 [project.optional-dependencies]
-spatialdata = [
-    "spatialdata==0.4.0",
-    "napari-spatialdata",
-    "pyqt5",
-    "spatialdata-plot",
-]
+
 dev = [
     "ruff",
     "pytest",
@@ -70,10 +64,8 @@ docs = [
 
 [tool.pixi.environments]
 default =       {features = [],                 solve-group = "default"}
-spatialdata =   {features = ["spatialdata"],    solve-group = "spatialdata"}
 dev =           {features = ["dev"],            solve-group = "dev"}
 docs =          {features = ["docs"],           solve-group = "docs"}
-dev-sdata =     {features = ["dev", "spatialdata"],solve-group = "dev-sdata"}
 
 [build-system]
 build-backend = "hatchling.build"
