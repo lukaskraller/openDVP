@@ -32,10 +32,6 @@ You can install openDVP via pip:
 ```bash
 pip install opendvp
 ```
-If you want to install with spatialdata capacity please run:
-```bash
-pip install 'opendvp[spatialdata]'
-```
 
 ## Motivation
 
