@@ -64,7 +64,7 @@ docs = [
 ]
 
 [project.urls]
-"Documentation" = "https://your-username.github.io/your-repo-name"
+"Documentation" = "https://coscialab.github.io/openDVP/"
 "Homepage" = "https://github.com/CosciaLab/openDVP"
 "Source" = "https://github.com/CosciaLab/openDVP"
 
