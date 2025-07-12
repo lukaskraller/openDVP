@@ -22,7 +22,7 @@
     plotting.coefficient_of_variation
     plotting.density
     plotting.dual_axis_boxplots
-    plotting.histogram_w_imputation
+    plotting.imputation_qc
     plotting.pca_loadings
     plotting.rankplot
     plotting.upset

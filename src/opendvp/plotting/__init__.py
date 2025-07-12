@@ -3,7 +3,7 @@ from .coefficient_of_variation import coefficient_of_variation
 from .correlation_heatmap import correlation_heatmap
 from .density import density
 from .dual_axis_boxplots import dual_axis_boxplots
-from .histogram_w_imputation import histogram_w_imputation
+from .imputation_qc import imputation_qc
 from .pca_loadings import pca_loadings
 from .plot_graph_network import plot_graph_network
 from .rankplot import rankplot
@@ -21,7 +21,7 @@ __all__ = [
     "plot_graph_network",
     "coefficient_of_variation",
     "dual_axis_boxplots",
-    "histogram_w_imputation",
+    "imputation_qc",
     "pca_loadings",
     "upset",
 ]
