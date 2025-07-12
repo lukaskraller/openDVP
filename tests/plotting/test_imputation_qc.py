@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import anndata
 import matplotlib.pyplot as plt
 import numpy as np
@@ -50,3 +52,30 @@ def test_imputation_qc():
     assert "imp_mean" in df_sns.columns
     assert "raw_mean" in df_sns.columns
     assert "diff" in df_sns.columns
+
+
+@patch("matplotlib.pyplot.show")
+def test_imputation_qc_shows_plot_and_returns_none(mock_show):
+    """
+    Test that plt.show() is called and None is returned when return_fig is False
+    and no ax is provided.
+    """
+    # Create a dummy AnnData object
+    n_obs, n_vars = 10, 5
+    X_imputed = np.random.rand(n_obs, n_vars)
+    adata = anndata.AnnData(X_imputed)
+    # Introduce some NaNs to simulate unimputed data and create variance
+    X_raw = X_imputed.copy()
+    X_raw[np.random.choice([True, False], size=X_raw.shape, p=[0.1, 0.9])] = np.nan
+    adata.layers["unimputed"] = X_raw
+    adata.var_names = [f"Gene_{i}" for i in range(n_vars)]
+    adata.obs_names = [f"Cell_{i}" for i in range(n_obs)]
+
+    # Call the function with parameters that trigger plt.show()
+    result = imputation_qc(adata, return_fig=False, ax=None)
+
+    # Assert that the function returns None
+    assert result is None, "Function should return None when return_fig is False"
+
+    # Assert that plt.show() was called
+    mock_show.assert_called_once()
