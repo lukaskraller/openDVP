@@ -10,14 +10,10 @@ maintainers = [{ name = "Jose Nimo", email = "jose.nimo@mdc-berlin.de" }]
 
 dependencies = [
     "anndata>=0.9.1, <0.11",
-    "geopandas>=0.14",
     "ipykernel",
-    "numba>=0.55.0",
-    "matplotlib<3.9.0",
     "scanpy==1.11.0",
-    "shapely>=2.0.1",
     "loguru",
-    "scipy<1.13", #gensim breaks above
+    "scipy<1.13", # Gensim breaks above
     "scikit-learn",
     "scikit-image",
     "adjusttext",
@@ -26,15 +22,14 @@ dependencies = [
     "upsetplot",
     "perseuspy>=0.3.9,<0.4",
     "gensim>= 4.3.2",
-    "spatialdata==0.4.0", #added spatialdata to default
+    "spatialdata==0.4.0",
     "napari-spatialdata",
     "pyqt5",
     "spatialdata-plot",
-    # "pyproj>=3.6", moved to pixi.tools.dependencies
+    # "pyproj>=3.6", Moved to pixi.tools.dependencies
     ]
 
 [project.optional-dependencies]
-
 dev = [
     "ruff",
     "pytest",

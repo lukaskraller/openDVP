@@ -7057,15 +7057,11 @@ packages:
 - pypi: ./
   name: opendvp
   version: 0.5.7
-  sha256: a9eabb6806a83bfcc035665f26cea5286eefa28883c16d6a20f76bab73195c11
+  sha256: 565faf7c0773b3d95c03aebedd967a0363da706958567a0fbb4daf0ca74e3c61
   requires_dist:
   - anndata>=0.9.1,<0.11
-  - geopandas>=0.14
   - ipykernel
-  - numba>=0.55.0
-  - matplotlib<3.9.0
   - scanpy==1.11.0
-  - shapely>=2.0.1
   - loguru
   - scipy<1.13
   - scikit-learn
