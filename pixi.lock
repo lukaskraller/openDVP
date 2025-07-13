@@ -7057,7 +7057,7 @@ packages:
 - pypi: ./
   name: opendvp
   version: 0.5.8
-  sha256: 7517e0574fe9e55c5460d029efa87d1e8602dd70218d9a4bbefc946ce48c4a45
+  sha256: d408beaa727a914ffe8af7b013214f6dd73ac4c82cb2d981766608c669654a8d
   requires_dist:
   - anndata>=0.9.1,<0.11
   - ipykernel

@@ -26,7 +26,6 @@ dependencies = [
     "napari-spatialdata",
     "pyqt5",
     "spatialdata-plot",
-    # "pyproj>=3.6", Moved to pixi.tools.dependencies
     ]
 
 [project.optional-dependencies]
