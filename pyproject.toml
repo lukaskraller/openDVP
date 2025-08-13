@@ -76,6 +76,7 @@ opendvp = { path = ".", editable = true }
 
 [tool.pixi.dependencies]
 pyproj = "3.7.1.*" 
+"." = "*"
 
 ## FORMATTING AND LINTING ##
 
