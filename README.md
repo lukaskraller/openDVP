@@ -23,6 +23,7 @@ Please refer to the [**documentation**](https://coscialab.github.io/openDVP/), p
 
 You will need at least Python 3.10 (or newer) installed on your system.  
 If you are new to creating Python environments, we suggest you use [uv](https://docs.astral.sh/uv/) or [pixi](https://pixi.sh/latest/).
+Installation took 4 seconds (excluding download time).
 
 You can install openDVP via pip:
 
