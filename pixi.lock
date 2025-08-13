@@ -7063,8 +7063,8 @@ packages:
   requires_python: '>3.10'
 - pypi: ./
   name: opendvp
-  version: 0.6.1
-  sha256: 911c9c59012eee254285094aab1e478018a61cdcdd2558fe3a800ee6de728b36
+  version: 0.6.2
+  sha256: 44fbb7e7c599cbb7fd9bedfb585ad18c495aa8339bbeeac938e2bf260ab3bdbb
   requires_dist:
   - anndata>=0.9.1,<0.11
   - dask>=2024.4.1,<=2024.11.2
@@ -7096,6 +7096,7 @@ packages:
   - pytest-cov ; extra == 'dev'
   - pluggy ; extra == 'dev'
   - pygments ; extra == 'dev'
+  - pathspec ; extra == 'dev'
   - sphinx ; extra == 'docs'
   - sphinx-copybutton ; extra == 'docs'
   - sphinxcontrib-bibtex ; extra == 'docs'

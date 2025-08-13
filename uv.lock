@@ -2130,7 +2130,7 @@ wheels = [
 
 [[package]]
 name = "opendvp"
-version = "0.5.12"
+version = "0.6.1"
 source = { editable = "." }
 dependencies = [
     { name = "adjusttext" },
@@ -2161,6 +2161,7 @@ dependencies = [
 dev = [
     { name = "coverage" },
     { name = "hatchling" },
+    { name = "pathspec" },
     { name = "pluggy" },
     { name = "pre-commit" },
     { name = "pygments" },
@@ -2198,6 +2199,7 @@ requires-dist = [
     { name = "napari-spatialdata" },
     { name = "nbsphinx", marker = "extra == 'docs'" },
     { name = "numpy", specifier = "<2.0" },
+    { name = "pathspec", marker = "extra == 'dev'" },
     { name = "perseuspy", specifier = ">=0.3.9,<0.4" },
     { name = "pingouin", specifier = ">=0.5.5,<0.6" },
     { name = "pluggy", marker = "extra == 'dev'" },
