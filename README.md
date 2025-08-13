@@ -11,41 +11,36 @@
 <img width="853" height="602" alt="Screenshot 2025-07-10 at 13 11 28" src="https://github.com/user-attachments/assets/15c4445e-b0c7-4734-945c-3d664ded4b00" />
 
 
-**OpenDVP** is an open-source framework designed to support Deep Visual Proteomics (DVP) across multiple modalities using community-supported tools.
-
----
-
 ## Overview
 
-OpenDVP empowers researchers to perform Deep Visual Proteomics using open-source software. It integrates with community data standards such as [AnnData](https://anndata.readthedocs.io/en/latest/) and [SpatialData](https://spatialdata.scverse.org/) to ensure interoperability with popular analysis tools like [Scanpy](https://github.com/scverse/scanpy), [Squidpy](https://github.com/scverse/squidpy), and [Scimap](https://github.com/labsyspharm/scimap).
+**OpenDVP** is an open-source framework designed to support Deep Visual Proteomics (DVP) across multiple modalities using community-supported tools. OpenDVP empowers researchers to perform Deep Visual Proteomics using open-source software. It integrates with community data standards such as [AnnData](https://anndata.readthedocs.io/en/latest/) and [SpatialData](https://spatialdata.scverse.org/) to ensure interoperability with popular analysis tools like [Scanpy](https://github.com/scverse/scanpy), [Squidpy](https://github.com/scverse/squidpy), and [Scimap](https://github.com/labsyspharm/scimap).
 
-This repository outlines four major use cases for OpenDVP:
+## Getting started
 
-1. **Image Processing and Analysis**
-2. **Matrix Processing and Analysis**
-3. **Quality Control with QuPath and Napari**
-4. **Exporting to LMD (Laser Microdissection)**
+Please refer to the [**documentation**](https://coscialab.github.io/openDVP/), particularly the [API documentation](https://coscialab.github.io/openDVP/api/index.html).
 
 ## Installation
 
+You will need at least Python 3.10 (or newer) installed on your system.  
+If you are new to creating Python environments, we suggest you use [uv](https://docs.astral.sh/uv/) or [pixi](https://pixi.sh/latest/).
+
 You can install openDVP via pip:
+
 ```bash
 pip install opendvp
 ```
 
-## Motivation
+To install the latest version:
 
-Deep Visual Proteomics (DVP) combines high-dimensional imaging, spatial analysis, and machine learning to extract complex biological insights from tissue samples. However, many current DVP tools are locked into proprietary formats, restricted software ecosystems, or closed-source pipelines that limit reproducibility, accessibility, and community collaboration.
+```bash
+pip install git+https://github.com/CosciaLab/openDVP.git@main
+```
 
-- Work transparently across modalities and analysis environments
-- Contribute improvements back to a growing ecosystem
-- Avoid vendor lock-in for critical workflows
+## Tutorials
 
-## Qupath-to-LMD
-
-[Qupath-to-LMD Webapp](https://qupath-to-lmd-mdcberlin.streamlit.app/)
-
-[![Tutorial](https://img.youtube.com/vi/jimBIqGUaXg/0.jpg)](https://www.youtube.com/watch?v=jimBIqGUaXg&t=2s)
+To understand what are the applications of openDVP, please check our
+[**Tutorials**](https://coscialab.github.io/openDVP/Tutorials/index.html).  
+Briefly, they introduce users to **(1) Image analysis**, **(2) downstream proteomic analysis**, and **(3) Integration of imaging with proteomic data**.  Please download our [**Demo Dataset**](https://zenodo.org/records/15830141) to best follow the tutorials :)  
 
 ## Community & Discussions
 
@@ -53,12 +48,23 @@ We are excited to hear from you and together we can improve spatial protemics.
 We welcome questions, feedback, and community contributions!  
 Join the conversation in the [GitHub Discussions](https://github.com/CosciaLab/opendvp/discussions) tab.
 
-
 ## Citation
 
-Please cite the corresponding bioarxiv for now, Coming Soon!
+Please cite the [BioArxiv](https://www.biorxiv.org/content/10.1101/2025.07.13.662099v1):
 
-## Demo data
-A comprehensive tutorial of openDVP features is on the works, to test it, feel free to download our demo data.
+>Nimo, J., Fritzsche, S., Valdes, D. S., Trinh, M., Pentimalli, T., Schallenberg, S., Klauschen, F., Herse, F., Florian, S., Rajewsky, N., & Coscia, F. (2025). OpenDVP: An experimental and computational framework for community-empowered deep visual proteomics [Preprint]. bioRxiv. https://doi.org/10.1101/2025.07.13.662099
 
-https://zenodo.org/records/15397560
+## Motivation
+
+[Deep Visual Proteomics (DVP)](https://www.nature.com/articles/s41587-022-01302-5) combines high-dimensional imaging, spatial analysis, and machine learning to extract complex biological insights from tissue samples. However, many current DVP tools are locked into proprietary formats, restricted software ecosystems, or closed-source pipelines that limit reproducibility, accessibility, and community collaboration.
+
+- Work transparently across modalities and analysis environments
+- Contribute improvements back to a growing ecosystem
+- Avoid vendor lock-in for critical workflows
+
+## Qupath-to-LMD
+
+Qupath to lmd is a tool we use to make it as easy as possible to go from QuPath annotations to LMD contours
+Check our [Qupath-to-LMD Webapp](https://qupath-to-lmd-mdcberlin.streamlit.app/), or watch our Youtube tutorial:
+
+[![Tutorial](https://img.youtube.com/vi/jimBIqGUaXg/0.jpg)](https://www.youtube.com/watch?v=jimBIqGUaXg&t=2s)
