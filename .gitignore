@@ -1,5 +1,6 @@
-#sdata
-/data/
+# docs
+/docs/data/
+/docs/outputs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
