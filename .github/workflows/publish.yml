@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies and build package
         run: |
-          uv pip sync --extra dev
+          uv pip sync --extra dev pyproject.toml
           uv run hatchling build
 
       - name: Publish to PyPI
