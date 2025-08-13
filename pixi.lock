@@ -7063,8 +7063,8 @@ packages:
   requires_python: '>3.10'
 - pypi: ./
   name: opendvp
-  version: 0.6.2
-  sha256: 44fbb7e7c599cbb7fd9bedfb585ad18c495aa8339bbeeac938e2bf260ab3bdbb
+  version: 0.6.3
+  sha256: 8719d68341f8f0c8d5854d01df718249425dcad5b8b4389c8a76e0e3c10dcbcc
   requires_dist:
   - anndata>=0.9.1,<0.11
   - dask>=2024.4.1,<=2024.11.2
