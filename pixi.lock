@@ -7056,14 +7056,15 @@ packages:
   requires_python: '>3.10'
 - pypi: ./
   name: opendvp
-  version: 0.5.8
-  sha256: d408beaa727a914ffe8af7b013214f6dd73ac4c82cb2d981766608c669654a8d
+  version: 0.5.10
+  sha256: f8d6a27e2fe22a399efcdd3ba211ee196debcb47f04aa64530f74414015e0aae
   requires_dist:
   - anndata>=0.9.1,<0.11
   - ipykernel
-  - scanpy==1.11.0
+  - scanpy>=1.11
   - loguru
   - scipy<1.13
+  - statsmodels>=0.14
   - scikit-learn
   - scikit-image
   - adjusttext
@@ -7072,7 +7073,7 @@ packages:
   - upsetplot
   - perseuspy>=0.3.9,<0.4
   - gensim>=4.3.2
-  - spatialdata==0.4.0
+  - spatialdata>=0.4
   - napari-spatialdata
   - pyqt5
   - spatialdata-plot
