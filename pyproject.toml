@@ -42,9 +42,10 @@ dev = [
   "pre-commit",
   "coverage",
   "pytest-cov",
-  "pluggy",
-  "pygments",
-  "pathspec"
+  # "pluggy",
+  # "pygments",
+  # "pathspec",
+  "deptry>=0.23.1",
 ]
 
 docs = [
