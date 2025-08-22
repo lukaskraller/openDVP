@@ -2158,7 +2158,7 @@ dependencies = [
     { name = "xarray" },
 ]
 
-[package.optional-dependencies]
+[package.dev-dependencies]
 dev = [
     { name = "coverage" },
     { name = "hatchling" },
@@ -2188,49 +2188,54 @@ docs = [
 requires-dist = [
     { name = "adjusttext" },
     { name = "anndata", specifier = ">=0.9.1,<0.11" },
-    { name = "coverage", marker = "extra == 'dev'" },
     { name = "dask", specifier = ">=2024.4.1,<=2024.11.2" },
     { name = "esda", specifier = ">=2.7,<2.8" },
     { name = "gensim", specifier = ">=4.3.2" },
-    { name = "hatchling", marker = "extra == 'dev'" },
     { name = "ipykernel" },
     { name = "loguru" },
-    { name = "myst-nb", marker = "extra == 'docs'" },
-    { name = "myst-parser", marker = "extra == 'docs'" },
     { name = "napari-spatialdata" },
-    { name = "nbsphinx", marker = "extra == 'docs'" },
     { name = "numpy", specifier = "<2.0" },
-    { name = "pathspec", marker = "extra == 'dev'" },
     { name = "perseuspy", specifier = ">=0.3.9,<0.4" },
     { name = "pingouin", specifier = ">=0.5.5,<0.6" },
-    { name = "pluggy", marker = "extra == 'dev'" },
-    { name = "pre-commit", marker = "extra == 'dev'" },
-    { name = "pygments", marker = "extra == 'dev'" },
     { name = "pyproj" },
     { name = "pyqt6" },
-    { name = "pytest", marker = "extra == 'dev'" },
-    { name = "pytest-cov", marker = "extra == 'dev'" },
-    { name = "ruff", marker = "extra == 'dev'" },
     { name = "scanpy", specifier = ">=1.11,<1.14" },
     { name = "scikit-image", specifier = "==0.25.2" },
     { name = "scipy", specifier = "<1.13" },
     { name = "spatialdata", specifier = ">=0.4" },
     { name = "spatialdata-plot" },
-    { name = "sphinx", marker = "extra == 'docs'" },
-    { name = "sphinx-autodoc-typehints", marker = "extra == 'docs'" },
-    { name = "sphinx-book-theme", marker = "extra == 'docs'" },
-    { name = "sphinx-copybutton", marker = "extra == 'docs'" },
-    { name = "sphinx-tabs", marker = "extra == 'docs'" },
-    { name = "sphinxcontrib-bibtex", marker = "extra == 'docs'" },
-    { name = "sphinxext-opengraph", marker = "extra == 'docs'" },
     { name = "statsmodels", specifier = ">=0.14.5" },
     { name = "tifffile", specifier = "==2025.6.11" },
-    { name = "twine", marker = "extra == 'docs'" },
     { name = "umap-learn", specifier = "==0.5.7" },
     { name = "upsetplot" },
     { name = "xarray", specifier = ">=2024.10.0" },
 ]
-provides-extras = ["dev", "docs"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "coverage" },
+    { name = "hatchling" },
+    { name = "pathspec" },
+    { name = "pluggy" },
+    { name = "pre-commit" },
+    { name = "pygments" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "ruff" },
+]
+docs = [
+    { name = "myst-nb" },
+    { name = "myst-parser" },
+    { name = "nbsphinx" },
+    { name = "sphinx" },
+    { name = "sphinx-autodoc-typehints" },
+    { name = "sphinx-book-theme" },
+    { name = "sphinx-copybutton" },
+    { name = "sphinx-tabs" },
+    { name = "sphinxcontrib-bibtex" },
+    { name = "sphinxext-opengraph" },
+    { name = "twine" },
+]
 
 [[package]]
 name = "packaging"

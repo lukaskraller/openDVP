@@ -34,17 +34,17 @@ dependencies = [
     "pyproj",
     ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-    "ruff",
-    "pytest",
-    "hatchling",
-    "pre-commit",
-    "coverage",
-    "pytest-cov",
-    "pluggy",
-    "pygments",
-    "pathspec"
+  "ruff",
+  "pytest",
+  "hatchling",
+  "pre-commit",
+  "coverage",
+  "pytest-cov",
+  "pluggy",
+  "pygments",
+  "pathspec"
 ]
 
 docs = [
@@ -60,6 +60,7 @@ docs = [
     "nbsphinx",
     "sphinx_autodoc_typehints"
 ]
+
 
 [project.urls]
 "Documentation" = "https://coscialab.github.io/openDVP/"
@@ -135,3 +136,5 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
 docstring-code-format = true
+
+
