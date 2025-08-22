@@ -2157,7 +2157,6 @@ source = { editable = "." }
 dependencies = [
     { name = "adjusttext" },
     { name = "anndata" },
-    { name = "dask" },
     { name = "esda" },
     { name = "gensim" },
     { name = "ipykernel" },
@@ -2169,15 +2168,11 @@ dependencies = [
     { name = "pyproj" },
     { name = "pyqt6" },
     { name = "scanpy" },
-    { name = "scikit-image" },
     { name = "scipy" },
     { name = "spatialdata" },
     { name = "spatialdata-plot" },
     { name = "statsmodels" },
-    { name = "tifffile" },
-    { name = "umap-learn" },
     { name = "upsetplot" },
-    { name = "xarray" },
 ]
 
 [package.dev-dependencies]
@@ -2208,27 +2203,22 @@ docs = [
 requires-dist = [
     { name = "adjusttext" },
     { name = "anndata", specifier = ">=0.9.1,<0.11" },
-    { name = "dask", specifier = ">=2024.4.1,<=2024.11.2" },
     { name = "esda", specifier = ">=2.7,<2.8" },
     { name = "gensim", specifier = ">=4.3.2" },
     { name = "ipykernel" },
     { name = "loguru" },
-    { name = "napari-spatialdata" },
+    { name = "napari-spatialdata", specifier = "~=0.5.5" },
     { name = "numpy", specifier = "<2.0" },
     { name = "perseuspy", specifier = ">=0.3.9,<0.4" },
     { name = "pingouin", specifier = ">=0.5.5,<0.6" },
     { name = "pyproj" },
     { name = "pyqt6" },
     { name = "scanpy", specifier = ">=1.11,<1.14" },
-    { name = "scikit-image", specifier = "==0.25.2" },
     { name = "scipy", specifier = "<1.13" },
-    { name = "spatialdata", specifier = ">=0.4" },
+    { name = "spatialdata", specifier = "==0.4.0" },
     { name = "spatialdata-plot" },
     { name = "statsmodels", specifier = ">=0.14.5" },
-    { name = "tifffile", specifier = "==2025.6.11" },
-    { name = "umap-learn", specifier = "==0.5.7" },
     { name = "upsetplot" },
-    { name = "xarray", specifier = ">=2024.10.0" },
 ]
 
 [package.metadata.requires-dev]
