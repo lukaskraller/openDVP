@@ -1,6 +1,6 @@
 [project]
 name = "openDVP"
-version = "0.6.5a1"
+version = "0.7.0"
 description = "open-sourced Deep Visual Proteomics toolkit"
 readme = "README.md"
 requires-python = ">=3.11, <3.13"
@@ -13,16 +13,11 @@ dependencies = [
     "spatialdata == 0.4.0",
     "napari-spatialdata ~= 0.5.5",
     "spatialdata-plot ~= 0.2.9 ",
-    # "dask >=2024.4.1, <=2024.11.2",
-    # "numpy <2.0",
     "ipykernel ~= 6.25",
     "scanpy >=1.11, <1.14",
-    # "umap-learn == 0.5.7",
     "loguru ~= 0.7.3",
     "scipy <1.13", # Gensim breaks above
     "statsmodels >=0.14.5",
-    # "scikit-image==0.25.2",
-    # "tifffile==2025.6.11",
     "adjusttext",
     "pingouin >=0.5.5, <0.6",
     "esda >=2.7, <2.8",
@@ -30,12 +25,9 @@ dependencies = [
     "perseuspy >=0.3.9,<0.4",
     "gensim >=4.3.2",
     "pyqt6",
-    # "xarray >=2024.10.0",
-    # "pyproj",
     ]
 
 [dependency-groups]
-
 dev = [
   "ruff",
   "pytest",
@@ -43,12 +35,8 @@ dev = [
   "pre-commit",
   "coverage",
   "pytest-cov",
-  # "pluggy",
-  # "pygments",
-  # "pathspec",
   "twine"
 ]
-
 docs = [
   "sphinx",
   "sphinx_copybutton",
@@ -62,7 +50,6 @@ docs = [
   "nbsphinx",
   "sphinx_autodoc_typehints"
 ]
-
 
 [project.urls]
 "Documentation" = "https://coscialab.github.io/openDVP/"
@@ -138,5 +125,3 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
 docstring-code-format = true
-
-
