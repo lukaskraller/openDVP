@@ -2130,7 +2130,7 @@ wheels = [
 
 [[package]]
 name = "opendvp"
-version = "0.6.4"
+version = "0.6.5"
 source = { editable = "." }
 dependencies = [
     { name = "adjusttext" },
@@ -2144,6 +2144,7 @@ dependencies = [
     { name = "numpy" },
     { name = "perseuspy" },
     { name = "pingouin" },
+    { name = "pyproj" },
     { name = "pyqt6" },
     { name = "scanpy" },
     { name = "scikit-image" },
@@ -2205,6 +2206,7 @@ requires-dist = [
     { name = "pluggy", marker = "extra == 'dev'" },
     { name = "pre-commit", marker = "extra == 'dev'" },
     { name = "pygments", marker = "extra == 'dev'" },
+    { name = "pyproj" },
     { name = "pyqt6" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pytest-cov", marker = "extra == 'dev'" },
