@@ -1,6 +1,6 @@
 [project]
 name = "openDVP"
-version = "0.6.5"
+version = "0.7.0"
 description = "open-sourced Deep Visual Proteomics toolkit"
 readme = "README.md"
 requires-python = ">=3.11, <3.13"
@@ -9,55 +9,46 @@ authors = [{name = "Jose Nimo", email = "jose.nimo@mdc-berlin.de"}]
 maintainers = [{ name = "Jose Nimo", email = "jose.nimo@mdc-berlin.de" }]
 
 dependencies = [
-    "anndata>=0.9.1, <0.11",
-    "dask >=2024.4.1, <=2024.11.2",
-    "numpy <2.0",
-    "ipykernel",
+    "anndata >=0.9.1, <0.11",
+    "spatialdata == 0.4.0",
+    "napari-spatialdata ~= 0.5.5",
+    "spatialdata-plot ~= 0.2.9 ",
+    "ipykernel ~= 6.25",
     "scanpy >=1.11, <1.14",
-    "umap-learn == 0.5.7",
-    "loguru",
+    "loguru ~= 0.7.3",
     "scipy <1.13", # Gensim breaks above
     "statsmodels >=0.14.5",
-    "scikit-image==0.25.2",
-    "tifffile==2025.6.11",
     "adjusttext",
     "pingouin >=0.5.5, <0.6",
     "esda >=2.7, <2.8",
     "upsetplot",
     "perseuspy >=0.3.9,<0.4",
     "gensim >=4.3.2",
-    "spatialdata >=0.4",
-    "napari-spatialdata",
     "pyqt6",
-    "spatialdata-plot",
-    "xarray >=2024.10.0",
     ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-    "ruff",
-    "pytest",
-    "hatchling",
-    "pre-commit",
-    "coverage",
-    "pytest-cov",
-    "pluggy",
-    "pygments",
-    "pathspec"
+  "ruff",
+  "pytest",
+  "hatchling",
+  "pre-commit",
+  "coverage",
+  "pytest-cov",
+  "twine"
 ]
-
 docs = [
-    "sphinx",
-    "sphinx_copybutton",
-    "sphinxcontrib-bibtex", 
-    "sphinx_tabs", 
-    "sphinxext-opengraph", 
-    "sphinx-book-theme",
-    "twine",
-    "myst-parser",
-    "myst_nb",
-    "nbsphinx",
-    "sphinx_autodoc_typehints"
+  "sphinx",
+  "sphinx_copybutton",
+  "sphinxcontrib-bibtex", 
+  "sphinx_tabs", 
+  "sphinxext-opengraph", 
+  "sphinx-book-theme",
+  "twine",
+  "myst-parser",
+  "myst_nb",
+  "nbsphinx",
+  "sphinx_autodoc_typehints"
 ]
 
 [project.urls]
@@ -65,33 +56,15 @@ docs = [
 "Homepage" = "https://github.com/CosciaLab/openDVP"
 "Source" = "https://github.com/CosciaLab/openDVP"
 
-[tool.pixi.environments]
-default =       {features = [],                 solve-group = "default"}
-dev =           {features = ["dev"],            solve-group = "dev"}
-docs =          {features = ["docs"],           solve-group = "docs"}
-
 [build-system]
-build-backend = "hatchling.build"
-requires = ["hatchling"]
-
-[tool.pixi.project]
-channels = ["conda-forge"]
-platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
-
-[tool.pixi.pypi-dependencies]
-opendvp = { path = ".", editable = true }
-
-[tool.pixi.tasks]
-
-[tool.pixi.dependencies]
-pyproj = "==3.7.1" 
+requires = ["uv_build>=0.8.13,<0.9.0"]
+build-backend = "uv_build"
 
 ## FORMATTING AND LINTING ##
 
 [tool.ruff]
 line-length = 120
 target-version = "py311"
-
 
 [tool.ruff.lint]
 per-file-ignores."*/__init__.py" = [ "F401" ]

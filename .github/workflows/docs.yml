@@ -3,9 +3,7 @@ name: docs
 on:
   push:
     tags:
-      - 'v*'
-    branches:
-      - docs
+      - "v*"
 
 jobs:
   build-docs:
@@ -21,18 +19,18 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version-file: "pyproject.toml"
 
-      - name: Install Pixi with docs dependencies
-        uses: prefix-dev/setup-pixi@v0.8.0
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v6
         with:
-            manifest-path: pyproject.toml
-            environments: docs
-            activate-environment: docs
-            log-level: vv
+          enable-cache: true
 
-      - name: Build documentation
-        run: sphinx-build -b html docs docs/_build/html
+      - name: Install dependencies
+        run: "uv sync"
+
+      - name: Build docs
+        run: uv run --group docs sphinx-build -b html docs docs/_build/html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -40,3 +38,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/_build/html
           publish_branch: gh-pages
+
+      - name: Minimize uv cache
+        run: uv cache prune --ci
