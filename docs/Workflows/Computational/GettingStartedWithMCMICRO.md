@@ -488,17 +488,134 @@ SOPA is a wonderful pipeline, similar to MCMICRO but has some fundamental differ
 
 Similarly, for a overview of SOPA read the [paper](https://www.nature.com/articles/s41467-024-48981-z), for a more technical overview visit the [website](https://gustaveroussy.github.io/sopa/).
 
+General:
+
 - SOPA runs on [Snakemake](https://snakemake.github.io/), nextflow version is in [development](https://nf-co.re/sopa/usage).
+- SOPA uses the Spatialdata object natively, some experience with SpatialData is recommended.
+
+Advantages:
+
+- SOPA can run on Windows.
 - SOPA is easier to customize than MCMICRO. For adding a function quickly to your pipeline use this (Python required).
 - SOPA can be used in four flavours: jupyter notebooks with python API, snakemake, nextflow, and CLI.
-- SOPA uses the Spatialdata object natively, experience with SpatialData is recommended.
 - SOPA is compatible with various modalities:  Xenium, Visium HD, MERSCOPE, CosMx, PhenoCycler, MACSima, Molecular Cartography.
 
-### Run SOPA locally
+Disadvantages:
+
+- More modality compatibility leads to complexity of setup.
+- SOPA cannot perform **Illumination correction**, **Stitching and Registration**, or **Background Subtraction**.(Jose is considering helping out SOPA devs with these).
+- Output is spatialdata object, not super friendly to get data out of.
+- Segmentation output is `.geojson` not `.tif` (you can convert easily with spatialdata function).
+
+## Setup SOPA locally in your computer (for testing subsets)
 
 - Familiarize yourself with the [Snakemake framework](https://snakemake.github.io/).
-- Follow SOPA [Getting Started](https://gustaveroussy.github.io/sopa/getting_started/) to install necessary packages.
-- Follow SOPA's [snakemake tutorial](https://gustaveroussy.github.io/sopa/tutorials/snakemake/)
+- Follow SOPA [Getting Started](https://gustaveroussy.github.io/sopa/getting_started/).
+- Follow SOPA's [snakemake tutorial](https://gustaveroussy.github.io/sopa/tutorials/snakemake/).
+
+### Step 1: Ensure you have conda/mamba installed
+
+- Download micromamba from [Micromamba Releases](https://github.com/mamba-org/micromamba-releases/releases). You might have to click `show all 27 assets` to see the version you need.
+- Check that you can create environments and download packages
+
+### Step 2: Create sopa environment
+
+```python
+# from SOPA user guide, tested by Jose
+# every line is one command that must be ran one at a time.
+conda create --name sopa python=3.10
+conda activate sopa
+
+pip install sopa
+pip install snakemake
+
+# you can decide which segmentation tool to use, let's use cellpose
+pip install 'sopa[cellpose]'
+
+# for some reason cellpose >4 breaks sopa, we have to uninstall and install cellpose 3
+pip uninstall cellpose
+pip install 'cellpose <4.0.0'
+```
+
+### Step 3: Download sopa defaults
+
+SOPA have many processes, and many processes are modality specific. You can concatenate them as you want (not simple, not super complex either). To simplify things for now, We will use SOPA-provided defaults for dealing with ome.tif
+
+```bash
+# in the terminal, go to directory you know
+# this will download the entire github repository
+git clone https://github.com/gustaveroussy/sopa.git
+```
+
+### Step 4: Edit default parameters
+
+Open the following file inside the downloaded `sopa` directory:
+`sopa/workflow/configs/misc/ome_tif.yaml`
+
+This is the parameter file that sets the parameters for all the processes.  
+For a deeper look into what each of these does check [parameter_guide](https://github.com/gustaveroussy/sopa/blob/main/workflow/config/example_commented.yaml)
+
+We will change the cellpose parameters to the following to make it work with our demo image.
+
+```yaml
+# these are the settings you should have (ensure you save the file after you are done).
+read:
+  technology: ome_tif
+
+patchify:
+  patch_width_pixel: 400
+  patch_overlap_pixel: 40
+
+segmentation:
+  cellpose:
+    model_type: "nuclei"
+    diameter: 25
+    channels: [ "DAPI_bg" ]
+    flow_threshold: 2
+    cellprob_threshold: -6
+    min_area: 25
+    gaussian_sigma: 1
+
+aggregate:
+  aggregate_channels: true
+  min_intensity_ratio: 0.1
+  expand_radius_ratio: 0.1
+
+explorer:
+  ram_threshold_gb: 4
+  pixel_size: 1
+```
+
+### Step 4: Run sopa with defaults
+
+There are three paths you need to pass to the snakemake command:
+
+1. path to your image
+2. path to the edited config file
+3. path to the workflow profile (provided by sopa download)
+
+For the demo image copy:  
+`RD_Coscia/Jose/__TestDatasets/TD_01_verysmall_mIF.ome.tif`  
+and place it in here:  
+`sopa/data/TD_01_verysmall_mIF.ome.tif`
+
+```bash
+# go to the sopa directory
+cd sopa
+# activate environment
+mamba activate sopa
+
+# run snakemake
+snakemake \
+    --config data_path=./data/TD_01_verysmall_mIF.ome.tif \
+    --configfile= ./workflow/configs/misc/ome_tif.yaml \
+    --workflow-profile ./workflow/profile/local \
+    --cores 2
+
+# for Windows you must replace:
+# <\> with a caret (^) for the traditional Command Prompt (cmd.exe) and a backtick (`) for PowerShell.
+# you can also remove them and create a single line command in an editor, and then copy paste.
+```
 
 ### Run SOPA on HPC
 
