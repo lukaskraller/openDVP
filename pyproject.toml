@@ -1,6 +1,5 @@
 [project]
 name = "openDVP"
-version = "0.7.2"
 version = "0.7.1"
 description = "open-sourced Deep Visual Proteomics toolkit"
 readme = "README.md"
@@ -10,7 +9,6 @@ authors = [{name = "Jose Nimo", email = "jose.nimo@mdc-berlin.de"}]
 maintainers = [{ name = "Jose Nimo", email = "jose.nimo@mdc-berlin.de" }]
 
 dependencies = [
-    # "anndata >=0.9.1, <0.11",
     "spatialdata == 0.4.0",
     "napari-spatialdata == 0.5.5",
     "spatialdata-plot ~= 0.2.9 ",
