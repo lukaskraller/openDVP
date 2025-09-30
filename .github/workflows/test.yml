@@ -18,7 +18,7 @@ jobs:
             fail-fast: false
             matrix:
               os: [ubuntu-latest, windows-latest, macos-latest]
-              python: ["3.11", "3.12"]
+              python: ["3.10","3.11", "3.12"]
 
         env:
             OS: ${{ matrix.os }}
@@ -50,6 +50,26 @@ jobs:
             #       verbose: true
             #   env:
             #       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+            - name: Build Wheel
+              run: "uv build"
+
+            - name: Setup Miniconda
+              uses: conda-incubator/setup-miniconda@v3
+              with:
+                auto-update-conda: true
+                auto-activate-base: false
+
+            - name: Create Isolated Conda Environment
+              # Use python-version here to ensure the environment matches the matrix
+              run: conda create -n build_test_env python=${{ matrix.python }} -y
+
+            - name: Install Built Wheel into Conda Environment
+              # Use the 'conda run' wrapper to ensure the pip install happens in the target env
+              run: conda run -n build_test_env pip install dist/*.whl
+
+            - name: Verify Installation
+              run: conda run -n build_test_env python -c "import opendvp; print('Successfully installed and imported package into Conda environment.')"
 
             - name: Minimize uv cache
               run: uv cache prune --ci
