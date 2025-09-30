@@ -62,11 +62,16 @@ jobs:
                 auto-activate-base: false
 
             - name: Create Isolated Conda Environment
-              # Use python-version here to ensure the environment matches the matrix
               run: conda create -n build_test_env python=${{ matrix.python }} -y
+              
+            - name: Install Wheel on Windows
+              if: runner.os == 'Windows'
+              run: |
+                $whl = Get-ChildItem -Path dist/*.whl | Select-Object -First 1
+                conda run -n build_test_env python -m pip install $whl.FullName
 
-            - name: Install Built Wheel into Conda Environment
-              # Use the 'conda run' wrapper to ensure the pip install happens in the target env
+            - name: Install Wheel on Linux/macOS
+              if: runner.os != 'Windows'
               run: conda run -n build_test_env pip install dist/*.whl
 
             - name: Verify Installation
