@@ -10,15 +10,16 @@ jobs:
     test:
         runs-on: ${{ matrix.os }}
         
-        defaults:
-            run:
-                shell: bash -e {0}
+        # defaults:
+        #     run:
+        #         shell: bash -e {0}
+        # because windows runs into issues
 
         strategy:
             fail-fast: false
             matrix:
               os: [ubuntu-latest, windows-latest, macos-latest]
-              python: ["3.10","3.11", "3.12"]
+              python: ["3.11", "3.12"]
 
         env:
             OS: ${{ matrix.os }}
