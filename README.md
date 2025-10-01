@@ -30,7 +30,6 @@ You can install openDVP via pip:
 conda create --name opendvp -y python=3.12
 ```
 
-
 ```bash
 pip install opendvp
 ```
