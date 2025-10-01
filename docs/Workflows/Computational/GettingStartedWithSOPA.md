@@ -9,7 +9,7 @@ Similarly, for a overview of SOPA read the [paper](https://www.nature.com/articl
 ### General:
 
 - SOPA runs on [Snakemake](https://snakemake.github.io/), nextflow version is in [development](https://nf-co.re/sopa/usage).
-- SOPA uses the Spatialdata object natively, some experience with SpatialData is recommended.
+- SOPA uses the Spatialdata object natively, some experience with SpatialData is preferred.
 
 ### Advantages:
 
