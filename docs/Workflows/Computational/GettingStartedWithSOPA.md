@@ -38,30 +38,33 @@ Similarly, for a overview of SOPA read the [paper](https://www.nature.com/articl
 
 ### Step 2: Create sopa environment
 
-```python
-# from SOPA user guide, tested by Jose
-# every line is one command that must be ran one at a time.
-conda create --name sopa python=3.10
+```console
+conda create --name sopa python=3.12
+```
+
+```console
 conda activate sopa
+```
 
-pip install sopa
-pip install snakemake
+Install sopa (with cellpose extension) and snakemake
 
-# you can decide which segmentation tool to use, let's use cellpose
-pip install 'sopa[cellpose]'
+```console
+pip install 'sopa[cellpose]' snakemake
+```
 
-# for some reason cellpose >4 breaks sopa, we have to uninstall and install cellpose 3
-pip uninstall cellpose
-pip install 'cellpose <4.0.0'
+for some reason cellpose 4 breaks sopa, we have to install cellpose 3
+
+```console
+pip install 'cellpose <4'
 ```
 
 ### Step 3: Download sopa defaults
 
 SOPA have many processes, and many processes are modality specific. You can concatenate them as you want (not simple, not super complex either). To simplify things for now, We will use SOPA-provided defaults for dealing with ome.tif
 
+In the terminal, go to directory you know and this will download the entire github repository.
+
 ```bash
-# in the terminal, go to directory you know
-# this will download the entire github repository
 git clone https://github.com/gustaveroussy/sopa.git
 ```
 
@@ -104,7 +107,7 @@ explorer:
   pixel_size: 1
 ```
 
-### Step 4: Run sopa with defaults
+### Step 5: Run sopa with defaults
 
 There are three paths you need to pass to the snakemake command:
 
@@ -117,25 +120,62 @@ For the demo image copy:
 and place it in here:  
 `sopa/data/TD_01_verysmall_mIF.ome.tif`
 
+SOPA command template
+
 ```bash
-# go to the sopa directory
-cd sopa
-# activate environment
-mamba activate sopa
-
-# run snakemake
 snakemake \
-    --config data_path=./data/TD_01_verysmall_mIF.ome.tif \
-    --configfile= ./workflow/configs/misc/ome_tif.yaml \
+    --config data_path=$PATH_TO_IMAGE \
+    --configfile=$PATH_TO_YAML \
     --workflow-profile ./workflow/profile/local \
-    --cores 2
-
-# for Windows you must replace:
-# <\> with a caret (^) for the traditional Command Prompt (cmd.exe) and a backtick (`) for PowerShell.
-# you can also remove them and create a single line command in an editor, and then copy paste.
+    --cores 4
 ```
 
-### Run SOPA on HPC
+I suggest you run the command from the sopa directory, and it will look something like this:
+
+```bash
+snakemake \
+    --config data_path=./data/TD_01_verysmall_mIF.ome.tif \
+    --configfile=./config/misc/ome_tif.yaml \
+    --workflow-profile ./workflow/profile/local \
+    --cores 6
+```
+
+Note, for Windows you must replace:
+
+- < \\ > with a caret < ^ > for the traditional Command Prompt (cmd.exe) and a backtick <`> for PowerShell.
+- you can also remove them and create a single line command in an editor, and then copy paste.
+
+
+### Step 6: Check post-run
+
+Before:
+
+```console
+.
+├── command.txt
+├── config
+│   └── ome_tif.yaml
+└── data
+    └── TD_01_verysmall_mIF.ome.tif
+```
+
+After:
+
+```console
+.
+├── command.txt
+├── config
+│   └── ome_tif.yaml
+└── data
+    ├── TD_01_verysmall_mIF.ome.explorer
+    ├── TD_01_verysmall_mIF.ome.tif
+    └── TD_01_verysmall_mIF.ome.zarr
+```
+
+The `.explorer` file can be opened with the Xenium explorer software (free).
+The `.zarr` file can be opened with `spatialdata`.
+
+## Run SOPA on HPC
 
 - Create a conda environment with `snakemake`, `snakemake-slurm`, and `snakemake-executor-plugin-slurm`.
 - Use profile that will use the executor plugin check [Snakemake with Slurm](https://hpc-docs.cubi.bihealth.org/slurm/snakemake/)
