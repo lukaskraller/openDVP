@@ -18,6 +18,8 @@ This guide is for users that are not experienced with MCMICRO or HPC, so it goes
 - Asking LLMs for help is great, just be careful, some of these pipelines and packages are not very popular and there are tendencies to hallucinate.
 - Ask humans for help, but help with log files, tracebacks, and context. Just like LLMs the more context the better we understand your problem.
 
+## How to setup in MacOS/Linux environment
+
 ## How to setup in the BIH HPC
 
 ### Step 1: Ensure you can access the cluster
@@ -27,9 +29,13 @@ Please take the time to read and go through the documentation at [Getting Access
 <details>
 <summary> Check access is working, you see this message: </summary>
 
-```bash
+```console
+ssh <USERNAME>@hpc-login-1.cubi.bihealth.org
+```
 
-❯ ssh jnimoca_m@hpc-login-1.cubi.bihealth.org
+Output:
+
+```bash
 Welcome to the BIH HPC 4 Research Cluster!
 
  You are on a login node.
@@ -44,8 +50,6 @@ HPC Access Portal: https://hpc-access.cubi.bihealth.org
 Last login: Thu Aug  7 12:54:25 2025 from 141.80.221.57
 -bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
 -bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
-[jnimoca_m@hpc-login-1 ~]$
-
 ```
 
 </details>
@@ -54,6 +58,21 @@ Last login: Thu Aug  7 12:54:25 2025 from 141.80.221.57
 
 Follow [BIH HPC instructions](https://hpc-docs.cubi.bihealth.org/how-to/service/file-exchange/) for using software to transfer files.
 Technically you should be able to connect from virtual machines. Sometimes there are issues with IP adresses, please contact IT for help.
+
+Download FileZilla, WinSCP, or CyberDuck for easy file transfer.  
+
+- MacOS: https://filezilla-project.org/  
+- Windows: https://winscp.net/eng/download.php  
+- Both: https://cyberduck.io/  
+
+#### Important Settings
+
+- Use SFTP
+
+#### MDC Users login nodes
+
+- username_m@hpc-login-1.cubi.bihealth.org
+- username_m@hpc-login-2.cubi.bihealth.org
 
 <details>
 <summary> Check if it is working </summary>
@@ -67,9 +86,12 @@ Familiarize yourself with how [storage works in the BIH HPC](https://hpc-docs.cu
 
 In the terminal, connect to the HPC. Go to your home directory and check what is there with `ls`
 
+```console
+ls
+```
+
 ```bash
 # Your home directory should look something like this:
-[jnimoca_m@hpc-login-1 ~]$ ls
 bin  ondemand  scratch  work
 ```
 
@@ -79,33 +101,50 @@ If you need more storage space, bring it up in meeting or Mattermost. We might h
 
 ### Step 4: Create environment in the HPC to run nextflow pipelines
 
-```python
-# these are the problems
-
-# (1) Java
-[jnimoca_m@hpc-login-1 ~]$ java -version
--bash: java: command not found
-#(2) Nextflow
-[jnimoca_m@hpc-login-1 ~]$ nextflow
--bash: /data/cephfs-1/home/users/jnimoca_m/bin/nextflow: No such file or directory
-```
-
 We will use **miniforge**(Conda analogue) to install these, please read the [Software Installation with Conda](https://hpc-docs.cubi.bihealth.org/best-practice/software-installation-with-conda/).
 
-```python
-# ensure you are running an interactive session in the HPC
-#this commands creates and interactive session with more computational resources
-hpc-login-1:~$ srun --mem=5G --pty bash -i
-hpc-cpu-123:~$ wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
-hpc-cpu-123:~$ bash Miniforge3-Linux-x86_64.sh -b -f -p $HOME/work/miniforge
-hpc-cpu-123:~$ eval "$(/$HOME/work/miniforge/bin/conda shell.bash hook)"
-hpc-cpu-123:~$ conda init
-hpc-cpu-123:~$ conda config --set auto_activate_base false
+#### Step 4.1: Activate interactive session
 
-# these commands to ensure conda channel is not used
-hpc-cpu-123:~$ conda config --add channels bioconda
-hpc-cpu-123:~$ conda config --add channels conda-forge
-hpc-cpu-123:~$ conda config --set channel_priority strict
+```console
+srun --mem=5G --pty bash -i
+```
+
+#### Step 4.2: Download miniforge
+
+```console
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+```
+
+#### Step 4.3: Install miniforge
+
+```console
+bash Miniforge3-Linux-x86_64.sh -b -f -p $HOME/work/miniforge
+```
+
+#### Step 4.4: Make conda command accesible
+
+```console
+eval "$(/$HOME/work/miniforge/bin/conda shell.bash hook)"
+```
+
+#### Step 4.5: Initialize conda
+
+```console
+conda init
+```
+
+#### Step 4.6: Change conda configuration
+
+```console
+conda config --set auto_activate_base false
+```
+
+```console
+conda config --add channels bioconda conda-forge
+```
+
+```console
+conda config --set channel_priority strict
 ```
 
 Conda hopefully is properly installed.
@@ -113,9 +152,13 @@ Conda hopefully is properly installed.
 <details>
 <summary>Check conda is working:</summary>
 
-```bash
+```console
+conda
+```
 
-[jnimoca_m@hpc-cpu-61 ~]$ conda
+Should output the following:
+
+```bash
 usage: conda [-h] [-v] [--no-plugins] [-V] COMMAND ...
 
 conda is a tool for managing and deploying applications, environments and packages.
@@ -153,60 +196,119 @@ commands:
     run               Run an executable in a conda environment.
     search            Search for packages and display associated information using the MatchSpec format.
     update (upgrade)  Update conda packages to the latest compatible version.
-
 ```
 
 </details>
 
-Now we will install the necessary packages
+### Step 4.7: Install the necessary packages 
 
-```python
-# Create a conda environment called 'mcmicro'
-hpc-cpu-123:~$ conda create -n mcmicro -y
+Create a conda environment called 'mcmicro'
 
-# this activates the environment
-hpc-cpu-123:~$ conda activate mcmicro
-
-# this install java and singularity
-hpc-cpu-123:~$ conda install openjdk singularity -y
+```console
+conda create -n mcmicro -y
 ```
 
-Now we proceed to install **Nextflow**
+This activates the environment
 
-```python
-# Download and run nextflow executable
-hpc-cpu-123:~$ curl -s https://get.nextflow.io | bash
-
-# Trust and make the file executable
-hpc-cpu-123:~$ chmod +x nextflow
-
-# move the file somewhere your environment can find it
-hpc-cpu-123:~$ mkdir -p $HOME/.local/bin/
-hpc-cpu-123:~$ mv nextflow $HOME/.local/bin/
+```console
+conda activate mcmicro
 ```
 
-<details>
-<summary>Check nextflow is working part 1</summary>
+This install java and singularity
+
+```console
+conda install openjdk singularity -y
+```
+
+#### Step 4.8: Install **Nextflow**
+
+Download and run nextflow executable
+
+```console
+curl -s https://get.nextflow.io | bash
+```
+
+Trust and make the file executable
+
+```console
+chmod +x nextflow
+```
+
+Move the file somewhere your environment can find it
+
+```console
+mkdir -p ~/.local/bin/
+```
+
+Move it to the local bin
+
+```console
+mv nextflow ~/.local/bin/
+```
+
+#### Step 4.9: Check Nextflow is working
+
+```console
+nextflow info
+```
+
+Output:
 
 ```bash
-(mcmicro) [jnimoca_m@hpc-cpu-213 ~]$ nextflow info
-  Version: 25.04.7 build 5955
-  Created: 08-09-2025 13:29 UTC (15:29 CEST)
-  System: Linux 5.14.0-570.21.1.el9_6.x86_64
-  Runtime: Groovy 4.0.26 on OpenJDK 64-Bit Server VM 22.0.1-internal-adhoc.conda.src
-  Encoding: UTF-8 (UTF-8)
+Version: 25.04.7 build 5955
+Created: 08-09-2025 13:29 UTC (15:29 CEST)
+System: Linux 5.14.0-570.21.1.el9_6.x86_64
+Runtime: Groovy 4.0.26 on OpenJDK 64-Bit Server VM 22.0.1-internal-adhoc.conda.src
+Encoding: UTF-8 (UTF-8)
 # this means nextflow is found in your PATH and can be run
 ```
 
-</details>
+#### Step 4.10: Tell Nextflow where to place files
 
+To prevent nextflow from placing files where they do not go, we must add variables (that nextflow will look for) and the paths. For example, we tell nextflow that NXF_SINGULARITY_CACHEDIR (where to store singularity images) is `/data/cephfs-1/work/groups/coscia/Singularity_Cache`, therefore it will place those files there.
 
-<details>
-<summary>Check nextflow is working part 2:</summary>
+First open your `.bashrc` file wiht:
 
-```bash
-(mcmicro) [jnimoca_m@hpc-cpu-213 ~]$ nextflow run nextflow-io/hello
+```console
+nano ~/.bashrc
+```
 
+This will open a terminal text editor, add the following 5 lines of code.
+Windows users you will not be able to copy paste, please be careful with typoes.
+
+```console
+export SINGULARITY_CACHEDIR=/data/cephfs-1/work/groups/coscia/Singularity_Cache
+export NXF_SINGULARITY_CACHEDIR=/data/cephfs-1/work/groups/coscia/Singularity_Cache
+export NXF_WORK=/data/cephfs-1/home/users/$USERNAME/scratch/
+export NXF_TEMP=/data/cephfs-1/home/users/$USERNAME/scratch/
+export NXF_HOME=/data/cephfs-1/home/users/$USERNAME/work/.nextflow
+```
+
+Restart the `.bashrc` file to trigger those changes
+
+```console
+source ~/.bashrc
+```
+
+### Step 6: Run Nextflow
+
+In case something went wrong before, remember you must have, and do any of these if needed:
+
+- interactive session activated (no login nodes) : `srun --mem=5G --pty bash -i`
+- mcmicro conda environment activated : `conda activate mcmicro`
+- have the `.bashrc` variables set and activated
+
+#### Step 6.1: Demo pipeline
+
+Run nextflow hello (demo) pipeline
+
+```console
+nextflow run nextflow-io/hello
+```
+
+This is how it should look like
+
+```console
  N E X T F L O W   ~  version 25.04.7
 
 NOTE: Your local project version looks outdated - a different revision is available in the remote repository [2ce0b0e294]
@@ -221,23 +323,27 @@ Hello world!
 Ciao world!
 
 Hola world!
-
-# this means you have connection to download pipelines and run them
-
 ```
 
 </details>
 
-### Step 5: Run Nextflow with test data
+#### Step 6.2: Download demo data (Exemplar-001)
 
-From each code block, please run the commands one at a time.
+Create a folder for demo data:
+
+```console
+mkdir -p ~/work/test1/
+```
+
+Download data using nextflow pipeline:
 
 ```bash
-# create directory for test data
-(mcmicro) [jnimoca_m@hpc-cpu-213 ~]$ mkdir -p ~/work/test1/
-# download test data from internet to test directory
-(mcmicro) [jnimoca_m@hpc-cpu-213 ~]$ nextflow run labsyspharm/mcmicro/exemplar.nf --name exemplar-001 --path ~/work/test1/
+nextflow run labsyspharm/mcmicro/exemplar.nf --name exemplar-001 --path ~/work/test1/
+```
 
+Output should look like this:
+
+```console
  N E X T F L O W   ~  version 25.04.7
 
 NOTE: Your local project version looks outdated - a different revision is available in the remote repository [b0175102db]
@@ -254,11 +360,16 @@ CPU hours   : 0.2
 Succeeded   : 7
 ```
 
-```bash
-# Run with -profile singularity, otherwise it defaults to Docker and it will fail.
-(mcmicro) [jnimoca_m@hpc-cpu-213 ~]$ nextflow run labsyspharm/mcmicro --in ~/work/test1/exemplar-001 -profile singularity
+#### Step 6.3: Run MCMICRO with demo data
 
- N E X T F L O W   ~  version 25.04.7
+```console
+nextflow run labsyspharm/mcmicro --in ~/work/test1/exemplar-001 -profile singularity
+```
+
+Output should look like this:
+
+```console
+N E X T F L O W   ~  version 25.04.7
 
 NOTE: Your local project version looks outdated - a different revision is available in the remote repository [b0175102db]
 Launching `https://github.com/labsyspharm/mcmicro` [scruffy_aryabhata] DSL2 - revision: 9122980d88 [master]
@@ -282,9 +393,13 @@ CPU hours   : 0.3
 Succeeded   : 4
 ```
 
+We can check the outputs of the pipeline:
+
+```console
+tree ~/work/test1/exemplar-001
+```
+
 ```python
-# Let's check the outputs
-(mcmicro) [jnimoca_m@hpc-cpu-213 ~]$ tree ~/work/test1/exemplar-001
 .
 └── exemplar-001
     ├── illumination
@@ -332,67 +447,15 @@ Succeeded   : 4
 
 </details>
 
-<details>
-<summary> Reasoning question: Why did it take so long to run that small (400mb) dataset?</summary>
+## Running MCMICRO with a script for distributed computing
 
-Because you ran that entire analysis in that single node, with the default resources.  
-When you run your dataset nextflow will dispatch jobs based on the requirements of each process.
+MCMICRO works best when we distribute all the tasks to the HPC.
 
-</details>
+You will need:
 
-### Step 6: How to run MCMICRO with HPC job
-
-Let's rerun the same dataset with a script
-
-```bash
-# let's create the script file
-
-# go to demo data
-(mcmicro) [jnimoca_m@hpc-cpu-213 ~]$ cd work/test1/exemplar-001/
-# create script file
-(mcmicro) [jnimoca_m@hpc-cpu-213 exemplar-001]$ touch script.sh
-# edit script 
-(mcmicro) [jnimoca_m@hpc-cpu-213 exemplar-001]$ nano script.sh 
-# then you type everything you need and press (CTRL+X) to leave
-# consider creating this file in a text editor (VSCode) and copy paste into it
-```
-
-Here is the demo script:
-
-```bash
-#!/bin/bash
-#SBATCH --job-name=test_job         # Job name
-#SBATCH --time=4:00:00              # Time limit hrs:min:sec
-#SBATCH --mem=10G                   # Memory for orchestrating node
-#SBATCH --cpus-per-task=2           # Number of CPU cores for orchestrating node
-
-eval "$(conda shell.bash hook)"     # This exposes conda hook to node
-conda activate mcmicro              # This activates environment in node
-PATH_TO_DATA="/data/cephfs-1/home/users/jnimoca_m/work/test1/exemplar-001"
-nextflow run labsyspharm/mcmicro --in $PATH_TO_DATA -profile singularity
-```
-
-Then run your script:
-
-```bash
-#the location of the script doesnt matter as long as the path in it directs to your data
-(mcmicro) [jnimoca_m@hpc-cpu-213 exemplar-001]$ sbatch demo_script.sh 
-sbatch: routed your job to partition short
-Submitted batch job 18622303
-```
-
-### Checklist
-
-- Ensure access to HPC
-- Ensure you can move files into HPC environment (consider image sizes)
-- Ensure enough storage space is available for your images and processing steps
-- Ensure HPC can run **java**
-- Ensure HPC can run **apptainer/singularity** images
-- Ensure HPC can run **nextflow**
-- Run **MCMICRO** [demo data](https://mcmicro.org/datasets/) directly on interactive session
-- Run **MCMICRO** [demo data](https://mcmicro.org/datasets/) with a HPC script
-
-SUCCESS, you managed to install everything, now let's dig into the biology!
+- raw image files
+- param.yml file
+- script.sh file
 
 ## How to prepare your images for MCMICRO
 
@@ -480,9 +543,66 @@ options:
     ashlar: --flip-y --align-channel 4 -m 50 --filter-sigma 1
 ```
 
+### script.sh
+
+- The `.sh` suffix denotes a script file.
+- The script will tell the HPC how to process your images.
+- I suggest you create a script in your preferred IDE, like VSCode, and then import it to the HPC when it is time to run your script.  
+
+Demo script:
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=test_job         # Job name
+#SBATCH --time=16:00:00             # Time limit hrs:min:sec
+#SBATCH --mem=10G                   # Memory for orchestrating node
+#SBATCH --cpus-per-task=2           # Number of CPU cores for orchestrating node
+
+eval "$(conda shell.bash hook)"     # This exposes conda hook to node
+conda activate mcmicro              # This activates environment in node
+PATH_TO_DATA="/data/cephfs-1/home/users/<USERNAME>/work/test1/exemplar-001"
+PATH_TO_PARAMS="/data/cephfs-1/home/users/<USERNAME>/work/test1/exemplar001_params.yml"
+
+nextflow run labsyspharm/mcmicro --in $PATH_TO_DATA --params $PATH_TO_PARAMS -profile singularity
+```
+
+Then run your script from the terminal
+
+```console
+sbatch demo_script.sh 
+```
+
+Output will look something like this:
+
+```console
+sbatch: routed your job to partition short
+Submitted batch job 18622303
+```
+
+Conceptually:  
+This script will start an orchestrating job, which will manage all the other jobs that have to be created and managed.
+Every daughter job will be managed from it. If the orchestrating job runs out of time, everything collapses.
+There are also ways one can run a batch script that can run one script per dataset. In that way processing multiple datasets from a single script. This is excellent for reproducibility.
+
+Looking for details?
+This part can get very complex, and highly depends on your needs. So I refrain from overexplaining. Look at your HPC documentation on how to run scripts, and what are their recommended workflows. Asking your friendly bioinformatician is a great first point of help.
+
 ### Considerations, ideas, and tips
 
 - You do not have to run everything all the time, sometimes I like to run MCMICRO just for (1) Illumination correction and (2) Stitching and registration and the move on to another software. Make use of the workflow options like `stop-at`.  
 - Inside the [nextflow.config](https://github.com/labsyspharm/mcmicro/blob/master/nextflow.config) file, MCMICRO developers link the default computational requirements for each module. They have set `profiles`. For example here you can find the [WSI defaults](https://github.com/labsyspharm/mcmicro/blob/master/config/nf/wsi.config) profile optimized for Whole slide imaging, and here the `profile` for  [TMA defaults](https://github.com/labsyspharm/mcmicro/blob/master/config/nf/tma.config). If you feel you need your own computational requirements, I suggest you fork the MCMICRO github repository, modify it, and then run mcmicro like this `nextflow run josenimo/mcmicro`. Nextflow is smart and will use that github repository instead.
-- For MDC peeps, feel free to use [josenimo/mcmicro](https://github.com/josenimo/mcmicro/) with `-profile singularity` in your `nextflow run` command. 
+- For MDC peeps, feel free to use [josenimo/mcmicro](https://github.com/josenimo/mcmicro/) with `-profile singularity` in your `nextflow run` command.
 - Nextflow has a nice `-resume` parameter to automatically check what already ran, and go on from there.
+  
+### Checklist
+
+- Ensure access to HPC
+- Ensure you can move files into HPC environment (consider image sizes)
+- Ensure enough storage space is available for your images and processing steps
+- Ensure HPC can run **java**
+- Ensure HPC can run **apptainer/singularity** images
+- Ensure HPC can run **nextflow**
+- Run **MCMICRO** [demo data](https://mcmicro.org/datasets/) directly on interactive session
+- Run **MCMICRO** [demo data](https://mcmicro.org/datasets/) with a HPC script
+
+SUCCESS, you managed to install everything, now let's dig into the biology!
