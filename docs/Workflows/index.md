@@ -1,4 +1,4 @@
-# openDVP the framework 
+# openDVP the framework
 
 ## Introduction
 
@@ -6,8 +6,8 @@ openDVP is a framework to empower users to perform spatial proteomics as easily 
 
 We suggest two main workflows:
 
- - flashDVP (optimized for speed)
- - DVP (optimized for complexity)
+- flashDVP (optimized for speed)
+- DVP (optimized for complexity)
 
 ## flashDVP
 
@@ -18,7 +18,7 @@ You require :
 - Images in which you can recognize tissue of interest
 - Laser Microdissection device, or someone willing to collaborate that has one.
 - LCMS setup, or someone willing to collaborate that has one ;) .
- 
+
 Workflow is:
 
 1. Acquire images of tissue of interest
@@ -27,7 +27,6 @@ Workflow is:
 4. Collect tissue of interest
 5. Prepare samples and acquire proteomes via LCMS
 6. Perform downstream proteomic data analysis
-
 
 ## DVP
 

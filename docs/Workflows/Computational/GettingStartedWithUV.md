@@ -151,7 +151,6 @@ Use this to check the version from within python
 print(dvp.__version__)
 ```
 
-
 ## Troubleshooting
 
 - Python version cannot be >=3.13 ; this will cause install to fail. Use python 3.11 or 3.12.
