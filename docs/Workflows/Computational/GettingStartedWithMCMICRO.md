@@ -274,7 +274,7 @@ nano ~/.bashrc
 ```
 
 This will open a terminal text editor, add the following 5 lines of code.
-Windows users you will not be able to copy paste, please be careful with typoes.
+Windows users you will not be able to copy paste, please be careful with typos.
 
 ```console
 export SINGULARITY_CACHEDIR=/data/cephfs-1/work/groups/coscia/Singularity_Cache
