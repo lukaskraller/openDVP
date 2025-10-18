@@ -1832,7 +1832,7 @@ wheels = [
 
 [[package]]
 name = "napari-spatialdata"
-version = "0.5.6"
+version = "0.5.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anndata" },
@@ -1862,9 +1862,9 @@ dependencies = [
     { name = "xarray" },
     { name = "xarray-datatree" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6f/35/228c805ee96174ffb8b44214dbf3405af4095c5009b30f77d1601010759c/napari_spatialdata-0.5.6.tar.gz", hash = "sha256:794955161a57748de8ab3e306d3ca45a23229cba45ed794044cac433cf0bfdb1", size = 15526394, upload-time = "2025-04-21T18:49:14.836Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/63/ac/151215ff814b7f67646729924172952a3614a00063e9a2355ded0e9aa134/napari_spatialdata-0.5.5.tar.gz", hash = "sha256:a02cfe988620735bab2047f65b10b82fa890e34ac83ebc7a1e44581655640749", size = 15525479, upload-time = "2025-01-20T15:13:18.269Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/96/96/983979e7a81cdf624b3a41540fc78c9508c94eca3611cec95a5e6b7734f3/napari_spatialdata-0.5.6-py3-none-any.whl", hash = "sha256:0c052663d86d3735961709e3f6bd7a04bf5da19dc46b8fb63a8499a6d18ef12f", size = 102616, upload-time = "2025-04-21T18:49:12.396Z" },
+    { url = "https://files.pythonhosted.org/packages/d3/53/b03ebf972c0af5a994ba2062cd1ac2397dcf6be11603eb9fb384790bded5/napari_spatialdata-0.5.5-py3-none-any.whl", hash = "sha256:d85214d73905d805c1b3f2912d33cad63c857b66ac62051ba0ff74892c2952e2", size = 102153, upload-time = "2025-01-20T15:13:16.056Z" },
 ]
 
 [[package]]
@@ -2134,7 +2134,6 @@ version = "0.7.1"
 source = { editable = "." }
 dependencies = [
     { name = "adjusttext" },
-    { name = "anndata" },
     { name = "esda" },
     { name = "gensim" },
     { name = "ipykernel" },
@@ -2183,12 +2182,11 @@ docs = [
 [package.metadata]
 requires-dist = [
     { name = "adjusttext" },
-    { name = "anndata", specifier = ">=0.9.1,<0.11" },
     { name = "esda", specifier = ">=2.7,<2.8" },
     { name = "gensim", specifier = ">=4.3.2" },
     { name = "ipykernel", specifier = "~=6.25" },
     { name = "loguru", specifier = "~=0.7.3" },
-    { name = "napari-spatialdata", specifier = "~=0.5.5" },
+    { name = "napari-spatialdata", specifier = "==0.5.5" },
     { name = "perseuspy", specifier = ">=0.3.9,<0.4" },
     { name = "pingouin", specifier = ">=0.5.5,<0.6" },
     { name = "pyogrio", specifier = "~=0.11.1" },

@@ -33,6 +33,10 @@ html_context = {
     "conf_py_path": "/docs/",
 }
 
+html_theme_options = {
+    "navigation_depth": -1,
+}
+
 # -- General configuration ---------------------------------------------------
 
 extensions = [

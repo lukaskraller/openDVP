@@ -75,6 +75,9 @@ def DIANN_to_adata(
     else:
         sample_metadata = pd.DataFrame(index=rawdata.index)
 
+    # TODO report number of matching out of all rows
+    # TODO allow users to pass exhaustive metadata to subset of pg_matrix rows
+
     # check sample_metadata filename_paths are unique, and matches df
     if set(sample_metadata.index) != set(rawdata.index):
         logger.warning("uniques from sample metadata and DIANN table do not match")
