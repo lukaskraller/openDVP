@@ -47,3 +47,11 @@ openDVP highly recommends utilizing open-source image processing pipelines: MCMI
 Image analysis can vary, but openDVP can help you filter common artefacts such as cells by morphological or intensity features. Filter dropped out cells by calculating the ratio of marker intensity between cycles. It also enables a easy back and forth between user-friendly annotation software like QuPath to easily integrate collaborators insights into the analysis. We use scimap for phenotyping, but we suggest you compare between the released approaches, and use what fits your problem best, that is the beauty of open source.
 
 We will release more details soon :)
+
+```{toctree}
+:maxdepth: 2
+:hidden:
+
+Experimental
+Computational
+```

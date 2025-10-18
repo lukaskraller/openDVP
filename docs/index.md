@@ -76,6 +76,6 @@ Not yet available.
 :hidden:
 
 api/_api_index
-Tutorials/index
-Workflows/index
+Tutorials/_tut_index
+Workflows/_work_index
 ```
