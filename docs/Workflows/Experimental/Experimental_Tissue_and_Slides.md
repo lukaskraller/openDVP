@@ -21,7 +21,7 @@ Here are some factors to consider when preparing for DVP.
 
 ### Cell size
 
-- Large cell sizes provide more input material in single-cell DVP and pooled DVP. For example, hepatocytes are large and f
+- Large cell sizes provide more input material in single-cell DVP and pooled DVP. For example, hepatocytes are large and full of input material.
 - Smaller cells would require pooling to readout the same number of proteins
 - See [The dawn of single-cell proteomics.](https://www.nature.com/articles/s41592-023-01771-9/figures/1).
 
