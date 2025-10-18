@@ -100,7 +100,7 @@ Commands:
 
 1. Create a new directory.
 
-`uv` works by creating directory specific environments. Therefore you should create a new directory for each different project. This might seems like separating a lot of things, but will keep your proyects tidy, and you should only have what you need for each specific project.
+`uv` works by creating directory specific environments. Therefore you should create a new directory for each different project. This might seems like separating a lot of things, but will keep your projects tidy, and you should only have what you need for each specific project.
 
 2. Open directory in [VSCode](https://code.visualstudio.com/download)
 
