@@ -1,9 +1,9 @@
 [project]
 name = "openDVP"
-version = "0.7.2"
+version = "0.7.3"
 description = "open-sourced Deep Visual Proteomics toolkit"
 readme = "README.md"
-requires-python = ">=3.11, <3.13"
+requires-python = ">=3.11, <3.14"
 license = {file = "LICENSE"}
 authors = [{name = "Jose Nimo", email = "jose.nimo@mdc-berlin.de"}]
 maintainers = [{ name = "Jose Nimo", email = "jose.nimo@mdc-berlin.de" }]
@@ -15,14 +15,14 @@ dependencies = [
     "ipykernel ~= 6.25",
     "scanpy >=1.11, <1.14",
     "loguru ~= 0.7.3",
-    "scipy <1.13", # Gensim breaks above
+    "scipy ~= 1.13",
     "statsmodels >=0.14.5",
     "adjusttext",
     "pingouin >=0.5.5, <0.6",
     "esda >=2.7, <2.8",
     "upsetplot",
     "perseuspy >=0.3.9,<0.4",
-    "gensim >=4.3.2", # Gensim breaks with python >=3.13
+    "gensim ~=4.4.0",
     "pyqt6",
     "tifffile     ~= 2025.9.30",
     "scikit-image ~= 0.25.2",
