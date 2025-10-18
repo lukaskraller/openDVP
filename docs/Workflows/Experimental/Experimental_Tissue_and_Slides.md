@@ -55,8 +55,12 @@ There are two main materials that make up the membrane:
 
 For a detailed read go to [Leica: consumables-for-laser-microdissection](https://www.leica-microsystems.com/science-lab/life-science/consumables-for-laser-microdissection/)
 
-### Preparing slides before imaging
+### Preparing slides before imaging (work in progress)
 
 #### Increasing attachment with Poly-L-Lysine
 
+(work in progress)
+
 #### Etching calibration points on the slide
+
+(work in progress)

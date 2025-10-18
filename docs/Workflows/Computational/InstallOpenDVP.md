@@ -1,4 +1,4 @@
-# Installation of opendvp
+# Install opendvp
 
 ## Quick start
 
@@ -14,7 +14,7 @@ or
 $ uv add opendvp
 ```
 
-## Installing opendvp with conda-like (environment manager)
+## Installing with conda/mamba
 
 Mamba is a fast, drop-in replacement for the conda package manager. It significantly speeds up installing packages and resolving environment dependencies, making it a great tool for any data scientist or Python developer. 🐍
 
@@ -22,7 +22,7 @@ This tutorial will guide you through installing Mamba on your system.
 
 If you are new here is a nice post explaining the main [Concepts](https://mamba.readthedocs.io/en/latest/user_guide/concepts.html#concepts) (<5min read)
 
-### Install environment manager
+### Install conda/mamba environment manager
 
 1. Check and download the most recent `Conda-forge Installer` release for your OS here: [Downloads](https://conda-forge.org/download/).
 2. Follow instructions on website for your OS
@@ -30,7 +30,7 @@ If you are new here is a nice post explaining the main [Concepts](https://mamba.
 4. Run `conda init`
 5. Run `conda install mamba -n base -c conda-forge` to install mamba
 
-### Install opendvp
+### Install opendvp with conda
 
 ```console
 $ conda create --name opendvp -y python=3.12
@@ -47,7 +47,9 @@ $ python
 0.7.1
 ```
 
-## Installing opendvp with uv
+Make sure you always activate the environment to use opendvp.
+
+## Install with uv
 
 Assuming that most proteomics analysts use R, I have made this small tutorial to get you started with environment creation in python. `uv` is an extremely fast Python package and project manager, it has many great features and it is a great skill to have if you need python for anything. Check their [documentation](https://docs.astral.sh/uv/).
 
@@ -75,7 +77,7 @@ or brew
 brew install uv
 ```
 
-#### Check uv works by running `uv` in the command line
+### Check uv works by running `uv` in the command line
 
 ```console
 $ uv
@@ -91,20 +93,10 @@ Commands:
   version  Read or update the project's version
   sync     Update the project's environment
   lock     Update the project's lockfile
-  export   Export the project's lockfile to an alternate format
-  tree     Display the project's dependency tree
-  tool     Run and install commands provided by Python packages
-  python   Manage Python versions and installations
-  pip      Manage Python packages with a pip-compatible interface
-  venv     Create a virtual environment
-  build    Build Python packages into source distributions and wheels
-  publish  Upload distributions to an index
-  cache    Manage uv's cache
-  self     Manage the uv executable
-  help     Display documentation for a command
+  ... (10 lines hidden)
 ```
 
-## Install opendvp with `uv`
+### Install opendvp with `uv`
 
 1. Create a new directory.
 
@@ -112,7 +104,7 @@ Commands:
 
 2. Open directory in [VSCode](https://code.visualstudio.com/download)
 
-3. Use `uv` to create your python environment
+3. Use `uv` to create your python (3.12) environment
 
 ```console
 $ uv init --python 3.12
@@ -128,11 +120,13 @@ $ uv add opendvp
 ### Check opendvp is installed
 
 ```bash
-> uv pip list | grep opendvp
-opendvp                       0.7.0
+> uv pip show opendvp
+Name: opendvp
+Version: 0.7.1
+... (hidden 3 lines)
 ```
 
-Showing you what version is installed.
+Showing you what version is installed where
 
 ## Use openDVP with jupyter notebooks
 
@@ -153,4 +147,4 @@ print(dvp.__version__)
 
 ## Troubleshooting
 
-- Python version cannot be >=3.13 ; this will cause install to fail. Use python 3.11 or 3.12.
+- Python version cannot yet be >=3.13 ; this will cause install to fail. Use python 3.11 or 3.12.

@@ -52,6 +52,6 @@ We will release more details soon :)
 :maxdepth: 2
 :hidden:
 
-Experimental
-Computational
+Experimental/index
+Computational/index
 ```

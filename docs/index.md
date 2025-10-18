@@ -72,10 +72,10 @@ For questions about openDVP and the DVP workflow you are very welcome to post a 
 Not yet available.
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 3
 :hidden:
 
-api/_api_index
-Tutorials/_tut_index
-Workflows/_work_index
+api/index
+Tutorials/index
+Workflows/index
 ```
