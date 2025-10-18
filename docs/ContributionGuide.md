@@ -138,6 +138,8 @@ The generated HTML files will be in the `docs/_build/html` directory. You can op
 
 Once you've made your changes and are happy with them, you're ready to submit a pull request.
 
+As of now, Jose will perform all the version bumping and releasing, do not worry about this.
+
 Go to your github branch website and click the big green button `Compare & Pull Request`
 
 Ensure that the **pull request**  is from your fork to the `main` branch of the `CosciaLab/openDVP` repository.
