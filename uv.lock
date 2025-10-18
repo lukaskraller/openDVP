@@ -2463,7 +2463,7 @@ requires-dist = [
     { name = "scikit-image", specifier = "~=0.25.2" },
     { name = "scikit-learn", specifier = "~=1.7.2" },
     { name = "scipy", specifier = "~=1.13" },
-    { name = "spatialdata", specifier = "==0.4.0" },
+    { name = "spatialdata", specifier = ">=0.4.0" },
     { name = "spatialdata-plot", specifier = "~=0.2.9" },
     { name = "statsmodels", specifier = ">=0.14.5" },
     { name = "tifffile", specifier = "~=2025.9.30" },

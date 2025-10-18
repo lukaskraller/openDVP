@@ -9,7 +9,7 @@ authors = [{name = "Jose Nimo", email = "jose.nimo@mdc-berlin.de"}]
 maintainers = [{ name = "Jose Nimo", email = "jose.nimo@mdc-berlin.de" }]
 
 dependencies = [
-    "spatialdata == 0.4.0",
+    "spatialdata >= 0.4.0",
     "napari-spatialdata == 0.5.5",
     "spatialdata-plot ~= 0.2.9 ",
     "ipykernel ~= 6.25",
