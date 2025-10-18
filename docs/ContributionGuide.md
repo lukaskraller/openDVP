@@ -146,17 +146,10 @@ This will run all the tests and also generate a coverage report.
 
 Our documentation is built using [Sphinx](https://www.sphinx-doc.org/en/master/) and is located in the `docs/` directory.
 
-To build the documentation locally, first install the documentation dependencies:
+To build the documentation locally run:
 
 ```bash
-uv pip install -e .[docs]
-```
-
-Then, navigate to the `docs` directory and run `make`:
-
-```bash
-cd docs
-make html
+uv run --group docs sphinx-build -b html docs/ docs/_build/html/
 ```
 
 The generated HTML files will be in the `docs/_build/html` directory. You can open `index.html` in your browser to view the documentation.
