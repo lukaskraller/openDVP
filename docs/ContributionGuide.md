@@ -1,4 +1,4 @@
-# Contributing to openDVP
+# Contribution Guide
 
 First off, thank you for considering contributing to openDVP! It's people like you that make open source so great. We welcome contributions of all kinds, from bug reports to new features.
 
@@ -11,9 +11,8 @@ This guide will walk you through the process of setting up your development envi
 3. Create a new branch for your PR
 4. Add your feature or bugfix to the codebase
 5. Make sure all tests are passing
-6. Build and visually check any changed documentation
+6. Ensure code style, and/or ensure documentation looks good.
 7. Open a PR back to the main repository
-8. Add a release note to your PR
 
 ## Step 1: Fork the opendvp repository to your own GitHub account
 
@@ -102,21 +101,12 @@ uv run pytest
 uv run pytest tests/io/test_DIANN_to_adata.py
 ```
 
-## Code Style, Formatting and Linting
+## Step 6: Code style check, documentation check
 
-We use `ruff` for code formatting and linting to ensure a consistent code style throughout the project. We also use `pre-commit` to automatically run these checks before you make a commit.
+Since you already installed `pre-commit` every time you have committed it should have ran `ruff`.
+We use `ruff` for code formatting and linting to ensure a consistent code style throughout the project.
 
-### 1. Set up pre-commit hooks
-
-The pre-commit hooks are defined in the `.pre-commit-config.yaml` file. To install them, run:
-
-```bash
-pre-commit install
-```
-
-Now, every time you run `git commit`, `ruff` will automatically format your code and check for any linting errors. If any files are modified by the hooks, you will need to `git add` them again and re-run `git commit`.
-
-### 2. Manual checks
+### Manual checks
 
 You can also run the formatter and linter manually:
 
@@ -130,19 +120,9 @@ To check for linting errors:
 uv run ruff check .
 ```
 
-## Running Tests
+The settings for these checks live inside `pyproject.toml`.
 
-We use `pytest` for testing. The tests are located in the `tests/` directory.
-
-To run the entire test suite, use the following command:
-
-```bash
-uv run pytest
-```
-
-This will run all the tests and also generate a coverage report.
-
-## Building the Documentation
+### Building the Documentation
 
 Our documentation is built using [Sphinx](https://www.sphinx-doc.org/en/master/) and is located in the `docs/` directory.
 
@@ -154,30 +134,14 @@ uv run --group docs sphinx-build -b html docs/ docs/_build/html/
 
 The generated HTML files will be in the `docs/_build/html` directory. You can open `index.html` in your browser to view the documentation.
 
-## Submitting Your Contribution
+## Step 7: Open a PR back to the main repository
 
 Once you've made your changes and are happy with them, you're ready to submit a pull request.
 
-1.  **Create a new branch** for your changes:
-    ```bash
-    git checkout -b your-feature-branch
-    ```
+Go to your github branch website and click the big green button `Compare & Pull Request`
 
-2.  **Commit your changes**:
-    ```bash
-    git add .
-    git commit -m "feat: A brief description of your feature"
-    ```
+Ensure that the **pull request**  is from your fork to the `main` branch of the `CosciaLab/openDVP` repository.
 
-3.  **Push your changes** to your fork:
-    ```bash
-    git push origin your-feature-branch
-    ```
+In your pull request description, please explain the changes you've made and why you've made them. If your pull request addresses an open issue, please link to it. Once you've submitted your pull request, our continuous integration (CI) system will automatically run the tests to make sure everything is working as expected. We will then review your contribution and provide feedback.
 
-4.  **Open a pull request** from your fork to the `main` branch of the `CosciaLab/openDVP` repository.
-
-In your pull request description, please explain the changes you've made and why you've made them. If your pull request addresses an open issue, please link to it.
-
-Once you've submitted your pull request, our continuous integration (CI) system will automatically run the tests to make sure everything is working as expected. We will then review your contribution and provide feedback.
-
-Thank you for contributing to openDVP!
+Thank you for contributing to openDVP!!

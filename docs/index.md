@@ -78,4 +78,5 @@ Not yet available.
 api/index
 Tutorials/index
 Workflows/index
+ContributionGuide
 ```
