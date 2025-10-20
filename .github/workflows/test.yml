@@ -13,7 +13,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-              os: [windows-latest, macos-latest, ubuntu-latest  ]
+              os: [windows-latest, macos-latest, ubuntu-latest]
               python: ["3.11", "3.12", "3.13"]
 
         env:
@@ -39,13 +39,13 @@ jobs:
                   DISPLAY: :42
               run: uv run pytest --cov --color=yes --cov-report=xml
 
-            # - name: Upload coverage to Codecov
-            #   uses: codecov/codecov-action@v5
-            #   with:
-            #       name: coverage
-            #       verbose: true
-            #   env:
-            #       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v5
+              with:
+                  name: coverage
+                  verbose: true
+              env:
+                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
             - name: Build Wheel
               run: "uv build"

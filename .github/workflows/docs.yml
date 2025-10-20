@@ -2,8 +2,10 @@ name: docs
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
+    paths:
+      - 'docs/**'
 
 jobs:
   build-docs:
