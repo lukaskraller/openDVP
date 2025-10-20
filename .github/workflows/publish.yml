@@ -1,9 +1,8 @@
 name: Publish to pypi
 
 on:
-  push:
-    tags:
-      - "v*" 
+  release:
+    types: [published]
 
 jobs:
   publish:
@@ -17,7 +16,7 @@ jobs:
         with:
           python-version-file: "pyproject.toml"
 
-      - name: Install the latest version of uv
+      - name: Install uv
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
