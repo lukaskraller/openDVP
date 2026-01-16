@@ -8,8 +8,7 @@
 [![License](https://img.shields.io/github/license/CosciaLab/openDVP.svg)](https://github.com/CosciaLab/opendvp/blob/main/LICENSE)
 [![codecov](https://codecov.io/gh/CosciaLab/openDVP/graph/badge.svg?token=IWGKMCHAA1)](https://codecov.io/gh/CosciaLab/openDVP)
 
-<img width="853" height="602" alt="Screenshot 2025-07-10 at 13 11 28" src="https://github.com/user-attachments/assets/15c4445e-b0c7-4734-945c-3d664ded4b00" />
-
+<img width="1239" height="696" alt="Screenshot 2026-01-16 at 09 09 26" src="https://github.com/user-attachments/assets/c06fa45e-71fb-49e1-8afc-fddd755e0943" />
 
 ## Overview
 
